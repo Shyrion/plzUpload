@@ -1,0 +1,17 @@
+{
+  "name": "Plz Upload",
+  "preferGlobal": true,
+  "version": "0.1.0",
+  "author": "Shyrion <jeremy.gabriele@gmail.com>",
+  "description": "Plz Upload - Easy uploading without prise de tête",
+  "contributors": [
+    {
+      "name": "Jérémy Gabriele",
+      "email": "jeremy.gabriele@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "express": "3.3.x",
+    "ejs": "~0.8.4"
+  }
+}
