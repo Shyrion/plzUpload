@@ -5,13 +5,14 @@ var dropArea = document.getElementById('dropZone');
 var fileToUpload = null;
 var totalProgress = 0;
 
-if('draggable' in document.createElement('span')) {
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    !('draggable' in document.createElement('span')) ) {
+    $('#dropZone').hide();
     console.log("Upload HTML5 dispo !");
+} else {
     $('#oldSchoolUpload').hide();
     $('#dropZone').css("width", $(window).width()*0.5);
     $('#dropZone').css("height",$(window).height()*0.4);
-} else {
-    $('#dropZone').hide();
 }
 
 // initialisation
