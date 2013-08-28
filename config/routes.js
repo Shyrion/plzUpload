@@ -1,4 +1,4 @@
-var fs = require('fs');
+var uploadController = require('../controllers/uploadController');
 
 module.exports = function(app, acl) {
 	var utils = require('../lib/utils');
@@ -17,15 +17,41 @@ module.exports = function(app, acl) {
 	//=========================//
 
 	app.post('/upload', function(req, res) {
-		fs.readFile(req.files.uploadedFile.path, function (err, data) {
-		  var newPath = __dirname + "/../public/upload/" + req.files.uploadedFile.name;
-		  fs.writeFile(newPath, data, function (err) {
-		  	var uploadUrl = '/upload/' + req.files.uploadedFile.name;
-		  	req.flash('Notice', 'Upload OK. Access it at the following url : <br/><br/>' +
-		  		'<a href="' + uploadUrl + '">' + uploadUrl + '</a>');
+		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
+			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl) {
+				if (err) {
+					req.flash('Error', err.message);
+				} else {
+					var message = 'Accédez à l\'upload à cette url :<br /> <a href="%1">%2</a>';
+					message = message.replace('%1', uploadUrl).replace('%2', fullUrl);
+		  		req.flash('Notice', message);
+				}
 				res.redirect('/');
-		  });
 		});
+	});
+
+	app.post('/uploadAjax', function(req, res) {
+		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
+			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl) {
+				res.send({
+					error: err,
+					uploadUrl: uploadUrl,
+					fullUrl: fullUrl
+				});
+		});
+	});
+
+	app.get('/info', function(req, res) {
+		uploadController.getAllUploadedFiles(function(allFiles) {
+			res.redirect('/');
+		})
+	});
+
+	app.get('/clear', function(req, res) {
+		uploadController.purgeUploadFolder(function(success) {
+			console.log('removed all');
+			res.redirect('/');
+		})
 	});
 
 	app.get('/contact', function(req, res) {

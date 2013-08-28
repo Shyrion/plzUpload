@@ -1,3 +1,14 @@
+@font-face { 
+  font-family: 'BeautifulEveryTime'; 
+  src: url('../fonts/BeautifulEveryTime.ttf'); 
+}
+
+.container
+{
+	font-family: "BeautifulEveryTime";
+	text-align: center;
+}
+
 .form
 {
 	max-width: 300px;
@@ -32,17 +43,35 @@
 	margin: 10px auto;
 	padding: 10px;
 }
+
+#dropZone
+{
+	border: 10px lightgray dashed;
+
+	margin: auto;
+	width: 200px;
+	height: 200px;
+}
+
 #flashError
 {
 	background: lightpink;
+	border: red 2px solid;
 }
 #flashWarn
 {
 	background: lightyellow;
+	border: yellow 2px solid;
 }
 #flashNotice
 {
 	background: lightgreen;
+	border: green 2px solid;
+}
+
+#logo
+{
+	text-align: center;
 }
 
 #register

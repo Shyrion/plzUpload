@@ -1,6 +1,16 @@
 var express 		= require('express');
 var utils			= require('./lib/utils');
 
+function setupMongoose(callback) {
+	var mongoose = require('mongoose');
+	mongoose.connect('mongodb://localhost/plzUpload', function() {
+		mongoose.connection.on('error', function(err, a) {
+			console.log(err, a);
+		});
+		if (callback) callback(mongoose);
+	});
+}
+
 function setupRoutes(app, callback) {
 	// Routes setup
 	require('./config/routes')(app);
@@ -18,6 +28,7 @@ function setupExpress(callback) {
 	app.set('views', __dirname + '/views');
 
 	app.use(express.static(__dirname + "/public"));
+	app.use(express.static(__dirname + "/public/upload"));
 
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
@@ -45,9 +56,11 @@ function startServer(app) {
 	});
 }
 
-
-setupExpress(function(app) {
-	setupRoutes(app, function(app) {
-		startServer(app);
+setupMongoose(function() {
+	setupExpress(function(app) {
+		setupRoutes(app, function(app) {
+			startServer(app);
+		});
 	});
-});
+})
+	

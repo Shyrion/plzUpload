@@ -8,23 +8,34 @@
 </head>
 <body>
 
+    <div id="logo">
+        <img src="/images/logo.png" />
+    </div>
+
     <div class="container">
 
         <% include partials/flash %>
         
-        <h1>Upload</h1>
+        <div id="oldSchoolUpload">
+            <h1>Upload</h1>
 
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-            <div>
-                <input type="file" name="uploadedFile" />
-            </div>
-            <div>
-            <input type="submit" value="Upload" />
-            </div>
-        </form>
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <div>
+                    <input type="file" name="uploadedFile" />
+                </div>
+                <div>
+                <input type="submit" value="Upload" />
+                </div>
+            </form>
+        </div>
+
+        <div id="dropZone">
+
+        </div>
     </div>
 
     <script src="scripts/jquery-1.10.2.js"></script>
     <script src="scripts/bootstrap.js"></script>
+    <script src="scripts/dragDrop.js"></script>
 </body>
 </html>
