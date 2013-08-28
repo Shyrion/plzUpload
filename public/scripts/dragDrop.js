@@ -58,7 +58,7 @@ if('draggable' in document.createElement('span')) {
 
         // création de l'objet XMLHttpRequest
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:3000/uploadAjax');
+        xhr.open('POST', 'http://plzupload.fruitygames.fr/uploadAjax');
         xhr.onload = function() {
             console.log("load");
             //result.innerHTML += this.responseText;

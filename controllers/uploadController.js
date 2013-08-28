@@ -50,6 +50,8 @@ function removeAllAtMidnight() {
 
 	var timeUntilMidnight = midnight-now;
 	//timeUntilMidnight = 10 * 1000; // 10 sec
+
+       console.log(now, midnight);
 	
 	console.log("Call function in " + timeUntilMidnight/1000 + "sec");
 

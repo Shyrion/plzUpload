@@ -1,5 +1,5 @@
 var express 		= require('express');
-var utils			= require('./lib/utils');
+var utils		= require('./lib/utils');
 
 function setupMongoose(callback) {
 	var mongoose = require('mongoose');
@@ -41,7 +41,7 @@ function setupExpress(callback) {
 	app.locals.projectName = 'PlzUpload';
 
 	if ('development' == app.get('env')) {
-		app.set('port', 3000);
+		app.set('port', 3112);
 		//app.use(express.logger());
 	} else if ('production' == app.get('env')) {
 		app.set('port', 80);
@@ -62,5 +62,4 @@ setupMongoose(function() {
 			startServer(app);
 		});
 	});
-})
-	
+});
