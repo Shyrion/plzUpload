@@ -3,78 +3,102 @@
   src: url('../fonts/BeautifulEveryTime.ttf'); 
 }
 
+body
+{
+	width: 100%;
+	height: 100%;
+}
+
+html
+{
+	width: 100%;
+	height: 100%;
+}
+
 .container
 {
 	font-family: "BeautifulEveryTime";
-	text-align: center;
 }
 
-.form
+.upload
 {
-	max-width: 300px;
-	padding: 19px 29px 29px;
-	margin: 0 auto 20px;
-	background-color: #fff;
-	border: 1px solid #e5e5e5;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	box-shadow: 0 1px 2px rgba(0,0,0,.05);
-}
-.form .form-heading, .form .checkbox
-{
-	margin-bottom: 10px;
-}
-.form input[type="text"], .form input[type="password"] {
-	font-size: 16px;
-	height: auto;
-	margin-bottom: 15px;
-	padding: 7px 9px;
-}
-
-.flash
-{
-	border-radius: 3px;
-
-	font-weight: bold;
-	text-align: center;
-	margin: 10px auto;
-	padding: 10px;
+	display: none;
+	margin: auto;
+	width: 30%;
+	height: 30%;
 }
 
 #dropZone
 {
-	border: 10px lightgray dashed;
-
+	display: table;
 	margin: auto;
-	width: 200px;
-	height: 200px;
+	width: 80%;
+	height: 100%;
 }
 
-#flashError
+#dropZone > h3
 {
-	background: lightpink;
-	border: red 2px solid;
-}
-#flashWarn
-{
-	background: lightyellow;
-	border: yellow 2px solid;
-}
-#flashNotice
-{
-	background: lightgreen;
-	border: green 2px solid;
+	font-size: 20pt;
+	font-family: "BeautifulEveryTime";
+
+	display: table-cell;
+	vertical-align: middle;
 }
 
 #logo
 {
-	text-align: center;
+	height: 50%;
 }
 
-#register
+#smallUpLink
 {
-	display: none;
+	color: red;
+
+	position: absolute;
+	top: 5px;
+	left: 5%;
+
+	width: 90%;
+	height: 1em;
+}
+
+#smallUpLink:visited
+{
+	color: red;
+}
+
+.content
+{
+	width: 100%;
+	height: 97%;
+}
+
+.dragover
+{
+	color: green;
+	border: 5px lightgreen dashed;
+  transition: border 200ms;
+}
+
+.dragout
+{
+	color: #555;
+	border: 5px lightgray dashed;
+  transition: border 200ms;
+}
+
+.wh100
+{
+	width: 100%;
+	height: 100%;
+}
+
+.h50
+{
+	height: 50%;
+}
+
+.h100
+{
+	height: 100%;
 }
