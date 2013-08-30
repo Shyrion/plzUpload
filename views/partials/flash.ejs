@@ -1,11 +1,12 @@
-
 <% if (Object.keys(flash).length) { %>
 	<% Object.each(flash, function(flashType, key) { %>
-		<div class="flash" id="flash<%= key %>">
+		<div>
 			<% flashType.forEach(function(flashMessage) { %>
-				<%- flashMessage %>
+				<div class="alert">
+				  <button type="button" class="close" data-dismiss="alert">&times;</button>
+				  <%- flashMessage %>
+				</div>
 			<% }) %>
 		</div>
 	<% }) %>
-
 <% } %>

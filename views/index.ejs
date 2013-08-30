@@ -8,15 +8,17 @@
 </head>
 <body>
 
-    <div id="logo">
-        <img src="/images/logo.png" />
+    <div id="smallUpLink" class="text-right" >
+        <a href="/info"><small>What is it?</small></a>
     </div>
 
-    <div class="container">
+    <div class="content text-center">
 
         <% include partials/flash %>
-        
-        <div id="oldSchoolUpload">
+
+        <img id="logo" src="/images/logo.png" />
+
+        <div id="oldSchoolUpload" class="upload">
             <h1>Upload</h1>
 
             <form action="/upload" method="POST" enctype="multipart/form-data">
@@ -29,13 +31,16 @@
             </form>
         </div>
 
-        <div id="dropZone">
-
+        <div id="dropUpload" class="upload">
+            <div id="dropZone" class="dragout">
+                <h3>Plz upload something here !</h3>
+            </div>
         </div>
     </div>
 
     <script src="scripts/jquery-1.10.2.js"></script>
     <script src="scripts/bootstrap.js"></script>
+    <script src="scripts/DropZone.js"></script>
     <script src="scripts/dragDrop.js"></script>
 </body>
 </html>

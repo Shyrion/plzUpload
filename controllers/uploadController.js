@@ -21,26 +21,25 @@ exports.uploadFile = function(path, fileName, ip, req, res, callback) {
 	});
 }
 
-function purgeUploadFolder(callback) {
+exports.getAllUploadedFiles = getAllUploadedFiles = function(callback) {
+	fs.readdir(UPLOAD_DIR, function(err, files) {
+		if (err) console.log(err);
+
+		callback(err, files);
+	})
+}
+
+exports.purgeUploadFolder = purgeUploadFolder = function(callback) {
 	// Remove all entries from database
 	Upload.find({}).remove();
 
 	// Remove all local uploaded files
-	getAllUploadedFiles(function(allFiles) {
+	getAllUploadedFiles(function(err, allFiles) {
 		allFiles.forEach(function(file) {
 			fs.unlinkSync(UPLOAD_DIR + '/' + file);
 		});
 		callback(true);
 	});
-}
-exports.purgeUploadFolder = purgeUploadFolder;
-
-exports.getAllUploadedFiles = getAllUploadedFiles = function(callback) {
-	fs.readdir(UPLOAD_DIR, function(err, files) {
-		if (err) console.log(err);
-
-		callback(files);
-	})
 }
 
 function removeAllAtMidnight() {

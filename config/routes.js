@@ -11,9 +11,8 @@ module.exports = function(app, acl) {
 		res.render('index');
 	});
 
-
 	//=========================//
-	//========= MISC ==========//
+	//======== UPLOAD =========//
 	//=========================//
 
 	app.post('/upload', function(req, res) {
@@ -22,7 +21,7 @@ module.exports = function(app, acl) {
 				if (err) {
 					req.flash('Error', err.message);
 				} else {
-					var message = 'Accédez à l\'upload à cette url :<br /> <a href="%1">%2</a>';
+					var message = 'Accédez au fichier à cette url :<br /> <a href="%1">%2</a>';
 					message = message.replace('%1', uploadUrl).replace('%2', fullUrl);
 		  		req.flash('Notice', message);
 				}
@@ -41,8 +40,9 @@ module.exports = function(app, acl) {
 		});
 	});
 
-	app.get('/info', function(req, res) {
-		uploadController.getAllUploadedFiles(function(allFiles) {
+	app.get('/getAllUploads', function(req, res) {
+		uploadController.getAllUploadedFiles(function(err, allFiles) {
+			console.log(allFiles);
 			res.redirect('/');
 		})
 	});
@@ -54,9 +54,26 @@ module.exports = function(app, acl) {
 		})
 	});
 
+
+	//=========================//
+	//========= INFO ==========//
+	//=========================//
+
+
+	app.get('/info', function(req, res) {
+		uploadController.getAllUploadedFiles(function(allFiles) {
+			res.render('info');
+		})
+	});
+
+
 	app.get('/contact', function(req, res) {
 		res.render('contact');
 	});
+
+	//=========================//
+	//========= MISC ==========//
+	//=========================//
 
 	//=========================//
 	//========== 404 ==========//
