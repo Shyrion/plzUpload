@@ -19,11 +19,12 @@ module.exports = function(app, acl) {
 		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
 			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl) {
 				if (err) {
-					req.flash('Error', err.message);
+					req.flash('Error', 'Error', err.message);
 				} else {
-					var message = 'Accédez au fichier à cette url :<br /> <a href="%1">%2</a>';
+					var title = 'Upload successful';
+					var message = 'Access your file here: <a href="%1">%2</a>';
 					message = message.replace('%1', uploadUrl).replace('%2', fullUrl);
-		  		req.flash('Notice', message);
+		  		req.flash('Notice', title, message);
 				}
 				res.redirect('/');
 		});
@@ -33,7 +34,7 @@ module.exports = function(app, acl) {
 		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
 			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl) {
 				res.send({
-					error: err,
+					errorMessage: (err ? err.message : null),
 					uploadUrl: uploadUrl,
 					fullUrl: fullUrl
 				});

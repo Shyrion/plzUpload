@@ -1,12 +1,9 @@
 <% if (Object.keys(flash).length) { %>
-	<% Object.each(flash, function(flashType, key) { %>
-		<div>
-			<% flashType.forEach(function(flashMessage) { %>
-				<div class="alert">
-				  <button type="button" class="close" data-dismiss="alert">&times;</button>
-				  <%- flashMessage %>
-				</div>
-			<% }) %>
-		</div>
+	<% Object.each(flash, function(flash, key) { %>
+		<div class="w50 alert alert-block <%= flash.type %>">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <h4><%= flash.title %></h4>
+      <%- flash.message %>
+    </div>
 	<% }) %>
 <% } %>

@@ -33,16 +33,29 @@ var dropZone = new DropZone('dropZone', function(file) {
     }
 
     xhr.onreadystatechange=function() {
-        if (xhr.readyState==4 && xhr.status==200) {
-            var response = JSON.parse(this.responseText);
-            var uploadUrl = response.uploadUrl;
-            var fullUrl = response.fullUrl;
-            var flash = document.createElement("div");
-            flash.className = "alert";
-            var message = '<strong>Succès !</strong> Accédez au fichier à cette url :<br><a href="%1">%2</a>';
-            message = message.replace('%1', uploadUrl).replace('%2', fullUrl);
-            flash.innerHTML = message;
-            $('body').prepend(flash);
+        if (xhr.readyState==4) {
+            if (xhr.status==200) {
+                var response = JSON.parse(this.responseText);
+
+                if (response.errorMessage) {
+                    var title = 'Error';
+                    var message = response.errorMessage;
+                
+                    new FlashMessage('error', title, message);
+                } else {
+
+                    var uploadUrl = response.uploadUrl;
+                    var fullUrl = response.fullUrl;
+                    
+                    var title = 'Upload successful';
+                    var message = 'Access your file here: <a href="%1">%2</a>';
+                    message = message.replace('%1', uploadUrl).replace('%2', fullUrl);
+                
+                    new FlashMessage('success', title, message);
+                }
+            } else {
+                new FlashMessage('error', 'Erf...', "Something has gone wrong...");
+            }
         }
     }
 

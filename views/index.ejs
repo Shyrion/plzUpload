@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title ? title : "Events" %></title>
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title><%= title ? title : "Plz Upload" %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-sup.css" />
 </head>
 <body>
 
+    <div id="getImageInput">
+        <input id="getUploadField" type="text" placeholder="abcde.jpg" />
+        <input id="getUploadButton" type="button" value="Récupérer" />
+    </div>
+
     <div id="smallUpLink" class="text-right" >
         <a href="/info"><small>What is it?</small></a>
     </div>
 
-    <div class="content text-center">
+    <div id="content" class="content text-center">
 
         <% include partials/flash %>
 
@@ -40,7 +45,14 @@
 
     <script src="scripts/jquery-1.10.2.js"></script>
     <script src="scripts/bootstrap.js"></script>
+    <script src="scripts/FlashMessage.js"></script>
     <script src="scripts/DropZone.js"></script>
     <script src="scripts/dragDrop.js"></script>
+
+    <script type="text/javascript">
+        $('#getUploadButton').click(function() {
+            document.location.href = location.protocol + "//" + location.hostname + ":" + location.port + "/" + $('#getUploadField').val();
+        });
+    </script>
 </body>
 </html>

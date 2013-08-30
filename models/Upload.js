@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 
 var UploadSchema = new Schema({
 	ip: String,
-	ext: String
+	ext: String,
+	name: String
 });
 
 var Upload = mongoose.model('Uploads', UploadSchema);

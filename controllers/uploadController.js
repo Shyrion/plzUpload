@@ -1,24 +1,70 @@
 var fs = require('fs');
 var Upload = require('../models/Upload');
+var ObjectID = require('mongodb').ObjectID;
 
 var UPLOAD_DIR = __dirname + "/../public/upload"
+var MAX_UPLOAD = 10;
+var ID_LENGTH = 5;
+
+var syllables = ['a', 'za', 'ra', 'ta', 'ya', 'pa', 'qa', 'sa', 'da', 'fa', 'ga', 'ja', 'ka', 'la',
+	'ma', 'wa', 'xa', 'ca', 'va', 'ba', 'na',
+	'e', 'ze', 're', 'te', 'ye', 'pe', 'qe', 'se', 'de', 'fe', 'ge', 'je', 'ke', 'le',
+	'me', 'we', 'xe', 'ce', 've', 'be', 'ne',
+	'i', 'zi', 'ri', 'ti', 'yi', 'pi', 'qi', 'si', 'di', 'fi', 'gi', 'ji', 'ki', 'li',
+	'mi', 'wi', 'xi', 'ci', 'vi', 'bi', 'ni',
+	'o', 'zo', 'ro', 'to', 'yo', 'po', 'qo', 'so', 'do', 'fo', 'go', 'jo', 'ko', 'lo',
+	'mo', 'wo', 'xo', 'co', 'vo', 'bo', 'no',
+	'u', 'zu', 'ru', 'tu', 'yu', 'pu', 'qu', 'su', 'du', 'fu', 'gu', 'ju', 'ku', 'lu',
+	'mu', 'wu', 'xu', 'cu', 'vu', 'bu', 'nu',
+	'ou', 'zou', 'rou', 'tou', 'you', 'pou', 'qou', 'sou', 'dou', 'fou', 'gou', 'jou', 'kou', 'lou',
+	'mou', 'wou', 'xou', 'cou', 'vou', 'bou', 'nou'
+
+];
+
+function generateName() {
+	var name = '';
+
+	allSyllableLength = syllables.length;
+
+	while(name.length < ID_LENGTH) {
+		name += syllables[Math.floor(Math.random()*allSyllableLength)];
+	}
+
+	return name;
+}
+
+function checkIP(ip, callback) {
+	Upload.count({ip: ip}, function(err, number) {
+		callback(err, number<MAX_UPLOAD);
+	});
+}
 
 exports.uploadFile = function(path, fileName, ip, req, res, callback) {
-	var fileExtension = fileName.split('.')[fileName.split('.').length-1];
-	fs.readFile(path, function (err, data) {
-	  var up = new Upload({
-	  	ip: req.connection.remoteAddress,
-	  	ext: fileExtension
-	  });
-	  var newPath = __dirname + "/../public/upload/" + up._id + "." + fileExtension;
-	  up.save(function(err, result) {
-	  	fs.writeFile(newPath, data, function (err) {
-		  	var uploadUrl = '/' + up._id + "." + fileExtension;
-		  	var fullUrl = req.headers.host + uploadUrl;
-				callback(err, uploadUrl, fullUrl);
-		  });
-	  });
+
+	checkIP(ip, function(err, result) {
+		if (err || result) {
+			var fileExtension = fileName.split('.')[fileName.split('.').length-1];
+			fs.readFile(path, function (err, data) {
+			  var up = new Upload({
+			  	name: generateName(),
+			  	ip: req.connection.remoteAddress,
+			  	ext: fileExtension
+			  });
+			  var newPath = __dirname + "/../public/upload/" + up.name + "." + fileExtension;
+			  up.save(function(err, result) {
+			  	fs.writeFile(newPath, data, function (err) {
+				  	var uploadUrl = '/' + up.name + "." + fileExtension;
+				  	var fullUrl = req.headers.host + uploadUrl;
+						callback(err, uploadUrl, fullUrl);
+				  });
+			  });
+			});
+		} else {
+			var err = new Error('You have reached your quota for today :). Come back tomorrow !');
+			callback(err, null, null);
+		}
 	});
+
 }
 
 exports.getAllUploadedFiles = getAllUploadedFiles = function(callback) {
