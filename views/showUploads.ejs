@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title ? title : "Plz Upload" %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-sup.css" />
+    <link href="stylesheets/bootstrap-responsive.css" rel="stylesheet">
+</head>
+<body>
+
+    <ul>
+        <% allFileNames.forEach(function(fileName) { %>
+            <li><a href="/<%= fileName %>"><%= fileName %></a></li>
+        <% }) %>
+    </ul>
+
+    <script src="scripts/jquery-1.10.2.js"></script>
+    <script src="scripts/bootstrap.js"></script>
+</body>
+</html>

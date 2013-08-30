@@ -43,8 +43,8 @@ module.exports = function(app, acl) {
 
 	app.get('/getAllUploads', function(req, res) {
 		uploadController.getAllUploadedFiles(function(err, allFiles) {
-			console.log(allFiles);
-			res.redirect('/');
+			console.log(allFiles,allFiles.length);
+			res.render('showUploads', {allFileNames: allFiles});
 		})
 	});
 
