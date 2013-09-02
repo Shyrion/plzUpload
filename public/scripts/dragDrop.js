@@ -10,6 +10,16 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
 var dropZone = new DropZone('dropZone', function(file) {
 
+    (function ($) {
+
+        $.fn.getWidthInPercent = function () {
+            var width = parseFloat($(this).css('width'))/parseFloat($(this).parent().css('width'));
+            return Math.round(100*width);
+        };
+
+    })(jQuery);
+
+    var firstPartProgress = $('#firstPart');
     var xhr = new XMLHttpRequest();
     xhr.open('POST', location.href + 'uploadAjax');
 
@@ -26,10 +36,19 @@ var dropZone = new DropZone('dropZone', function(file) {
     };
 
     xhr.upload.onprogress = function(event) {
+        progression = event.loaded/event.total*100;
+
+        if (firstPartProgress.getWidthInPercent()>=100) {
+            firstPartProgress.removeClass('active');
+        } else {
+            firstPartProgress.width(progression+'%');
+        }
     }
+
 
     xhr.upload.onloadstart = function(event) {
         console.log("load start");
+        $('#overlay').show();
     }
 
     xhr.onreadystatechange=function() {
@@ -56,6 +75,7 @@ var dropZone = new DropZone('dropZone', function(file) {
             } else {
                 new FlashMessage('error', 'Erf...', "Something has gone wrong...");
             }
+            $('#overlay').hide();
         }
     }
 
@@ -63,4 +83,4 @@ var dropZone = new DropZone('dropZone', function(file) {
     var formData = new FormData();
     formData.append('uploadedFile', file);
     xhr.send(formData);
-}, function(val) {console.log(val)});
+});

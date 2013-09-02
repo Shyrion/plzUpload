@@ -55,7 +55,8 @@ exports.uploadFile = function(path, fileName, ip, req, res, callback) {
 			  	fs.writeFile(newPath, data, function (err) {
 				  	var uploadUrl = '/' + up.name + "." + fileExtension;
 				  	var fullUrl = req.headers.host + uploadUrl;
-						callback(err, uploadUrl, fullUrl);
+				  	var uploadCode = up.name;
+						callback(err, uploadUrl, fullUrl, uploadCode);
 				  });
 			  });
 			});

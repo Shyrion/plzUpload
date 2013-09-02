@@ -3,11 +3,16 @@ var utils		= require('./lib/utils');
 
 function setupMongoose(callback) {
 	var mongoose = require('mongoose');
-	mongoose.connect('mongodb://localhost/plzUpload', function() {
-		mongoose.connection.on('error', function(err, a) {
-			console.log(err, a);
-		});
-		if (callback) callback(mongoose);
+	mongoose.connect('mongodb://localhost/plzUpload', function(err) {
+		if (err) {
+			console.log("COULD NOT START SERVER : ", err);
+			process.exit(0);
+		} else {
+			mongoose.connection.on('error', function(err, a) {
+				console.log(err, a);
+			});
+			if (callback) callback(mongoose);
+		}
 	});
 }
 

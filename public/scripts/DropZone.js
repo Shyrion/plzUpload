@@ -1,4 +1,4 @@
-var DropZone = function (id, onDropCallback, onProgressCallback) {
+var DropZone = function (id, onDropCallback) {
 
     this.dropElement = document.getElementById('dropZone');
     this.fileToUpload = null;
@@ -48,13 +48,6 @@ var DropZone = function (id, onDropCallback, onProgressCallback) {
     }
     this.dropElement.addEventListener('drop', onDrop, false);
 
-    // mise à jour de la progression
-    function onProgress(event) {
-        this.progress += event.loaded;
-        if (onProgressCallback) onProgressCallback(this.progress);
-    }
-
-    // traitement du lot de fichiers
     function processFile(file, callback) {
         if (!file) return;
 

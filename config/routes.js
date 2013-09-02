@@ -17,13 +17,13 @@ module.exports = function(app, acl) {
 
 	app.post('/upload', function(req, res) {
 		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
-			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl) {
+			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl, uploadCode) {
 				if (err) {
 					req.flash('Error', 'Error', err.message);
 				} else {
 					var title = 'Upload successful';
-					var message = 'Access your file here: <a href="%1">%2</a>';
-					message = message.replace('%1', uploadUrl).replace('%2', fullUrl);
+					var message = 'Give this code to your friend for download: <a href="%1">%2</a>';
+					message = message.replace('%1', uploadUrl).replace('%2', uploadCode);
 		  		req.flash('Notice', title, message);
 				}
 				res.redirect('/');
@@ -31,6 +31,7 @@ module.exports = function(app, acl) {
 	});
 
 	app.post('/uploadAjax', function(req, res) {
+		console.log(req.files.uploadedFile);
 		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
 			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl) {
 				res.send({
@@ -40,6 +41,21 @@ module.exports = function(app, acl) {
 				});
 		});
 	});
+
+
+
+
+/////µµµµµµµµµµ TODO : Empêcher upload vides quand input + Récupérer vide.
+/////////////       Test fichier sans extension
+
+
+
+
+
+
+
+
+
 
 	app.get('/getAllUploads', function(req, res) {
 		uploadController.getAllUploadedFiles(function(err, allFiles) {
