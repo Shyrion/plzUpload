@@ -16,6 +16,7 @@ module.exports = function(app, acl) {
 	//=========================//
 
 	app.post('/upload', function(req, res) {
+		console.log(req.files.uploadedFile.path);
 		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
 			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl, uploadCode) {
 				if (err) {

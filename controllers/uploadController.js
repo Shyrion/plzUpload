@@ -45,6 +45,7 @@ exports.uploadFile = function(path, fileName, ip, req, res, callback) {
 		if (err || result) {
 			var fileExtension = fileName.split('.')[fileName.split('.').length-1];
 			fs.readFile(path, function (err, data) {
+				console.log("FINISHED READFILE", err, data);
 			  var up = new Upload({
 			  	name: generateName(),
 			  	ip: req.connection.remoteAddress,
@@ -52,7 +53,9 @@ exports.uploadFile = function(path, fileName, ip, req, res, callback) {
 			  });
 			  var newPath = __dirname + "/../public/upload/" + up.name + "." + fileExtension;
 			  up.save(function(err, result) {
+					console.log("FINISHED SAVE", err, result);
 			  	fs.writeFile(newPath, data, function (err) {
+						console.log("FINISHED WRITEFILE", err);
 				  	var uploadUrl = '/' + up.name + "." + fileExtension;
 				  	var fullUrl = req.headers.host + uploadUrl;
 				  	var uploadCode = up.name;
