@@ -38,6 +38,8 @@ var dropZone = new DropZone('dropZone', function(file) {
     xhr.upload.onprogress = function(event) {
         progression = event.loaded/event.total*100;
 
+        console.log(progression);
+
         if (firstPartProgress.getWidthInPercent()>=100) {
             firstPartProgress.removeClass('active');
         } else {
