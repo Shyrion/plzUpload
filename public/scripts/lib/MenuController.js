@@ -17,6 +17,8 @@ define([], function(UploadProgress) {
   		win.focus();
     });
 
+		this.facebookDiv = $('#facebookLogin');
+
 	  this.allUploads = {};
 	}
 
@@ -35,11 +37,11 @@ define([], function(UploadProgress) {
 
 	MenuController.prototype.open = function open() {
 		$('#mainContent').animate({
-			right: "202",
+			right: "187",
 			queue: false
 		});
 		$('#menu').animate({
-			right: "0",
+			right: "-16",
 			queue: false
 		});
 		this.opened = true;
@@ -56,6 +58,8 @@ define([], function(UploadProgress) {
 		});
 		this.opened = false;
 	}
+
+	//===== Uploads =====//
 
 	MenuController.prototype.addUpload = function addUpload(fileInfo) {
 		var uploadHtml = $('<div class="upload">' +
@@ -81,6 +85,22 @@ define([], function(UploadProgress) {
 
 	MenuController.prototype.onUploadFailed = function onUploadFailed(uploadDiv) {
 		uploadDiv.remove();
+	}
+
+	//===== Facebook Login =====//
+
+	MenuController.prototype.addFacebookLogin = function addFacebookLogin(isLoggedIn, callback) {
+		if (isLoggedIn) {
+
+		}
+	}
+
+	MenuController.prototype.onFBLogin = function onFBLogin(usename) {
+		this.facebookDiv.hide();
+	}
+
+	MenuController.prototype.onFBLogout = function onFBLogout() {
+		this.facebookDiv.show();
 	}
 
 	return MenuController;

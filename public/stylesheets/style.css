@@ -177,25 +177,69 @@ a.button:visited
 	padding-bottom: 10px;
 }
 
-
-.menuItem
+.menuItemGroup .speech, .menuItemGroup ul
 {
-	height: 50px;
+	font-size: 10pt;
+	padding: 0px;
 }
 
-.menuItem:hover
+.menuItemGroup li
 {
-	background-color: #555;
+	border-top: 1px solid #555;
+	background-color: blue;
+
+	list-style-type: none;
+	text-align: center;
+	font-size: 9pt;
+	font-weight: bold;
+	line-height: 40px;
+
+	padding: 0px;
+	width: 185px;
+	height: 40px;
 }
 
-.menuItem.clickable
+.menuItemGroup li.first
 {
-	cursor: pointer;
+	background-color: rgb(178, 178, 255);
+	color: #333;
+}
+
+.menuItemGroup li.second
+{
+	background-color: rgb(255, 126, 126);
+	color: #333;
+}
+
+.menuItemGroup li.third
+{
+	background-color: rgb(136, 255, 212);
+	color: #333;
+	border-bottom: 1px solid #555;
 }
 
 #getFile
 {
 	overflow: hidden;
+}
+
+#FBLogin::before
+{
+	content: url('/images/logoFB25.png');
+
+	vertical-align: -20%;
+
+	margin-right: 5px;
+}
+
+#FBLogin
+{
+	cursor: pointer;
+}
+
+#FBLogin:hover
+{
+	background-color: #555;
 }
 
 /*====== Uploads ======*/
