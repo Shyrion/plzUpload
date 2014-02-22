@@ -70,8 +70,6 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 							var fullUrl = response.fullUrl;
 							var uploadCode = response.uploadCode;
 
-							console.log(response);
-
 							/*var title = 'Upload successful';
 							var message = 'Access your file here: <a href="%1">%2</a>';
 							message = message.replace('%1', uploadUrl).replace('%2', fullUrl);*/
