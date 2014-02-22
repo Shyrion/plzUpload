@@ -75,7 +75,7 @@ define([], function(UploadProgress) {
 		uploadDiv.append(finishHtml);
 	}
 
-	MenuController.prototype.onUploadFailed = function onUploadFailed() {
+	MenuController.prototype.onUploadFailed = function onUploadFailed(uploadDiv) {
 		uploadDiv.remove();
 	}
 

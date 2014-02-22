@@ -38,7 +38,7 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 			xhr.onerror = function() {
 				console.log("error");
 
-				menuController.onUploadFailed();
+				menuController.onUploadFailed(uploadItemHtml);
 			};
 
 			xhr.upload.onprogress = function(event) {
@@ -61,7 +61,7 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 						if (response.errorMessage) {
 							var title = 'Error';
 							var message = response.errorMessage;
-							menuController.onUploadFailed();
+							menuController.onUploadFailed(uploadItemHtml);
 							//new FlashMessage('error', title, message);
 						} else {
 							var uploadUrl = response.uploadUrl;
