@@ -33,14 +33,12 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 
 			xhr.onload = function() {
 				console.log("load", newUpload);
-				//result.innerHTML += this.responseText;
-				//handleComplete(file.size);
 			};
 
 			xhr.onerror = function() {
 				console.log("error");
-				//result.textContent = this.responseText;
-				//handleComplete(file.size);
+
+				menuController.onUploadFailed();
 			};
 
 			xhr.upload.onprogress = function(event) {
@@ -63,7 +61,7 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 						if (response.errorMessage) {
 							var title = 'Error';
 							var message = response.errorMessage;
-
+							menuController.onUploadFailed();
 							//new FlashMessage('error', title, message);
 						} else {
 							var uploadUrl = response.uploadUrl;
