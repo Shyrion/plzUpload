@@ -90,6 +90,7 @@ define(['lib/CrispyPear/CPSprite'], function(CPSprite) {
 
   Glooty.prototype.setAnimation = function setAnimation(animation) {
 		this.currentSprite.start(animation);
+		this.currentSprite.x = (600-this.currentSprite.currentSequence.frameSize.w)/2;
   }
 
 	return Glooty;

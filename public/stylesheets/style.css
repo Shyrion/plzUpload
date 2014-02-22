@@ -246,6 +246,7 @@ a.button:visited
 /*==================*/
 /*====== Main ======*/
 /*==================*/
+
 #mainContent
 {
 	background: white;
@@ -263,9 +264,15 @@ a.button:visited
 	text-align: center;
 
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
-	margin: -200px 0px 0px -250px;
+	margin: -200px 0px 0px -300px;
+}
+
+#centeredZone > *
+{
+	display: block;
+	margin: auto;
 }
 
 #glooty
