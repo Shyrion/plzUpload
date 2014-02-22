@@ -126,6 +126,7 @@ a.button:visited
 	position: absolute;
 	top: 0;
 	right: -202px;
+	overflow-y: scroll;
 
 	width: 200px;
 	height: 100%;
@@ -163,6 +164,7 @@ a.button:visited
 	margin-bottom: 50px;
 	width: 100%;
 }
+
 .menuItemGroup .title
 {
 	display: block;
@@ -189,6 +191,11 @@ a.button:visited
 .menuItem.clickable
 {
 	cursor: pointer;
+}
+
+#getFile
+{
+	overflow: hidden;
 }
 
 /*====== Uploads ======*/
@@ -232,6 +239,10 @@ a.button:visited
 	border: solid 1px yellow;
 }
 
+.upload a
+{
+	color: #F7F7F7;
+}
 /*==================*/
 /*====== Main ======*/
 /*==================*/

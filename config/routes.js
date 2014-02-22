@@ -34,11 +34,12 @@ module.exports = function(app, acl) {
 	app.post('/uploadAjax', function(req, res) {
 		console.log(req.files.uploadedFile);
 		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
-			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl) {
+			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl, uploadCode) {
 				res.send({
 					errorMessage: (err ? err.message : null),
 					uploadUrl: uploadUrl,
-					fullUrl: fullUrl
+					fullUrl: fullUrl,
+					uploadCode: uploadCode
 				});
 		});
 	});

@@ -9,16 +9,24 @@ define([], function(UploadProgress) {
 
 		$('#menuButton').click(function() {
 			this.opened ? this.close() : this.open();
-			this.opened = !this.opened;
 		}.bind(this));
 
-		$('#getUploadButton').click(function() {
-    	var fileUrl = location.protocol + "//" + location.hostname + ":" + location.port + "/" + $('#getUploadField').val();
-    	var win=window.open(fileUrl, '_blank');
-  		win.focus();
-    });
+		this.bindUploadOnClick($('#getUploadButton'), $('#getUploadField').val());
 
 	  this.allUploads = {};
+	}
+
+	MenuController.prototype.bindUploadOnClick = function bindUploadOnClick(element, uploadCode) {
+  	element.click(function() {
+    	var fileUrl = location.protocol + "//" + location.hostname + ":" + location.port + "/" + uploadCode;
+    	var win = window.open(fileUrl, '_blank');
+  		win.focus();
+  		return false;
+    });
+	}
+
+	MenuController.prototype.isOpened = function isOpened() {
+		return this.opened;
 	}
 
 	MenuController.prototype.open = function open() {
@@ -30,6 +38,7 @@ define([], function(UploadProgress) {
 			right: "0",
 			queue: false
 		});
+		this.opened = true;
 	}
 
 	MenuController.prototype.close = function close() {
@@ -41,6 +50,7 @@ define([], function(UploadProgress) {
 			right: "-202",
 			queue: false
 		});
+		this.opened = false;
 	}
 
 	MenuController.prototype.addUpload = function addUpload(fileInfo) {
@@ -53,6 +63,16 @@ define([], function(UploadProgress) {
     '</div>');
     this.menuUploadsDiv.append(uploadHtml);
     return uploadHtml;
+	}
+
+	MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv, name, url) {
+		$('.progress', uploadDiv).remove();
+
+		var finishHtml = $('<div><span><strong>Finished!</strong> (<a href="' + url + '">' + name + '</a>)</span></div>');
+
+		this.bindUploadOnClick($('a', finishHtml), name);
+
+		uploadDiv.append(finishHtml);
 	}
 
 	return MenuController;

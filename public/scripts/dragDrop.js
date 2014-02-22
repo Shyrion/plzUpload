@@ -51,8 +51,9 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 
 			xhr.upload.onloadstart = function(event) {
 				console.log("load start");
-				$('#overlay').show();
-			}
+
+				if (!this.menuController.isOpened()) this.menuController.open();
+			}.bind(this);
 
 			xhr.onreadystatechange=function() {
 				if (xhr.readyState==4) {
@@ -60,30 +61,34 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 						var response = JSON.parse(this.responseText);
 
 						if (response.errorMessage) {
-						var title = 'Error';
-						var message = response.errorMessage;
+							var title = 'Error';
+							var message = response.errorMessage;
 
-						//new FlashMessage('error', title, message);
+							//new FlashMessage('error', title, message);
+						} else {
+							var uploadUrl = response.uploadUrl;
+							var fullUrl = response.fullUrl;
+							var uploadCode = response.uploadCode;
+
+							console.log(response);
+
+							/*var title = 'Upload successful';
+							var message = 'Access your file here: <a href="%1">%2</a>';
+							message = message.replace('%1', uploadUrl).replace('%2', fullUrl);*/
+
+							menuController.onUploadFinished(uploadItemHtml, uploadCode, fullUrl);
+
+							console.log(newUpload);
+							//new FlashMessage('success', title, message);
+						}
 					} else {
-						var uploadUrl = response.uploadUrl;
-						var fullUrl = response.fullUrl;
-
-						var title = 'Upload successful';
-						var message = 'Access your file here: <a href="%1">%2</a>';
-						message = message.replace('%1', uploadUrl).replace('%2', fullUrl);
-
-						console.log(newUpload);
-						//new FlashMessage('success', title, message);
-					}
-				} else {
 					//new FlashMessage('error', 'Erf...', "Something has gone wrong...");
+					}
+					$('#overlay').hide();
 				}
-				$('#overlay').hide();
 			}
-		}
-
-		// création de l'objet FormData
-		var formData = new FormData();
+			// création de l'objet FormData
+			var formData = new FormData();
 			formData.append('uploadedFile', file);
 			xhr.send(formData);
 		}.bind(this));
