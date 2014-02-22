@@ -3,62 +3,47 @@
 <head>
     <title><%= title ? title : "Plz Upload" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-sup.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 </head>
 <body>
 
-    <div id="overlay">
+   <!--  <div id="overlay">
         <div id="progressBar" class="progress progress-striped active">
           <div id="firstPart" class="bar bar-success" style="width: 0%;"></div>
         </div>
-    </div>
+    </div> -->
 
-    <div id="getImageInput">
-        <input id="getUploadField" type="text" placeholder="abcde.jpg" />
-        <input id="getUploadButton" type="button" value="Récupérer" />
-    </div>
-
-    <div id="smallUpLink" class="text-right" >
+    <div id="aboutLink">
         <a href="/info"><small>What is it?</small></a>
     </div>
 
-    <div id="content" class="content text-center">
-
-        <% include partials/flash %>
-
-        <img id="logo" src="/images/logo.png" />
-
-        <div id="oldSchoolUpload" class="upload">
-            <h1>Upload</h1>
-
-            <form action="/upload" method="POST" enctype="multipart/form-data">
-                <div>
-                    <input type="file" name="uploadedFile" />
-                </div>
-                <div>
-                <input type="submit" value="Upload" />
-                </div>
-            </form>
+    <div id="mainContent" class="text-center">
+        <div id="menuButton">
+            <img src="/images/iconMenu.png" width="40" height="40">
         </div>
 
-        <div id="dropUpload" class="upload">
-            <div id="dropZone" class="dragout">
-                <h3>Plz upload something here !</h3>
-            </div>
+        <div id="centeredZone">
+            <img id="glooty" src="/images/logo.png" />
         </div>
+
     </div>
 
-    <script src="scripts/jquery-1.10.2.js"></script>
-    <script src="scripts/bootstrap.js"></script>
-    <script src="scripts/FlashMessage.js"></script>
-    <script src="scripts/DropZone.js"></script>
-    <script src="scripts/dragDrop.js"></script>
+    <nav id="menu">
+        <div class="menuItemGroup">
+            <span class="title">Get a file</span>
+            <div id="getFile" class="textCenter">
+                <input id="getUploadField" class="textCenter" type="text" placeholder="Enter file code" />
+                <a id="getUploadButton" class="button" href="javascript:void(0)">Get it!</a>
+            </div>
+        </div>
 
-    <script type="text/javascript">
-        $('#getUploadButton').click(function() {
-            document.location.href = location.protocol + "//" + location.hostname + ":" + location.port + "/" + $('#getUploadField').val();
-        });
-    </script>
+        <div id="menuUploads" class="menuItemGroup">
+            <span class="title">Uploads</span>
+        </div>
+    </nav>
+
+    <script src="scripts/lib/require.js"></script>
+    <script src="scripts/plzupload.js"></script>
+
 </body>
 </html>
