@@ -273,7 +273,7 @@ a.button:visited
 
 }
 
-.dragover
+/*.dragover
 {
 	color: green;
 	filter: blur(2px);
@@ -285,7 +285,7 @@ a.button:visited
 {
 	color: #555;
   transition: border 200ms;
-}
+}*/
 
 .textCenter
 {

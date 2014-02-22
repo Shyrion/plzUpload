@@ -7,6 +7,7 @@ define([], function() {
 	}
 
 	UploadProgress.prototype.setProgress = function setProgress(newProgress) {
+		//TODO: add smooth
 		this.progressBar.attr('value', newProgress);
 		this.progressValue.html(newProgress + "%");
 	}

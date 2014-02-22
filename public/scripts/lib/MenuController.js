@@ -11,7 +11,11 @@ define([], function(UploadProgress) {
 			this.opened ? this.close() : this.open();
 		}.bind(this));
 
-		this.bindUploadOnClick($('#getUploadButton'), $('#getUploadField').val());
+		$('#getUploadButton').click(function() {
+    	var fileUrl = location.protocol + "//" + location.hostname + ":" + location.port + "/" + $('#getUploadField').val();
+    	var win = window.open(fileUrl, '_blank');
+  		win.focus();
+    });
 
 	  this.allUploads = {};
 	}
