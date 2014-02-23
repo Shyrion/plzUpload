@@ -7,13 +7,7 @@
 define([], function() {
 	var FacebookManager = function() {
 
-		this.currentUser = {
-			id: null,
-			avatar: null,
-			token: null,
-			permissions: [],
-			pages: []
-		}
+		this.currentUser = {};
 
 		this.appId = '';
 		this.channelUrl = '';
@@ -26,6 +20,17 @@ define([], function() {
 		this.onLoginStatusNotAuthorizedCB = null;
 		this.onLoginStatusNotConnectedCB = null;
 
+		this.resetCurrentUser = function() {
+			this.currentUser = {
+				id: null,
+				avatar: null,
+				token: null,
+				permissions: [],
+				pages: []
+			}
+		}
+
+		this.resetCurrentUser();
 
 		/**
 		* Set the authorisation the user already granted for this app
@@ -150,21 +155,28 @@ define([], function() {
 		}
 
 		/**
-		* Logout from the app only (invalidate token). User is still logged on facebook.com
+		* Logout from the app only (deauthorize permissions, in fact). User is still logged on facebook.com
 		*
 		* @param {Function} callback A callback function to be called when response is got
 		*
 		* @return nothing
 		*/
-		this.logout = function(callback) { // Does not work.
-			console.log('TOKEN', this.currentUser.token);
-			var expireTokenUrl = 'https://api.facebook.com/restserver.php?method=auth.expireSession& ' +
-													'format=json&access_token=' + this.currentUser.token;
-			$.ajax(expireTokenUrl, {
-	        type: 'GET',
+		this.logout = function(callback) {
+			/*var expireTokenUrl = 'https://api.facebook.com/restserver.php?method=auth.expireSession& ' +
+													'format=json&access_token=' + this.currentUser.token;*/
+			// The above method do not work, it seems
+
+			var permissionsUrl = 'https://graph.facebook.com/me/permissions?access_token=' +
+													this.currentUser.token;
+
+			$.ajax(permissionsUrl, {
+	        type: 'DELETE',
 	        complete: function(result) {
-	            callback(result.status == 200);
-	        }
+            if (result.responseText == "true" && result.statusText == "OK") {
+            	this.resetCurrentUser();
+            }
+            if (callback) callback(result.responseText == "true" && result.statusText == "OK");
+	        }.bind(this)
 	    });
 		}
 
@@ -198,6 +210,7 @@ define([], function() {
 			        	var resultJSON = JSON.parse(result.responseText);
 			        	if (resultJSON.result == 'ok') {
 			        		// TODO : display success message
+	            		this.currentUser = null;
 									if (callback) callback(true);
 			        	} else {
 			        		// TODO : display error message
@@ -536,43 +549,3 @@ define([], function() {
 
 	return FacebookManager;
 });
-
-/*// Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
-function getBase64Image(img) {
-    // Create an empty canvas element
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    // Copy the image contents to the canvas
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-
-    // Get the data-URL formatted image
-    // Firefox supports PNG and JPEG. You could check img.src to guess the
-    // original format, but be aware the using "image/jpg" will re-encode the image.
-    var dataURL = canvas.toDataURL("image/png");
-
-    return dataURL;//.replace(/^data:image\/(png|jpg);base64,/, "");
-}
-
-function getBase64FromImageUrl(URL) {
-    var img = new Image();
-    img.src = URL;
-    img.onload = function () {
-
-
-    var canvas = document.createElement("canvas");
-    canvas.width =this.width;
-    canvas.height =this.height;
-
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(this, 0, 0);
-
-
-    var dataURL = canvas.toDataURL("image/png");
-
-    console.log(dataURL.replace(/^data:image\/(png|jpg);base64,/, "").substring(0, 20));
-
-    }
-}*/

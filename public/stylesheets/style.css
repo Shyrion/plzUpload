@@ -10,6 +10,11 @@
     cursor: help;
 }
 
+a
+{
+	text-decoration: none;
+}
+
 body
 {
 	font-family: "Helvetica" Arial;
@@ -172,6 +177,7 @@ a.button:visited
 	text-align: center;
 	font-size: 16pt;
 	/*text-indent: 28px;*/
+	line-height: 20px;
 
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -181,6 +187,12 @@ a.button:visited
 {
 	font-size: 10pt;
 	padding: 0px;
+	margin: 0px;
+}
+
+.menuItemGroup .speech
+{
+	padding-bottom: 10px;
 }
 
 .menuItemGroup li
@@ -223,16 +235,21 @@ a.button:visited
 	overflow: hidden;
 }
 
-#FBLogin::before
+#FBLogin::before, #FBLogout::before
 {
-	content: url('/images/logoFB25.png');
+	content: url('/images/logoFBLogin25.png');
 
 	vertical-align: -20%;
 
 	margin-right: 5px;
 }
 
-#FBLogin
+#FBLogout::before
+{
+	content: url('/images/logoFBLogout25.png');
+}
+
+#FBLogin, #FBLogout
 {
 	cursor: pointer;
 }
@@ -250,13 +267,20 @@ a.button:visited
 	padding: 10px 5px;
 }
 
+.upload .uploadName
+{
+	font-weight: bold;
+	font-size: 11pt;
+}
+
 .upload progress
 {
 	background-color: blue;
 	border: solid 1px green;
 
+	margin-right: 7px;
 	height: 20px;
-	width: 150px;
+	width: 130px;
 }
 
 .upload progress-bar

@@ -5,6 +5,7 @@ define([], function(UploadProgress) {
 		this.menuButton = $('#menuButton');
 		this.menuDiv = $('#menu');
 		this.menuUploadsDiv = $('#menuUploads');
+		this.menuUploadsSpeech = $('.speech', this.menuUploadsDiv);
 		this.opened = false;
 
 		$('#menuButton').click(function() {
@@ -17,7 +18,9 @@ define([], function(UploadProgress) {
   		win.focus();
     });
 
-		this.facebookDiv = $('#facebookLogin');
+		this.facebookLoginDiv = $('#facebookLogin');
+		this.facebookLogoutDiv = $('#facebookLogout');
+		this.facebookLogoutDiv.hide();
 
 	  this.allUploads = {};
 	}
@@ -62,6 +65,9 @@ define([], function(UploadProgress) {
 	//===== Uploads =====//
 
 	MenuController.prototype.addUpload = function addUpload(fileInfo) {
+		// Hide speech if visible
+		this.menuUploadsSpeech.hide();
+
 		var uploadHtml = $('<div class="upload">' +
         '<span class="uploadName">' + fileInfo.name + '</span>' +
         '<div class="progress">' +
@@ -76,7 +82,7 @@ define([], function(UploadProgress) {
 	MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv, name, url) {
 		$('.progress', uploadDiv).remove();
 
-		var finishHtml = $('<div><span><strong>Finished!</strong> (<a href="' + url + '">' + name + '</a>)</span></div>');
+		var finishHtml = $('<div><span><strong>Finished!</strong> (Code: <a href="' + url + '">' + name + '</a>)</span></div>');
 
 		this.bindUploadOnClick($('a', finishHtml), name);
 
@@ -85,6 +91,10 @@ define([], function(UploadProgress) {
 
 	MenuController.prototype.onUploadFailed = function onUploadFailed(uploadDiv) {
 		uploadDiv.remove();
+
+		if (!$('.upload', this.menuUploadsDiv).length) {
+			this.menuUploadsSpeech.show();
+		}
 	}
 
 	//===== Facebook Login =====//
@@ -96,11 +106,14 @@ define([], function(UploadProgress) {
 	}
 
 	MenuController.prototype.onFBLogin = function onFBLogin(usename) {
-		this.facebookDiv.hide();
+		console.log("Login")
+		this.facebookLoginDiv.hide();
+		this.facebookLogoutDiv.show();
 	}
 
 	MenuController.prototype.onFBLogout = function onFBLogout() {
-		this.facebookDiv.show();
+		this.facebookLoginDiv.show();
+		this.facebookLogoutDiv.hide();
 	}
 
 	return MenuController;

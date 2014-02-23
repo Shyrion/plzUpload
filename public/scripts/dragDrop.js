@@ -3,9 +3,27 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 	var DragDropController = function(menuController) {
 		this.menuController = menuController;
 
+	  this.nbRunningUploads = 0;
 	  this.allUploads = {};
+    this.multiUploadAuthorized = false;
+
+    $('body').on('authorizeMultiupload', function() {
+    	console.log("Authorize multi");
+    	this.multiUploadAuthorized = true;
+    }.bind(this));
+
+    $('body').on('unauthorizeMultiupload', function() {
+    	console.log("Unauthorize multi");
+    	this.multiUploadAuthorized = false;
+    }.bind(this));
 
 		var dropZone = new DropZone('glooty', function(file) {
+
+			// If multiupload not authorized and we already have one running upload, error
+			if (!this.multiUploadAuthorized && this.nbRunningUploads) {
+				console.log('One at a time !');
+				return;
+			}
 
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', location.href + 'uploadAjax');
@@ -53,40 +71,45 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 				if (!this.menuController.isOpened()) this.menuController.open();
 			}.bind(this);
 
+			var self = this;
 			xhr.onreadystatechange=function() {
 				if (xhr.readyState==4) {
 					if (xhr.status==200) {
 						var response = JSON.parse(this.responseText);
 
-						if (response.errorMessage) {
-							var title = 'Error';
-							var message = response.errorMessage;
-							menuController.onUploadFailed(uploadItemHtml);
-							//new FlashMessage('error', title, message);
-						} else {
+						console.log(response);
+
+						if (response.result == 'ok') {
 							var uploadUrl = response.uploadUrl;
 							var fullUrl = response.fullUrl;
 							var uploadCode = response.uploadCode;
 
-							/*var title = 'Upload successful';
-							var message = 'Access your file here: <a href="%1">%2</a>';
-							message = message.replace('%1', uploadUrl).replace('%2', fullUrl);*/
-
 							menuController.onUploadFinished(uploadItemHtml, uploadCode, fullUrl);
+						} else {
+							var error = response.error;
+							var message = error.message;
 
-							console.log(newUpload);
-							//new FlashMessage('success', title, message);
+							menuController.onUploadFailed(uploadItemHtml);
+						}
+
+						// Decrease running uploads counter + send even if no upload running
+						self.nbRunningUploads--;
+
+						if (!self.nbRunningUploads) {
+							$('body').trigger('noUploadRunning');
 						}
 					} else {
 					//new FlashMessage('error', 'Erf...', "Something has gone wrong...");
 					}
-					$('#overlay').hide();
 				}
 			}
 			// création de l'objet FormData
 			var formData = new FormData();
 			formData.append('uploadedFile', file);
 			xhr.send(formData);
+
+			// Increase running uploads counter
+			this.nbRunningUploads++;
 		}.bind(this));
 	}
 

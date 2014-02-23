@@ -12,7 +12,6 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Glooty',
 
   //===== Glooty animation =====//
 
-
   var glooty = new Glooty(function(self) {
 	  self.setAnimation('wait');
 	  self.play();
@@ -34,9 +33,15 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Glooty',
 	  glooty.setAnimation('eat');
   });
 
+  $('body').on('noUploadRunning', function() {
+  	glooty.setAnimation('wait');
+  }.bind(this));
+
   //===== Facebook login =====//
 
 	var fbManager = new FacebookManager();
+
+	fbManager.setServerValidationUrl(location.origin + '/ws/facebookLogin');
 
 	$('#FBLogin').click(function() {
 		fbManager.login(function(success) {
@@ -45,11 +50,23 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Glooty',
 					fbManager.getUserInfo(function(response) {
 						fbManager.currentUser.name = response.name;
 						if (menuController) menuController.onFBLogin(fbManager.currentUser.name);
+						$('body').trigger('authorizeMultiupload');
 					});
 				} else {
 					console.log('User resigned :(');
 				}
 		}, 'email');
+	});
+
+	$('#FBLogout').click(function() {
+		fbManager.logout(function(success) {
+				if (success) {
+					if (menuController) menuController.onFBLogout();
+						$('body').trigger('unauthorizeMultiupload');
+				} else {
+					console.log('Failed to logout ? :(');
+				}
+		});
 	});
   
   function checkUserStatus() {
@@ -57,7 +74,6 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Glooty',
 			//if (!$('#facebookLogin').length) initLoginButton();
 
 			if (userStatus == 'connected') {
-				console.log('connected', fbManager);
 
 				if (menuController) menuController.onFBLogin(fbManager.currentUser.name);
 				

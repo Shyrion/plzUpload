@@ -3,7 +3,7 @@ var Upload = require('../models/Upload');
 var ObjectID = require('mongodb').ObjectID;
 
 var UPLOAD_DIR = __dirname + "/../public/upload"
-var MAX_UPLOAD = 10;
+var MAX_UPLOAD = 10; // TODO: Change for 3 or 5
 var ID_LENGTH = 5;
 
 var syllables = ['a', 'za', 'ra', 'ta', 'ya', 'pa', 'qa', 'sa', 'da', 'fa', 'ga', 'ja', 'ka', 'la',
@@ -17,8 +17,11 @@ var syllables = ['a', 'za', 'ra', 'ta', 'ya', 'pa', 'qa', 'sa', 'da', 'fa', 'ga'
 	'u', 'zu', 'ru', 'tu', 'yu', 'pu', 'qu', 'su', 'du', 'fu', 'gu', 'ju', 'ku', 'lu',
 	'mu', 'wu', 'xu', 'cu', 'vu', 'bu', 'nu',
 	'ou', 'zou', 'rou', 'tou', 'you', 'pou', 'qou', 'sou', 'dou', 'fou', 'gou', 'jou', 'kou', 'lou',
-	'mou', 'wou', 'xou', 'cou', 'vou', 'bou', 'nou'
-
+	'mou', 'wou', 'xou', 'cou', 'vou', 'bou', 'nou',
+	'oo', 'zoo', 'roo', 'too', 'yoo', 'poo', 'qoo', 'soo', 'doo', 'foo', 'goo', 'joo', 'koo', 'loo',
+	'moo', 'woo', 'xoo', 'coo', 'voo', 'boo', 'noo',
+	'y', 'zy', 'ry', 'ty', 'yy', 'py', 'qy', 'sy', 'dy', 'fy', 'gy', 'jy', 'ky', 'ly',
+	'my', 'wy', 'xy', 'cy', 'vy', 'by', 'ny'
 ];
 
 function generateName() {
@@ -33,40 +36,41 @@ function generateName() {
 	return name;
 }
 
-function checkIP(ip, callback) {
+exports.checkIP = function checkIP(ip, callback) {
 	Upload.count({ip: ip}, function(err, number) {
 		callback(err, number<MAX_UPLOAD);
 	});
 }
 
-exports.uploadFile = function(path, fileName, ip, req, res, callback) {
+exports.uploadFile = function(path, fileName, req, res, callback) {
 
-	checkIP(ip, function(err, result) {
-		if (err || result) {
-			var fileExtension = fileName.split('.')[fileName.split('.').length-1];
-			fs.readFile(path, function (err, data) {
-				console.log("FINISHED READFILE", err, data);
-			  var up = new Upload({
-			  	name: generateName(),
-			  	ip: req.connection.remoteAddress,
-			  	ext: fileExtension
-			  });
-			  var newPath = __dirname + "/../public/upload/" + up.name + "." + fileExtension;
-			  up.save(function(err, result) {
-					console.log("FINISHED SAVE", err, result);
-			  	fs.writeFile(newPath, data, function (err) {
-						console.log("FINISHED WRITEFILE", err);
-				  	var uploadUrl = '/' + up.name + "." + fileExtension;
-				  	var fullUrl = 'http://' + req.headers.host + uploadUrl;
-				  	var uploadCode = up.name + "." + fileExtension;
-						callback(err, uploadUrl, fullUrl, uploadCode);
-				  });
-			  });
-			});
-		} else {
-			var err = new Error('You have reached your quota for today :). Come back tomorrow !');
-			callback(err, null, null);
-		}
+	// Get the file extension from the filename
+	var fileExtension = '';
+	fileExtension = (fileName.indexOf('.') != -1) && fileName.split('.')[fileName.split('.').length-1];
+	
+	fs.readFile(path, function (err, data) {
+		console.log("FINISHED READFILE");
+
+		// Create entry in DB
+	  var up = new Upload({
+	  	name: generateName(),
+	  	ip: req.connection.remoteAddress,
+	  	ext: fileExtension
+	  });
+
+	  var newPath = UPLOAD_DIR + '/' + up.name + "." + fileExtension;
+	  up.save(function(err, result) {
+			console.log("FINISHED SAVE");
+
+			// Upload to server
+	  	fs.writeFile(newPath, data, function (err) {
+				console.log("FINISHED WRITEFILE");
+		  	var uploadUrl = '/' + up.name + "." + fileExtension;
+		  	var fullUrl = 'http://' + req.headers.host + uploadUrl;
+		  	var uploadCode = up.name + "." + fileExtension;
+				callback(err, uploadUrl, fullUrl, uploadCode);
+		  });
+	  });
 	});
 
 }

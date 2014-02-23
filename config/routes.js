@@ -1,7 +1,11 @@
 var uploadController = require('../controllers/uploadController');
 
-module.exports = function(app, acl) {
-	var utils = require('../lib/utils');
+module.exports = function(app) {
+
+	var utils 							= require('../lib/utils');
+	var errors							= require('./errors');
+
+	var fbLoginController		= require('../controllers/fbLoginController');
 
 	//=========================//
 	//========= HOME ==========//
@@ -15,7 +19,7 @@ module.exports = function(app, acl) {
 	//======== UPLOAD =========//
 	//=========================//
 
-	app.post('/upload', function(req, res) {
+	/*app.post('/upload', function(req, res) {
 		console.log(req.files.uploadedFile.path);
 		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
 			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl, uploadCode) {
@@ -29,18 +33,58 @@ module.exports = function(app, acl) {
 				}
 				res.redirect('/');
 		});
-	});
+	});*/
 
 	app.post('/uploadAjax', function(req, res) {
-		console.log(req.files.uploadedFile);
-		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
-			req.connection.remoteAddress, req, res, function(err, uploadUrl, fullUrl, uploadCode) {
-				res.send({
-					errorMessage: (err ? err.message : null),
-					uploadUrl: uploadUrl,
-					fullUrl: fullUrl,
-					uploadCode: uploadCode
+
+		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, isAdmin) {
+
+			function uploadFunction(callback) {
+				uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
+					req, res, function(err, uploadUrl, fullUrl, uploadCode) {
+						if (err) {
+							console.log(err);
+							response = {
+								result: 'error',
+								error: errors.GENERAL_ERROR
+							}
+						} else {
+							response = {
+								result: 'ok',
+								uploadUrl: uploadUrl,
+								fullUrl: fullUrl,
+								uploadCode: uploadCode
+							};
+						}
+						if (callback) callback(response);		
 				});
+			}
+
+			var response = {};
+			
+			if (err) {
+				// User is not logged in : Authorize only 3 uploads per IP address !
+				console.log('user not connected. Restrictions ! :).');
+				uploadController.checkIP(req.connection.remoteAddress, function(err, ipAuthorized) {
+					if (ipAuthorized) {
+						uploadFunction(function(response) {
+							res.send(JSON.stringify(response));
+						});
+					} else {
+						res.send(JSON.stringify({
+							result: 'error',
+							error: errors.QUOTA_REACHED
+						}));
+					}
+				});
+				return;
+			} else {
+				// User is logged in, we let him do what he wants :)
+				console.log('user connected. Have fun :).');
+				uploadFunction(function(response) {
+					res.send(JSON.stringify(response));
+				});
+			}
 		});
 	});
 
@@ -52,7 +96,49 @@ module.exports = function(app, acl) {
 
 
 
+	app.post('/ws/facebookLogin', function(req, res) {
 
+		if (req.body.askForLogout == 'true') {
+			console.log("Asked for logout", req.body);
+			req.session.userId = null;
+	    req.session.fbToken = null;
+
+			response = {
+				result: 'ok'
+			}
+	    	
+	   	res.send(JSON.stringify(response));
+	   	return;
+		}
+
+		var fbData = {
+        accessToken: req.body.accessToken,
+        expiresIn: req.body.expiresIn,
+        signedRequest: req.body.signedRequest,
+        userId: req.body.userID
+    }
+
+    fbLoginController.validateFacebookLogin(fbData, function(err, result) {
+    	var response;
+    	if (err) {
+    		response = {
+    			result: 'error',
+    			error: err
+    		}
+    	} else {
+
+    		req.session.userId = fbData.userId;
+    		req.session.fbToken = fbData.accessToken;
+
+    		response = {
+    			result: 'ok'
+    		}
+    	}
+    	
+    	res.send(JSON.stringify(response));
+    });
+	
+	});
 
 
 
