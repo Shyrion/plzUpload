@@ -51,7 +51,7 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Facebook
   //===== Glooty animation =====//
 
   $('#centeredZone').on('dragover', function(e) {
-  	$('body').trigger('fileDragOver');
+  	$('body').trigger('fileDragOver', e);
   });
 
   $('#centeredZone').on('dragenter', function(e) {
