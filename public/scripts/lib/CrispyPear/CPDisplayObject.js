@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012  Jérémy Gabriele
+Copyright (C) 2012  Jeremy Gabriele
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,113 +27,109 @@ Anchors = {
 	BOTTOMRIGHT:  8
 }
 
-define(['lib/CrispyPear/CPUtils'], function() {
+var CPDisplayObject = function (params) {
 
-	var CPDisplayObject = function (params) {
+	// cpClass: 'DisplayableObject';
 
-		// cpClass: 'DisplayableObject';
+	this.x = this.y = 0;
+	this.width = this.height = 0;
+	this.flipX = this.flipY = false;
+	
+	this._anchor = Anchors.TOPLEFT;
+	this._anchorOffsetX = this._anchorOffsetY = 0;
 
-		this.x = this.y = 0;
-		this.width = this.height = 0;
-		this.flipX = this.flipY = false;
-		
-		this._anchor = Anchors.TOPLEFT;
-		this._anchorOffsetX = this._anchorOffsetY = 0;
+	function anchorChanged(newAnchor) {
 
-		function anchorChanged(newAnchor) {
+		this._anchor = newAnchor;
 
-			this._anchor = newAnchor;
-
-			if ((this._anchor == Anchors.CENTER) ||
-				(this._anchor == Anchors.TOPCENTER) ||
-				(this._anchor == Anchors.BOTTOMCENTER)) {
-				this._anchorOffsetX = -this.width/2;
-			}
-			if ((this._anchor == Anchors.CENTERRIGHT) ||
-				(this._anchor == Anchors.TOPRIGHT) ||
-				(this._anchor == Anchors.BOTTOMRIGHT)) {
-				this._anchorOffsetX = -this.width;
-			}
-			if ((this._anchor == Anchors.CENTERLEFT) ||
-				(this._anchor == Anchors.CENTER) ||
-				(this._anchor == Anchors.CENTERRIGHT)) {
-				this._anchorOffsetY = -this.height/2;
-			}
-			if ((this._anchor == Anchors.BOTTOMLEFT) ||
-				(this._anchor == Anchors.BOTTOMCENTER) ||
-				(this._anchor == Anchors.BOTTOMRIGHT)) {
-				this._anchorOffsetY = -this.height;
-			}
+		if ((this._anchor == Anchors.CENTER) ||
+			(this._anchor == Anchors.TOPCENTER) ||
+			(this._anchor == Anchors.BOTTOMCENTER)) {
+			this._anchorOffsetX = -this.width/2;
 		}
-		Object.defineProperty(this, 'anchor', {
-			get : function() { return this._anchor; },
-			set : anchorChanged.bind(this)
-		});
-		
-		this.canvas = null;
-		this.context = null;
-
-		this._scale = 1;
-		this.alpha = 1;
-
-		function scaleChanged(newScale) {
-			this.width *= 1/this._scale;
-			this.height *= 1/this._scale;
-
-			this._scale = newScale;
-
-			this.width *= this._scale;
-			this.height *= this._scale;
+		if ((this._anchor == Anchors.CENTERRIGHT) ||
+			(this._anchor == Anchors.TOPRIGHT) ||
+			(this._anchor == Anchors.BOTTOMRIGHT)) {
+			this._anchorOffsetX = -this.width;
 		}
-		Object.defineProperty(this, 'scale', {
-			get : function() { return this._scale; },
-			set : scaleChanged
-		});
-
-		if (params) {
-			if (params.name) this.name = params.name;
-			if (params.x) this.x = params.x;
-			if (params.y) this.y = params.y;
-			if (params.width) this.width = params.width;
-			if (params.height) this.height = params.height;
-			if (typeof(params.anchor) != 'undefined') this.anchor = params.anchor;
-			if (params.scale) this.scale = params.scale;
+		if ((this._anchor == Anchors.CENTERLEFT) ||
+			(this._anchor == Anchors.CENTER) ||
+			(this._anchor == Anchors.CENTERRIGHT)) {
+			this._anchorOffsetY = -this.height/2;
+		}
+		if ((this._anchor == Anchors.BOTTOMLEFT) ||
+			(this._anchor == Anchors.BOTTOMCENTER) ||
+			(this._anchor == Anchors.BOTTOMRIGHT)) {
+			this._anchorOffsetY = -this.height;
 		}
 	}
+	Object.defineProperty(this, 'anchor', {
+		get : function() { return this._anchor; },
+		set : anchorChanged.bind(this)
+	});
+	
+	this.canvas = null;
+	this.context = null;
 
-	CPDisplayObject.prototype.destroy = function () {
-		for (var key in this) {
-			this[key] = null;
-		}
+	this._scale = 1;
+	this.alpha = 1;
+
+	/*function scaleChanged(newScale) {
+		this.width *= 1/this._scale;
+		this.height *= 1/this._scale;
+
+		this._scale = newScale;
+
+		this.width *= this._scale;
+		this.height *= this._scale;
+	}
+	Object.defineProperty(this, 'scale', {
+		get : function() { return this._scale; },
+		set : scaleChanged
+	});*/
+
+	if (params) {
+		if (params.name) this.name = params.name;
+		if (params.x) this.x = params.x;
+		if (params.y) this.y = params.y;
+		if (params.width) this.width = params.width;
+		if (params.height) this.height = params.height;
+		if (typeof(params.anchor) != 'undefined') this.anchor = params.anchor;
+		if (params.scale) this.scale = params.scale;
+	}
+}
+
+CPDisplayObject.prototype.destroy = function () {
+	for (var key in this) {
+		this[key] = null;
+	}
+}
+
+CPDisplayObject.prototype.needsRedraw = function () {
+	CPSceneManager.instance.invalidate(this.context);
+}
+
+CPDisplayObject.prototype.prepareDraw = function () {
+
+	var posX = this.x+this._anchorOffsetX;
+	var posY = this.y+this._anchorOffsetY;
+
+    this.context.globalAlpha = this.alpha;
+
+	if (this.flipX) {
+	  this.context.scale(-1, 1);
+	  posX = (posX*(-1))-this.width;
 	}
 
-	CPDisplayObject.prototype.needsRedraw = function () {
-		CPSceneManager.instance.invalidate(this.context);
+	if (this.flipY) {
+	  this.context.scale(1, -1);
+	  posY = (posY*(-1))-this.height;
 	}
 
-	CPDisplayObject.prototype.prepareDraw = function () {
+	return {x: posX, y: posY}
 
-		var posX = this.x+this._anchorOffsetX;
-		var posY = this.y+this._anchorOffsetY;
+}
 
-	    this.context.globalAlpha = this.alpha;
+CPDisplayObject.prototype.draw = function (){
+}
 
-		if (this.flipX) {
-		  this.context.scale(-1, 1);
-		  posX = (posX*(-1))-this.width;
-		}
-
-		if (this.flipY) {
-		  this.context.scale(1, -1);
-		  posY = (posY*(-1))-this.height;
-		}
-
-		return {x: posX, y: posY}
-
-	}
-
-	CPDisplayObject.prototype.draw = function (){
-	}
-
-	return CPDisplayObject;
-});

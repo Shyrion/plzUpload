@@ -1,6 +1,6 @@
 define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(DropZone, MenuController, UploadProgress) {
 
-	var DragDropController = function(menuController) {
+	var DragDropController = function(dropZoneId, menuController) {
 		this.menuController = menuController;
 
 	  this.nbRunningUploads = 0;
@@ -17,7 +17,7 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
     	this.multiUploadAuthorized = false;
     }.bind(this));
 
-		var dropZone = new DropZone('glooty', function(file) {
+		var dropZone = new DropZone(dropZoneId, function(file) {
 
 			// If multiupload not authorized and we already have one running upload, error
 			if (!this.multiUploadAuthorized && this.nbRunningUploads) {

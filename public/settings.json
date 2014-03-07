@@ -1,0 +1,14 @@
+{
+	"parentDiv": "centeredZone",
+	"canvasSize": {
+		"width": "max",
+		"height": "max"
+	},
+
+	"allImages": [
+		{ "imageName": "animWaiting", "imagePath": "images/Glooty/animWaiting.png" },
+		{ "imageName": "animOpeningMouth", "imagePath": "images/Glooty/animOpeningMouth.png" },
+		{ "imageName": "animHystery", "imagePath": "images/Glooty/animHystery.png" },
+		{ "imageName": "animEating", "imagePath": "images/Glooty/animEating.png" }
+	]
+}

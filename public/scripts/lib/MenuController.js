@@ -18,6 +18,12 @@ define([], function(UploadProgress) {
   		win.focus();
     });
 
+    $('#getUploadField').keydown(function(e) {
+    	window.setTimeout(function() {
+    		$('#getUploadButton').css('display', ($(this).val() != '') ? 'block' : 'none');
+    	}.bind(this), 1);
+    })
+
 		this.facebookLoginDiv = $('#facebookLogin');
 		this.facebookLogoutDiv = $('#facebookLogout');
 		this.facebookLogoutDiv.hide();

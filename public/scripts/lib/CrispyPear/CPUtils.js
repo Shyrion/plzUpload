@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011  Jérémy Gabriele
+	Copyright (C) 2011  Jeremy Gabriele
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
 	Used in CPSceneManager.js
 */
 window.requestAnimFrame = (function(){
-	// return  window.requestAnimationFrame       || 
+	return  window.requestAnimationFrame 
 	// 		window.webkitRequestAnimationFrame || 
 	// 		window.mozRequestAnimationFrame    || 
 	// 		window.oRequestAnimationFrame      || 
 	// 		window.msRequestAnimationFrame     || 
-			return function(callback){
+			/*return function(callback){
 				window.setTimeout(callback, 1000 / 60);
-			};
+			};*/
 })();
 
 /*

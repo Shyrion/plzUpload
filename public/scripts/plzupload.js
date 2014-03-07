@@ -4,38 +4,67 @@ requirejs.config({
 });
 
 
-require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Glooty', 'lib/FacebookManager'],
-	function(a, DragDropController, MenuController, Glooty, FacebookManager) {
+require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/FacebookManager'],
+	function(a, DragDropController, MenuController, FacebookManager) {
   var menuController = new MenuController();
-  var dragDrop = new DragDropController(menuController);
+  var dragDrop = new DragDropController('centeredZone', menuController);
 
+
+  //===== CPScene =====//
+
+  new CPGame("settings.json", function(cpGame) {
+
+  	var onResourcesLoaded = function() {
+      console.log('Resources loaded !');
+    
+	    // Launch 1rst scene
+	    CPSceneManager.instance.setScene("MainScene");
+	  }.bind(this)
+	  var onResourcesProgress = function(progress) {
+	      //console.log(progress + '%');
+	  }
+
+	  CPResourceManager.instance.init(cpGame.allImages, onResourcesLoaded, onResourcesProgress);
+
+    CPResourceManager.instance.startLoading();
+  });
+
+  var timer = null;
+  $(window).resize(function(e) {
+  	//TODO: More smooth, with safe area (not on every resize)
+
+  	window.clearTimeout(timer);
+  	timer = window.setTimeout(resize, 500);
+
+  	function resize() {
+	  	CPGame.instance.canvasWidth = $(window).width();
+	    CPGame.instance.canvasHeight = $(window).height();
+
+	  	$('canvas').attr('width', CPGame.instance.canvasWidth);
+	  	$('canvas').attr('height', CPGame.instance.canvasHeight);
+
+	  	$('body').trigger('resizeEnd');
+  	}
+	  	
+  });
 
   //===== Glooty animation =====//
 
-  var glooty = new Glooty(function(self) {
-	  self.setAnimation('wait');
-	  self.play();
+  $('#centeredZone').on('dragover', function(e) {
+  	$('body').trigger('fileDragOver');
   });
 
-  $('#glooty').on('dragover', function(e) {
-	  glooty.setAnimation('preEat');
+  $('#centeredZone').on('dragleave', function(e) {
+  	$('body').trigger('fileDragFinished');
   });
 
-  $('#glooty').on('dragleave', function(e) {
-	  glooty.setAnimation('wait');
+  $('#centeredZone').on('dragend', function(e) {
+  	$('body').trigger('fileDragFinished');
   });
 
-  $('#glooty').on('dragend', function(e) {
-	  glooty.setAnimation('wait');
+  $('#centeredZone').on('drop', function(e) {
+  	$('body').trigger('fileDropped');
   });
-
-  $('#glooty').on('drop', function(e) {
-	  glooty.setAnimation('eat');
-  });
-
-  $('body').on('noUploadRunning', function() {
-  	glooty.setAnimation('wait');
-  }.bind(this));
 
   //===== Facebook login =====//
 
@@ -102,7 +131,7 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Glooty',
 	}
 
   fbManager.init({
-		appId: '601752169899573',
+		appId: '126267960876070', // real one : 601752169899573
 		//channelUrl: '//book.fruitygames.fr/channel.html',
 		locale: 'en_GB'
 		/*onLoginStatusConnectedCB,
