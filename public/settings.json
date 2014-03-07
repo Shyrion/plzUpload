@@ -7,8 +7,10 @@
 
 	"allImages": [
 		{ "imageName": "animWaiting", "imagePath": "images/Glooty/animWaiting.png" },
-		{ "imageName": "animOpeningMouth", "imagePath": "images/Glooty/animOpeningMouth.png" },
+		{ "imageName": "animBreathing", "imagePath": "images/Glooty/animBreathing.png" },
+		{ "imageName": "animOpenMouth", "imagePath": "images/Glooty/animOpenMouth.png" },
 		{ "imageName": "animHystery", "imagePath": "images/Glooty/animHystery.png" },
-		{ "imageName": "animEating", "imagePath": "images/Glooty/animEating.png" }
+		{ "imageName": "animEating", "imagePath": "images/Glooty/animEating.png" },
+		{ "imageName": "animDisapointed", "imagePath": "images/Glooty/animDisapointed.png" }
 	]
 }

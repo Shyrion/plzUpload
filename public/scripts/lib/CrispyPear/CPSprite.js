@@ -156,7 +156,7 @@ CPSprite.prototype.start = function (sequenceName, params) {
 		this.width = this.currentSequence.frameSize.w;
 		this.height = this.currentSequence.frameSize.h;
 		this.scale = this.currentSequence.scale;
-		console.log(this.currentSequence.scale);
+		this.anchor = this.anchor;
 
 		if (params && params.oneShot) this.currentSequence.oneShot = params.oneShot;
 
@@ -248,6 +248,9 @@ CPSprite.prototype.draw = function (){
 		imgBounds[0], imgBounds[1], imgBounds[2], imgBounds[3],
 		// (x,y,w,h) of the final image
 		pos.x,pos.y, this.width*this.scale, this.height*this.scale);
+
+	/*this.context.rect(pos.x,pos.y, this.width*this.scale, this.height*this.scale);
+	this.context.stroke();*/
 
 	this.context.restore();
 }

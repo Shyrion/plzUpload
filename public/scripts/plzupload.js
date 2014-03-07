@@ -54,8 +54,12 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Facebook
   	$('body').trigger('fileDragOver');
   });
 
+  $('#centeredZone').on('dragenter', function(e) {
+  	$('body').trigger('fileDragEnter');
+  });
+
   $('#centeredZone').on('dragleave', function(e) {
-  	$('body').trigger('fileDragFinished');
+  	$('body').trigger('fileDragOut');
   });
 
   $('#centeredZone').on('dragend', function(e) {
@@ -64,6 +68,10 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Facebook
 
   $('#centeredZone').on('drop', function(e) {
   	$('body').trigger('fileDropped');
+  });
+
+  $('#centeredZone').on('dragout', function(e) {
+  	$('body').trigger('fileDragOut');
   });
 
   //===== Facebook login =====//
@@ -117,7 +125,7 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Facebook
 					});
 				}, 'email');
 			} else {
-				console.log('NOT connected');
+				//console.log('NOT connected');
 
 				/*fbManager.login(function(success) {
 					console.log("Autologin success ? ", success);
