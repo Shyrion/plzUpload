@@ -48,7 +48,7 @@
    
    sprite.start('run');
    sprite.start('run'); // does nothing
-   //sprite.start('walk', {startFrame: 2, oneShot: true});
+   //sprite.start('walk', {startFrame: 2, repeatCount: 1});
 */
 
 var CPSprite = function (params) {
@@ -119,36 +119,51 @@ CPSprite.prototype.add = function (params){
 	}
 	
 /*
-	INCREASE the sprite counter
+	INCREASE the sprite counter. Returns true if the animation is finished.
 */
 CPSprite.prototype.currentFramePlusPlus = function (){
 	if (!this.paused) {
 		if (this.currentSequence.currentFrame+1 > 
 			this.currentSequence.totalFrame+this.currentSequence.offset) {
-			if (this.currentSequence.oneShot) { // if OS, no need to go back to 1rst frame and pause
-				this.pause();
-				return;
-		    }
-    		this.currentSequence.currentFrame = this.currentSequence.offset+1;
+			// if repeatCount is set, we need to check...
+			if (this.currentSequence.repeatCount != null) {
+				// We decrease the counter
+				this.currentSequence.repeatCount--;
+				if (this.currentSequence.repeatCount == 0) {
+					// The animation should be stopped
+					//this.pause();
+					if (this.currentSequence.onFinishCallback)
+						this.currentSequence.onFinishCallback();
+					return true;
+				}
+		  }
+    	this.currentSequence.currentFrame = this.currentSequence.offset+1;
 		} else {
-    		this.currentSequence.currentFrame += 1;
-    	}
+    	this.currentSequence.currentFrame += 1;
+    }
+    return false;
+	} else {
+		return true;
 	}
 }
   
 /*
-	START the named animation
+	START the named animation. Optionally execute callback each time the animation ends
 	params = {
-	  oneShot => plays only once the animation, then stop (no loop)
+	  repeatCount => plays the animation X times, then stop (no loop)
 	  startFrame => starts the animation from this frame (useful when walk->run)
 	}
 */
-CPSprite.prototype.start = function (sequenceName, params) {
+CPSprite.prototype.start = function (sequenceName, params, callback) {
 	if (!this.locked()) {
-		this.paused = false;
 
-		// return if we started an already started sequence
-		if ( this.currentSequence == this.sequences[sequenceName]) return;
+		// return if we started an already started sequence.
+		// Exception if the animation was previously paused.
+		// IS THIS USEFUL ?
+		/*if ( (this.currentSequence == this.sequences[sequenceName]) && !this.paused )
+			return;*/
+
+		this.paused = false;
 
 		this.currentSequence = this.sequences[sequenceName]
 
@@ -158,7 +173,7 @@ CPSprite.prototype.start = function (sequenceName, params) {
 		this.scale = this.currentSequence.scale;
 		this.anchor = this.anchor;
 
-		if (params && params.oneShot) this.currentSequence.oneShot = params.oneShot;
+		if (params && params.repeatCount) this.currentSequence.repeatCount = params.repeatCount;
 
 		// start the anim from the 1rst frame or not ?
 		if (params && params.startFrame &&
@@ -167,17 +182,33 @@ CPSprite.prototype.start = function (sequenceName, params) {
 		else
 			this.currentSequence.currentFrame = this.currentSequence.offset+1;
 
+		this.currentSequence.onFinishCallback = callback;
+
 		this.currentSequence.timeBeforeTick = this.currentSequence.nextTick;
 
 		this.firstDraw = true;
 	}
 }
+
+/*
+	Play the named animation X times, then execute a callback
+*/
+CPSprite.prototype.playRepeat = function playRepeat(sequenceName, repeatCount, callback) {
+	this.start(sequenceName, {repeatCount: repeatCount}, callback);
+}
+
+/*
+	Play the named animation once, then execute a callback
+*/
+CPSprite.prototype.playOnce = function playOnce(sequenceName, callback) {
+	this.playRepeat(sequenceName, 1, callback);
+}
   
-CPSprite.prototype.locked = function () {
+CPSprite.prototype.locked = function locked() {
 	return this.isLocked;
 }
 
-CPSprite.prototype.lock = function () {
+CPSprite.prototype.lock = function lock() {
 	this.isLocked = true;
 }
 
@@ -222,9 +253,9 @@ CPSprite.prototype.update = function (dt){
 	this.currentSequence.timeBeforeTick = this.currentSequence.timeBeforeTick-dt;
 
 	if (this.currentSequence.timeBeforeTick <= 0) {
-		this.currentFramePlusPlus();
+		var needsToRedraw = !this.currentFramePlusPlus();
 		this.currentSequence.timeBeforeTick += this.currentSequence.nextTick;
-		return this.context;
+		return (needsToRedraw ? this.context : null);
 	}
 	return false;
 }

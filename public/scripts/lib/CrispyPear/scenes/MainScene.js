@@ -37,6 +37,11 @@ var MainScene = function (params) {
     });
     this.backgroundLayer.insert("bg",bg);*/
 
+
+    //============================//
+    //===== TITLE & SUBTITLE =====//
+    //============================//
+
     var titleGroup = new CPDisplayGroup();
 
     var titleText = new CPText({
@@ -114,6 +119,17 @@ var MainScene = function (params) {
         frameSize: {w:CPResourceManager.instance.getImage('animWaiting').width/6, h:CPResourceManager.instance.getImage('animWaiting').height}
     });
 
+    // Crying animation
+    animatedSprite.add({
+        sequenceName: 'crying',
+        spriteSheet: CPResourceManager.instance.getImage('animWaiting'),
+        totalFrame: 5,
+        offset: 0,
+        framePerSecond: 8,
+        scale: 1/2,
+        frameSize: {w:CPResourceManager.instance.getImage('animWaiting').width/6, h:CPResourceManager.instance.getImage('animWaiting').height}
+    });
+
     // Open mouth animation
     animatedSprite.add({
         sequenceName: 'openMouth',
@@ -158,8 +174,6 @@ var MainScene = function (params) {
         frameSize: {w:CPResourceManager.instance.getImage('animDisapointed').width/6, h:CPResourceManager.instance.getImage('animDisapointed').height}
     });
 
-    animatedSprite.start('breathing');
-
 
     //====================//
     //======= EYES =======//
@@ -193,17 +207,20 @@ var MainScene = function (params) {
 
     _w = _h = null;
 
-    var timer = null;
-
     function wait() {
-        animatedSprite.start('breathing');
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-            animatedSprite.start('blink');
-            timer = setTimeout(function() {
-                animatedSprite.start('waiting');
-            }, 1000);
-        }, 6000);
+        animatedSprite.playRepeat('breathing', 10, function() {
+            animatedSprite.playOnce('blink', function() {
+                cry();
+            });
+        });
+    }
+
+    function cry() {
+        animatedSprite.playRepeat('crying', 4, function() {
+            animatedSprite.playOnce('blink', function() {
+                wait();
+            });
+        });
     }
     
     var hysteryMode = false;
@@ -223,13 +240,11 @@ var MainScene = function (params) {
     exitHystery();
 
     $('body').on('fileDragEnter', function() {
-        exitHystery()
-        animatedSprite.start('openMouth');
-        clearTimeout(timer);
-        timer = setTimeout(function() {
+        exitHystery();
+        animatedSprite.playOnce('openMouth', function() {
             hysteryMode = true;
             animatedSprite.start('hystery');
-        }, 500);
+        });
         
     }.bind(this));
 
@@ -244,10 +259,6 @@ var MainScene = function (params) {
         var leftEyeX = animatedSprite.x-70;
         var rightEyeX = animatedSprite.x+70;
 
-        if (filePosX > leftEyeX) {
-            console.log(filePosX, leftEyeX);
-        }
-
         var eyeRay = 10;
         leftEye.x = (filePosX > leftEyeX) ? Math.min(leftEyeX+eyeRay, filePosX) : Math.max(leftEyeX-eyeRay, filePosX);
         leftEye.y = (filePosY > eyeY) ? Math.min(eyeY+eyeRay, filePosY) : Math.max(eyeY-eyeRay, filePosY);
@@ -259,32 +270,26 @@ var MainScene = function (params) {
 
     $('body').on('fileDragFinished', function() {
         exitHystery()
-        clearTimeout(timer);
         wait();
     }.bind(this));
 
     $('body').on('fileDropped', function() {
         exitHystery()
-        clearTimeout(timer);
         animatedSprite.start('eating');
     }.bind(this));
 
     $('body').on('fileDragOut', function() {
         exitHystery()
-        animatedSprite.start('disapointed');
-        clearTimeout(timer);
-        timer = setTimeout(function() {
+        animatedSprite.playRepeat('disapointed', 15, function() {
             wait();
-        }, 3000);
+        });
     }.bind(this));
 
     $('body').on('noUploadRunning', function() {
         exitHystery()
-        animatedSprite.start('breathing');
-        clearTimeout(timer);
-        timer = setTimeout(function() {
+        animatedSprite.playRepeat('breathing', 3, function() {
             wait();
-        }, 3000);
+        });
     }.bind(this));
 
 
@@ -294,11 +299,12 @@ var MainScene = function (params) {
         subtitleText.draw();
 
         animatedSprite.x = CPGame.instance.canvasWidth/2;
-        animatedSprite.y = CPGame.instance.canvasHeight/2;
+        animatedSprite.y = Math.max(titleGroup.y+subtitleText.y+subtitleText.height+animatedSprite.height/2*animatedSprite.scale, CPGame.instance.canvasHeight/2);
+        console.log(titleGroup.y,subtitleText.y,subtitleText.height, CPGame.instance.canvasHeight/2, animatedSprite.y);
     });
 
-    $(window).resize(function(e) {
-    });
+    // Starts everything
+    wait();
 }
   
 MainScene.inheritsFrom(CPScene);
