@@ -6,13 +6,17 @@
 	},
 
 	"allImages": [
-		{ "imageName": "animWaiting", "imagePath": "images/Glooty/animWaiting.png" },
-		{ "imageName": "animBreathing", "imagePath": "images/Glooty/animBreathing.png" },
-		{ "imageName": "animBlink", "imagePath": "images/Glooty/animBlink.png" },
-		{ "imageName": "animOpenMouth", "imagePath": "images/Glooty/animOpenMouth.png" },
-		{ "imageName": "animHystery", "imagePath": "images/Glooty/animHystery.png" },
-		{ "imageName": "animEating", "imagePath": "images/Glooty/animEating.png" },
-		{ "imageName": "animDisapointed", "imagePath": "images/Glooty/animDisapointed.png" },
-		{ "imageName": "eye", "imagePath": "images/Glooty/eye.png" }
+		{ "imageName": "animBlink", "imagePath": "images/Glooty/animBlink.gif" },
+		{ "imageName": "animBreathing", "imagePath": "images/Glooty/animBreathing.gif" },
+		{ "imageName": "animCrying", "imagePath": "images/Glooty/animCrying.gif" },
+		{ "imageName": "animDisapointed", "imagePath": "images/Glooty/animDisapointed.gif" },
+		{ "imageName": "animDisapointedBlink", "imagePath": "images/Glooty/animDisapointedBlink.gif" },
+		{ "imageName": "animEating", "imagePath": "images/Glooty/animEating.gif" },
+		{ "imageName": "animJump", "imagePath": "images/Glooty/animJump.gif" },
+		{ "imageName": "animHappy", "imagePath": "images/Glooty/animHappy.gif" },
+		{ "imageName": "animHystery", "imagePath": "images/Glooty/animHystery.gif" },
+		{ "imageName": "animOpenMouth", "imagePath": "images/Glooty/animOpenMouth.gif" },
+
+		{ "imageName": "eye", "imagePath": "images/Glooty/eye.gif" }
 	]
 }

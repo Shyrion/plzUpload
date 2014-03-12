@@ -93,7 +93,6 @@ var MainScene = function (params) {
         totalFrame: 6,
         offset: 0,
         framePerSecond: 8,
-        scale: 1/2,
         frameSize: {w:CPResourceManager.instance.getImage('animBreathing').width/6, h:CPResourceManager.instance.getImage('animBreathing').height}
     });
 
@@ -104,30 +103,27 @@ var MainScene = function (params) {
         totalFrame: 6,
         offset: 0,
         framePerSecond: 6,
-        scale: 1/2,
         frameSize: {w:CPResourceManager.instance.getImage('animBlink').width/6, h:CPResourceManager.instance.getImage('animBlink').height}
     });
 
-    // Waiting animation
+    // Jump animation
     animatedSprite.add({
-        sequenceName: 'waiting',
-        spriteSheet: CPResourceManager.instance.getImage('animWaiting'),
-        totalFrame: 5,
+        sequenceName: 'jump',
+        spriteSheet: CPResourceManager.instance.getImage('animJump'),
+        totalFrame: 4,
         offset: 0,
         framePerSecond: 8,
-        scale: 1/2,
-        frameSize: {w:CPResourceManager.instance.getImage('animWaiting').width/6, h:CPResourceManager.instance.getImage('animWaiting').height}
+        frameSize: {w:CPResourceManager.instance.getImage('animJump').width/4, h:CPResourceManager.instance.getImage('animJump').height}
     });
 
     // Crying animation
     animatedSprite.add({
         sequenceName: 'crying',
-        spriteSheet: CPResourceManager.instance.getImage('animWaiting'),
+        spriteSheet: CPResourceManager.instance.getImage('animCrying'),
         totalFrame: 5,
         offset: 0,
         framePerSecond: 8,
-        scale: 1/2,
-        frameSize: {w:CPResourceManager.instance.getImage('animWaiting').width/6, h:CPResourceManager.instance.getImage('animWaiting').height}
+        frameSize: {w:CPResourceManager.instance.getImage('animCrying').width/6, h:CPResourceManager.instance.getImage('animCrying').height}
     });
 
     // Open mouth animation
@@ -137,7 +133,6 @@ var MainScene = function (params) {
         totalFrame: 4,
         offset: 0,
         framePerSecond: 8,
-        scale: 1/2,
         frameSize: {w:CPResourceManager.instance.getImage('animOpenMouth').width/4, h:CPResourceManager.instance.getImage('animOpenMouth').height}
     });
 
@@ -148,7 +143,6 @@ var MainScene = function (params) {
         totalFrame: 6,
         offset: 0,
         framePerSecond: 8,
-        scale: 1/2,
         frameSize: {w:CPResourceManager.instance.getImage('animHystery').width/6, h:CPResourceManager.instance.getImage('animHystery').height}
     });
 
@@ -156,11 +150,10 @@ var MainScene = function (params) {
     animatedSprite.add({
         sequenceName: 'eating',
         spriteSheet: CPResourceManager.instance.getImage('animEating'),
-        totalFrame: 4,
+        totalFrame: 6,
         offset: 0,
         framePerSecond: 8,
-        scale: 1/2,
-        frameSize: {w:CPResourceManager.instance.getImage('animEating').width/4, h:CPResourceManager.instance.getImage('animEating').height}
+        frameSize: {w:CPResourceManager.instance.getImage('animEating').width/6, h:CPResourceManager.instance.getImage('animEating').height}
     });
 
     // Disapointed animation
@@ -170,8 +163,25 @@ var MainScene = function (params) {
         totalFrame: 6,
         offset: 0,
         framePerSecond: 6,
-        scale: 1/2,
         frameSize: {w:CPResourceManager.instance.getImage('animDisapointed').width/6, h:CPResourceManager.instance.getImage('animDisapointed').height}
+    });
+    animatedSprite.add({
+        sequenceName: 'disapointedBlink',
+        spriteSheet: CPResourceManager.instance.getImage('animDisapointedBlink'),
+        totalFrame: 6,
+        offset: 0,
+        framePerSecond: 6,
+        frameSize: {w:CPResourceManager.instance.getImage('animDisapointedBlink').width/6, h:CPResourceManager.instance.getImage('animDisapointedBlink').height}
+    });
+
+    // Happy animation
+    animatedSprite.add({
+        sequenceName: 'happy',
+        spriteSheet: CPResourceManager.instance.getImage('animHappy'),
+        totalFrame: 4,
+        offset: 0,
+        framePerSecond: 8,
+        frameSize: {w:CPResourceManager.instance.getImage('animHappy').width/4, h:CPResourceManager.instance.getImage('animHappy').height}
     });
 
 
@@ -208,17 +218,39 @@ var MainScene = function (params) {
     _w = _h = null;
 
     function wait() {
-        animatedSprite.playRepeat('breathing', 10, function() {
+        animatedSprite.playRepeat('breathing', 7, function() {
             animatedSprite.playOnce('blink', function() {
-                cry();
+                if (Math.floor(Math.random()*2)) {
+                    cry();
+                } else {
+                    jump();
+                }
             });
         });
     }
 
     function cry() {
-        animatedSprite.playRepeat('crying', 4, function() {
+        animatedSprite.playRepeat('crying', 6, function() {
             animatedSprite.playOnce('blink', function() {
                 wait();
+            });
+        });
+    }
+
+    function jump() {
+        animatedSprite.playRepeat('jump', 2, function() {
+            wait();
+        });
+    }
+
+    function disapointed() {
+        animatedSprite.playRepeat('disapointed', 4, function() {
+            animatedSprite.playOnce('disapointedBlink', function() {
+                if (Math.floor(Math.random()*2)) {
+                    disapointed();
+                } else {
+                    wait();
+                }
             });
         });
     }
@@ -269,25 +301,23 @@ var MainScene = function (params) {
     }.bind(this));
 
     $('body').on('fileDragFinished', function() {
-        exitHystery()
+        exitHystery();
         wait();
     }.bind(this));
 
     $('body').on('fileDropped', function() {
-        exitHystery()
+        exitHystery();
         animatedSprite.start('eating');
     }.bind(this));
 
     $('body').on('fileDragOut', function() {
-        exitHystery()
-        animatedSprite.playRepeat('disapointed', 15, function() {
-            wait();
-        });
+        exitHystery();
+        disapointed();
     }.bind(this));
 
     $('body').on('noUploadRunning', function() {
         exitHystery()
-        animatedSprite.playRepeat('breathing', 3, function() {
+        animatedSprite.playRepeat('happy', 12, function() {
             wait();
         });
     }.bind(this));
