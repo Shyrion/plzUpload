@@ -86,6 +86,10 @@ CPDisplayGroup.prototype.insert = function (name, object) {
 	var maxObjectX = minObjectX + object.width;
 	var maxObjectY = minObjectY + object.height;
 
+	// Translate the object with displayGroup's coordinate
+	object.x += this.x;
+	object.y += this.y;
+
 	// console.log(object.content, minObjectX, minObjectY, maxObjectX, maxObjectY);
 
 	if ((this._boxMinX==null) || (this._boxMinX > minObjectX))
@@ -99,6 +103,9 @@ CPDisplayGroup.prototype.insert = function (name, object) {
 
 	// console.log(this._boxMinX,this._boxMinY,
 	// 	this._boxMaxX,this._boxMaxY);
+
+	object.canvas = this.canvas;
+	object.context = this.context;
 
 	if (object.needsRedraw && object.context)
 		object.needsRedraw();

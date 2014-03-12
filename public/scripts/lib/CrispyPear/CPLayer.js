@@ -27,6 +27,8 @@ var CPLayer = function (zIndex, parentName) {
     this.context = this.canvas.getContext('2d');
 
     this.displayGroup = new CPDisplayGroup();
+    this.displayGroup.canvas = this.canvas;
+    this.displayGroup.context = this.context;
 }
 
 /*

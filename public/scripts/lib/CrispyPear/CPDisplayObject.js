@@ -74,21 +74,22 @@ var CPDisplayObject = function (params) {
 	this.scale = 1;
 	this.alpha = 1;
 
-	/*function scaleChanged(newScale) {
-		console.log(this._scale);
-		this.width *= 1/this._scale; // reset the width to 100%
+	function scaleChanged(newScale) {
+		// Reset the sites to 100%
+		this.width *= 1/this._scale;
 		this.height *= 1/this._scale;
 
+		// Update scale
 		this._scale = newScale;
 
-		console.log(this._scale);
+		// Apply it to width and height
 		this.width *= this._scale;
 		this.height *= this._scale;
 	}
 	Object.defineProperty(this, 'scale', {
 		get : function() { return this._scale; },
 		set : scaleChanged
-	});*/
+	});
 
 	if (params) {
 		if (params.name) this.name = params.name;
@@ -98,7 +99,6 @@ var CPDisplayObject = function (params) {
 		if (params.height) this.height = params.height;
 		if (params.scale) this.scale = params.scale;
 		if (typeof(params.anchor) != 'undefined') this.anchor = params.anchor;
-		if (params.scale) this.scale = params.scale;
 	}
 }
 

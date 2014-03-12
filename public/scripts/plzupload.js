@@ -139,11 +139,7 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Facebook
 	}
 
   fbManager.init({
-		appId: '126267960876070', // real one : 601752169899573
-		//channelUrl: '//book.fruitygames.fr/channel.html',
+		appId: '601752169899573', // test one : 126267960876070 
 		locale: 'en_GB'
-		/*onLoginStatusConnectedCB,
-		onLoginStatusNotAuthorizedCB,
-		onLoginStatusNotConnectedCB,*/
 	}, checkUserStatus);
 });

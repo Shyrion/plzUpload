@@ -128,13 +128,14 @@ CPSprite.prototype.currentFramePlusPlus = function (){
 			// if repeatCount is set, we need to check...
 			if (this.currentSequence.repeatCount != null) {
 				// We decrease the counter
-				this.currentSequence.repeatCount--;
-				if (this.currentSequence.repeatCount == 0) {
+				if (this.currentSequence.repeatCount <= 1) {
 					// The animation should be stopped
 					//this.pause();
 					if (this.currentSequence.onFinishCallback)
 						this.currentSequence.onFinishCallback();
 					return true;
+				} else {
+					this.currentSequence.repeatCount--;
 				}
 		  }
     	this.currentSequence.currentFrame = this.currentSequence.offset+1;
@@ -236,8 +237,8 @@ CPSprite.prototype.gotoAndStop = function (i)
 {
 	if (this.currentSequence.totalFrame >= i && i>0)
 		this.currentSequence.currentFrame = i;
-	this.pause();
 	this.draw();
+	this.pause();
 }
 	
 CPSprite.prototype.update = function (dt){
@@ -266,7 +267,7 @@ CPSprite.prototype.draw = function (){
 
 	var pos = CPDisplayObject.prototype.prepareDraw.call(this);
 
-	if (this.paused || this.isLocked) return;
+	//if (this.paused || this.isLocked) return;
 
 	// calculate the good image to display
 	var imgBounds = [((this.currentSequence.currentFrame-1)%this.currentSequence.framePerRow)*this.currentSequence.frameSize.w,
@@ -278,7 +279,7 @@ CPSprite.prototype.draw = function (){
 		// (x,y,w,h) we will crop within the image
 		imgBounds[0], imgBounds[1], imgBounds[2], imgBounds[3],
 		// (x,y,w,h) of the final image
-		pos.x,pos.y, this.width*this.scale, this.height*this.scale);
+		pos.x,pos.y, this.width, this.height);
 
 	/*this.context.rect(pos.x,pos.y, this.width*this.scale, this.height*this.scale);
 	this.context.stroke();*/
