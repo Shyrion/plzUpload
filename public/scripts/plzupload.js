@@ -55,7 +55,7 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Facebook
   });
 
   $('#centeredZone').on('dragenter', function(e) {
-  	$('body').trigger('fileDragEnter');
+  	$('body').trigger('fileDragEnter', e);
   });
 
   $('#centeredZone').on('dragleave', function(e) {

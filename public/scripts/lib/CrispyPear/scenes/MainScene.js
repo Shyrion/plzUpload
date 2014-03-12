@@ -218,6 +218,7 @@ var MainScene = function (params) {
     _w = _h = null;
 
     function wait() {
+        exitHystery();
         animatedSprite.playRepeat('breathing', 7, function() {
             animatedSprite.playOnce('blink', function() {
                 if (Math.floor(Math.random()*2)) {
@@ -269,13 +270,13 @@ var MainScene = function (params) {
         hysteryMode = false;
         leftEye.y = rightEye.y = -2500;
     }
-    exitHystery();
 
-    $('body').on('fileDragEnter', function() {
+    $('body').on('fileDragEnter', function(eventTrigger, e) {
         exitHystery();
         animatedSprite.playOnce('openMouth', function() {
             hysteryMode = true;
             animatedSprite.start('hystery');
+            $('body').trigger('fileDragOver', e);
         });
         
     }.bind(this));
@@ -288,10 +289,10 @@ var MainScene = function (params) {
         var filePosY = e.originalEvent.clientY;
 
         var eyeY = animatedSprite.y-25;
-        var leftEyeX = animatedSprite.x-70;
-        var rightEyeX = animatedSprite.x+70;
+        var leftEyeX = animatedSprite.x-68;
+        var rightEyeX = animatedSprite.x+68;
 
-        var eyeRay = 10;
+        var eyeRay = 6;
         leftEye.x = (filePosX > leftEyeX) ? Math.min(leftEyeX+eyeRay, filePosX) : Math.max(leftEyeX-eyeRay, filePosX);
         leftEye.y = (filePosY > eyeY) ? Math.min(eyeY+eyeRay, filePosY) : Math.max(eyeY-eyeRay, filePosY);
 
