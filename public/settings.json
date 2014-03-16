@@ -12,6 +12,7 @@
 		{ "imageName": "animDisapointed", "imagePath": "images/Glooty/animDisapointed.gif" },
 		{ "imageName": "animDisapointedBlink", "imagePath": "images/Glooty/animDisapointedBlink.gif" },
 		{ "imageName": "animEating", "imagePath": "images/Glooty/animEating.gif" },
+		{ "imageName": "animGlups", "imagePath": "images/Glooty/animGlups.gif" },
 		{ "imageName": "animJump", "imagePath": "images/Glooty/animJump.gif" },
 		{ "imageName": "animHappy", "imagePath": "images/Glooty/animHappy.gif" },
 		{ "imageName": "animHystery", "imagePath": "images/Glooty/animHystery.gif" },

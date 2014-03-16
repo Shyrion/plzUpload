@@ -38,12 +38,6 @@ var CPImage = function (params) {
         } else {
           console.log("invalid img");
         }
-
-        this.width = this.img.width;
-        this.height = this.img.height;
-        // if (params.scale) this.scale = params.scale;
-        if (params.width) this.width = params.width;
-        if (params.height) this.height = params.height;
     }
 }
 
@@ -55,10 +49,13 @@ CPImage.prototype.draw = function () {
     var pos = CPDisplayObject.prototype.prepareDraw.call(this);
 
     this.context.drawImage(this.img,
-        pos.x * this.scale,
-        pos.y * this.scale,
-        this.width*this.scale,
-        this.height*this.scale);
+        pos.x,
+        pos.y,
+        this.width,
+        this.height);
+
+    /*this.context.rect(pos.x,pos.y, this.width, this.height);
+    this.context.stroke();*/
 
     this.context.restore();
 }

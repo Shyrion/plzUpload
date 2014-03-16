@@ -21,7 +21,7 @@ var MainScene = function (params) {
     this.parent.call(this, params);
 
     this.backgroundLayer = this.addLayer(10);
-    this.characterLayer = this.addLayer(20);
+    this.characterLayer = this.addLayer(15);
 
     var _w = CPGame.instance.canvasWidth;
     var _h = CPGame.instance.canvasHeight;
@@ -156,6 +156,16 @@ var MainScene = function (params) {
         frameSize: {w:CPResourceManager.instance.getImage('animEating').width/6, h:CPResourceManager.instance.getImage('animEating').height}
     });
 
+    // Waiting animation
+    animatedSprite.add({
+        sequenceName: 'glups',
+        spriteSheet: CPResourceManager.instance.getImage('animGlups'),
+        totalFrame: 6,
+        offset: 0,
+        framePerSecond: 8,
+        frameSize: {w:CPResourceManager.instance.getImage('animGlups').width/6, h:CPResourceManager.instance.getImage('animGlups').height}
+    });
+
     // Disapointed animation
     animatedSprite.add({
         sequenceName: 'disapointed',
@@ -191,22 +201,24 @@ var MainScene = function (params) {
 
 
     var leftEye = new CPImage({
-        x: -70,
+        x: 0,
         y: -2500,
         img: CPResourceManager.instance.getImage('eye'),
         width: 48,
         height: 39,
+        scale: 1,
         anchor: Anchors.CENTER
     });
     cloud.insert("leftEye", leftEye);
     this.characterLayer.insert("leftEye", leftEye);
 
     var rightEye = new CPImage({
-        x: 70,
+        x: 0,
         y: leftEye.y,
         img: CPResourceManager.instance.getImage('eye'),
         width: 48,
         height: 39,
+        scale: 1,
         anchor: Anchors.CENTER
     });
     cloud.insert("rightEye", rightEye);
@@ -255,6 +267,14 @@ var MainScene = function (params) {
             });
         });
     }
+
+    function glups() {
+        animatedSprite.playOnce('glups', function() {
+            animatedSprite.playRepeat('happy', 12, function() {
+                wait();
+            });
+        });
+    }
     
     var hysteryMode = false;
 
@@ -278,26 +298,71 @@ var MainScene = function (params) {
             animatedSprite.start('hystery');
             $('body').trigger('fileDragOver', e);
         });
-        
     }.bind(this));
 
+    var eyesBaseY       = animatedSprite.y-25;
+    var leftEyeBaseX    = animatedSprite.x-64;
+    var rightEyeBaseX   = animatedSprite.x+73;
+    var eyeRay          = 12;
+
+    function computeEyesPosition(mousePos) {
+        var filePosX = mousePos.x;
+        var filePosY = mousePos.y;
+
+        // eyeX - mouseX
+        var leftEyeFileDelta = Math.abs(leftEyeBaseX - filePosX);
+        var rightEyeFileDelta = Math.abs(rightEyeBaseX - filePosX);
+
+        // eyeY - mouseY
+        var eyesDeltaY = Math.abs(eyesBaseY - filePosY);
+
+        // We calculate the angle the eye should have
+        var leftEyeAngle = Math.atan(eyesDeltaY/leftEyeFileDelta);
+        var rightEyeAngle = Math.atan(eyesDeltaY/rightEyeFileDelta);
+
+        var leftEyeRayDeltaX = rightEyeRayDeltaX = leftEyeRayDeltaY = rightEyeRayDeltaY = eyeRay;
+        
+        // Mouse is "inside" an eye, we need to "stick it" to the mouse
+        var hypLeft2 = leftEyeFileDelta * leftEyeFileDelta + eyesDeltaY * eyesDeltaY;
+        if (hypLeft2 < eyeRay*eyeRay) {
+            leftEyeRayDeltaX = leftEyeFileDelta;
+            leftEyeRayDeltaY = eyesDeltaY;
+        }
+        var hypRight2 = rightEyeFileDelta * rightEyeFileDelta + eyesDeltaY * eyesDeltaY;
+        if (hypRight2 < eyeRay*eyeRay) {
+            rightEyeRayDeltaX = rightEyeFileDelta;
+            rightEyeRayDeltaY = eyesDeltaY;
+        }
+
+        // We "report" the angle we have on a smaller triangle
+        var leftEyeDeltaX = Math.cos(leftEyeAngle) * leftEyeRayDeltaX;
+        var leftEyeDeltaY = Math.sin(leftEyeAngle) * leftEyeRayDeltaY;
+        var rightEyeDeltaX = Math.cos(rightEyeAngle) * rightEyeRayDeltaX;
+        var rightEyeDeltaY = Math.sin(rightEyeAngle) * rightEyeRayDeltaY;
+
+        // Need to take care of negative values for cos
+        leftEyeDeltaX *= (filePosX < leftEyeBaseX) ? 1 : -1;
+        leftEyeDeltaY *= (filePosY < eyesBaseY) ? 1 : -1;
+        rightEyeDeltaX *= (filePosX < rightEyeBaseX) ? 1 : -1;
+        rightEyeDeltaY *= (filePosY < eyesBaseY) ? 1 : -1;
+
+        // Set eyes position
+        leftEye.x = leftEyeBaseX - leftEyeDeltaX ;
+        leftEye.y = eyesBaseY - leftEyeDeltaY;
+        rightEye.x = rightEyeBaseX - rightEyeDeltaX ;
+        rightEye.y = eyesBaseY - leftEyeDeltaY;
+
+        // We need to redraw the eyes
+        leftEye.needsRedraw();
+        rightEye.needsRedraw();
+    }
     $('body').on('fileDragOver', function(eventTrigger, e) {
         if (!isHystery()) return;
 
-        // Move eyes
-        var filePosX = e.originalEvent.clientX;
-        var filePosY = e.originalEvent.clientY;
-
-        var eyeY = animatedSprite.y-25;
-        var leftEyeX = animatedSprite.x-68;
-        var rightEyeX = animatedSprite.x+68;
-
-        var eyeRay = 6;
-        leftEye.x = (filePosX > leftEyeX) ? Math.min(leftEyeX+eyeRay, filePosX) : Math.max(leftEyeX-eyeRay, filePosX);
-        leftEye.y = (filePosY > eyeY) ? Math.min(eyeY+eyeRay, filePosY) : Math.max(eyeY-eyeRay, filePosY);
-
-        rightEye.x = (filePosX > rightEyeX) ? Math.min(rightEyeX+eyeRay, filePosX) : Math.max(rightEyeX-eyeRay, filePosX);
-        rightEye.y = (filePosY > eyeY) ? Math.min(eyeY+eyeRay, filePosY) : Math.max(eyeY-eyeRay, filePosY);
+        computeEyesPosition({
+            x: e.originalEvent.clientX,
+            y: e.originalEvent.clientY
+        });
 
     }.bind(this));
 
@@ -317,10 +382,8 @@ var MainScene = function (params) {
     }.bind(this));
 
     $('body').on('noUploadRunning', function() {
-        exitHystery()
-        animatedSprite.playRepeat('happy', 12, function() {
-            wait();
-        });
+        exitHystery();
+        glups();
     }.bind(this));
 
 

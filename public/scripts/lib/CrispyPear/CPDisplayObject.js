@@ -45,22 +45,22 @@ var CPDisplayObject = function (params) {
 		if ((this._anchor == Anchors.CENTER) ||
 			(this._anchor == Anchors.TOPCENTER) ||
 			(this._anchor == Anchors.BOTTOMCENTER)) {
-			this._anchorOffsetX = -this.width/2*this.scale;
+			this._anchorOffsetX = -this.width/2;
 		}
 		if ((this._anchor == Anchors.CENTERRIGHT) ||
 			(this._anchor == Anchors.TOPRIGHT) ||
 			(this._anchor == Anchors.BOTTOMRIGHT)) {
-			this._anchorOffsetX = -this.width*this.scale;
+			this._anchorOffsetX = -this.width;
 		}
 		if ((this._anchor == Anchors.CENTERLEFT) ||
 			(this._anchor == Anchors.CENTER) ||
 			(this._anchor == Anchors.CENTERRIGHT)) {
-			this._anchorOffsetY = -this.height/2*this.scale;
+			this._anchorOffsetY = -this.height/2;
 		}
 		if ((this._anchor == Anchors.BOTTOMLEFT) ||
 			(this._anchor == Anchors.BOTTOMCENTER) ||
 			(this._anchor == Anchors.BOTTOMRIGHT)) {
-			this._anchorOffsetY = -this.height*this.scale;
+			this._anchorOffsetY = -this.height;
 		}
 	}
 	Object.defineProperty(this, 'anchor', {
@@ -71,7 +71,7 @@ var CPDisplayObject = function (params) {
 	this.canvas = null;
 	this.context = null;
 
-	this.scale = 1;
+	this._scale = 1;
 	this.alpha = 1;
 
 	function scaleChanged(newScale) {
@@ -85,6 +85,8 @@ var CPDisplayObject = function (params) {
 		// Apply it to width and height
 		this.width *= this._scale;
 		this.height *= this._scale;
+
+		//this.anchor = this.anchor; // Need to update _anchorOffsets
 	}
 	Object.defineProperty(this, 'scale', {
 		get : function() { return this._scale; },
@@ -117,7 +119,7 @@ CPDisplayObject.prototype.prepareDraw = function () {
 	var posX = this.x+this._anchorOffsetX;
 	var posY = this.y+this._anchorOffsetY;
 
-    this.context.globalAlpha = this.alpha;
+  this.context.globalAlpha = this.alpha;
 
 	if (this.flipX) {
 	  this.context.scale(-1, 1);
