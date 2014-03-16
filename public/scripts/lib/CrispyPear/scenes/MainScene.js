@@ -360,7 +360,7 @@ var MainScene = function (params) {
         if (!isHystery()) return;
 
         computeEyesPosition({
-            x: e.originalEvent.clientX,
+            x: e.originalEvent.clientX+parseInt($('#mainContent').css('right')),
             y: e.originalEvent.clientY
         });
 
