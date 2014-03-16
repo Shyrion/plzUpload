@@ -153,10 +153,16 @@ module.exports = function(app) {
 	});
 
 	app.get('/clear', function(req, res) {
-		uploadController.purgeUploadFolder(function(success) {
-			console.log('removed all');
-			res.redirect('/');
-		})
+		fbLoginController.isAdminLoggedIn(req.session.userId, req.session.fbToken, function(err, authorized) {
+			if (authorized) {
+				uploadController.purgeUploadFolder(function(success) {
+					console.log('removed all');
+					res.redirect('/');
+				});
+			} else {
+				res.send("You are not admin.");
+			}
+		});
 	});
 
 

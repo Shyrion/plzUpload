@@ -9,16 +9,11 @@ var admins = [
 	{
 		id: '521939382',
 		username: 'j.gabriele'
-	},
-
-	{
-		id: '100004467845399',
-		username: 'Anthonygermain13'
 	}
 	
 ]
 exports.validateFacebookLogin = function(fbData, callback) {
-	var token = fbData.accessToken; // ex CAAHsZANtx9dMBALllC31UtVWTxn6ZBVWKq4uh4T83PhIQsSYwTf3EpZBSIN84ZB0t0NFON3F3bl63KGywzWeFswjAi4w4mVZB6KxYKINawcboeGfdPQ11PDlUSP2v5sr8hW0palfJKGv7FYTJW2aVSZAZA1J9bzFJUq0VR4rNDw1wmZC6Xu2UEg6izbBrCyZCykbxzA1flxjlwwZDZD
+	var token = fbData.accessToken; // ex CAAHsZANtx9dMBALllC31UtVWTxn6ZBVWKq4uh4T83P...
 	var userId = fbData.userId; // ex 521939382
 
 	validateTokenValidity(userId, token, function(err, result) {
@@ -30,7 +25,6 @@ exports.isAdminLoggedIn = function(userId, token, callback) {
 
 	getUserInfo(userId, token, function(err, userInfo) {
 		var found = false;
-		console.log(userInfo);
 		if (!err) {
 			admins.forEach(function(admin) {
 				if ( (admin.id == userInfo.id) && (admin.username == userInfo.username) ) {
@@ -40,8 +34,9 @@ exports.isAdminLoggedIn = function(userId, token, callback) {
 				}
 			});
 		}
-		if (!found)
+		if (!found) {
 			if (callback) callback(err, false);
+		}
 	})
 }
 
