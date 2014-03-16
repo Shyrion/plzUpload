@@ -41,7 +41,7 @@ exports.isAdminLoggedIn = function(userId, token, callback) {
 }
 
 exports.validateTokenValidity = validateTokenValidity = function(userId, token, callback) {
-	var url = 'https://graph.facebook.com/' + userId + '/friends?access_token=' + token;
+	var url = 'https://graph.facebook.com/' + userId + '?access_token=' + token;
 
 	var req = https.get(url, function(res) {
 		/*"error": { "message": "The access token could not be decrypted",

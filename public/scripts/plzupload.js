@@ -86,7 +86,7 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Facebook
 				if (success) {
 					fbManager.getUserInfo(function(response) {
 						fbManager.currentUser.name = response.name;
-						if (menuController) menuController.onFBLogin(fbManager.currentUser.name);
+						if (menuController) menuController.onFBLogin(fbManager.currentUser);
 						$('body').trigger('authorizeMultiupload');
 					});
 				} else {
@@ -111,14 +111,10 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Facebook
 			//if (!$('#facebookLogin').length) initLoginButton();
 
 			if (userStatus == 'connected') {
-
-				if (menuController) menuController.onFBLogin(fbManager.currentUser.name);
-				
-				fbManager.getUserInfo(function(response) {
-					fbManager.currentUser.name = response.name;
-				});
 				fbManager.login(function(success) {
 					console.log("Autologin success ? ", success);
+
+					if (menuController) menuController.onFBLogin(fbManager.currentUser);
 
 					fbManager.getUserInfo(function(response) {
 						fbManager.currentUser.name = response.name;

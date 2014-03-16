@@ -42,7 +42,7 @@ exports.checkIP = function checkIP(ip, callback) {
 	});
 }
 
-exports.uploadFile = function(path, fileName, req, res, callback) {
+exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 
 	// Get the file extension from the filename
 	var fileExtension = '';
@@ -55,7 +55,8 @@ exports.uploadFile = function(path, fileName, req, res, callback) {
 	  var up = new Upload({
 	  	name: generateName(),
 	  	ip: req.connection.remoteAddress,
-	  	ext: fileExtension
+	  	ext: fileExtension,
+	  	userId: userId
 	  });
 
 	  var newPath = UPLOAD_DIR + '/' + up.name + "." + fileExtension;
@@ -80,6 +81,12 @@ exports.getAllUploadedFiles = getAllUploadedFiles = function(callback) {
 		if (err) console.log(err);
 
 		callback(err, files);
+	});
+}
+
+exports.getUploadedFilesForUser = function(userId, callback) {
+	Upload.find({userId: userId}, function(err, allUploads) {
+		if (callback) callback(err, allUploads);
 	})
 }
 

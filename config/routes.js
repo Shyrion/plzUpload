@@ -35,13 +35,48 @@ module.exports = function(app) {
 		});
 	});*/
 
+	app.get('/uploads/:fbUserId', function(req, res) {
+		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
+			var response;
+			if (err) {
+				console.log(err);
+				response = {
+					result: 'error',
+					error: errors.GENERAL_ERROR
+				}
+				res.send(JSON.stringify(response));
+			} else if (user.id != req.params.fbUserId) {
+				response = {
+					result: 'error',
+					error: errors.GENERAL_ERROR
+				};
+				res.send(JSON.stringify(response));
+			} else {
+				uploadController.getUploadedFilesForUser(user.id, function(err, allUploads) {
+					if (err) {
+						response = {
+							result: 'error',
+							error: errors.GENERAL_ERROR
+						};
+					} else {
+						response = {
+							result: 'ok',
+							allUploads: allUploads
+						};
+					}
+					res.send(JSON.stringify(response));
+				});
+			}
+		});
+	});
+
 	app.post('/uploadAjax', function(req, res) {
 
-		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, isAdmin) {
+		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
 
 			function uploadFunction(callback) {
 				uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
-					req, res, function(err, uploadUrl, fullUrl, uploadCode) {
+					req.session.userId, req, res, function(err, uploadUrl, fullUrl, uploadCode) {
 						if (err) {
 							console.log(err);
 							response = {
@@ -141,7 +176,9 @@ module.exports = function(app) {
 	});
 
 
-
+	//=========================//
+	//========= MISC ==========//
+	//=========================//
 
 
 
@@ -171,7 +208,7 @@ module.exports = function(app) {
 	//=========================//
 
 
-	app.get('/info', function(req, res) {
+	/*app.get('/info', function(req, res) {
 		uploadController.getAllUploadedFiles(function(allFiles) {
 			res.render('info');
 		})
@@ -180,7 +217,7 @@ module.exports = function(app) {
 
 	app.get('/contact', function(req, res) {
 		res.render('contact');
-	});
+	});*/
 
 	//=========================//
 	//========= MISC ==========//

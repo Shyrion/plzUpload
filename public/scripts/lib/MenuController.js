@@ -111,10 +111,28 @@ define([], function(UploadProgress) {
 		}
 	}
 
-	MenuController.prototype.onFBLogin = function onFBLogin(usename) {
-		console.log("Login")
+	MenuController.prototype.onFBLogin = function onFBLogin(currentUser) {
 		this.facebookLoginDiv.hide();
 		this.facebookLogoutDiv.show();
+
+		var self=this;
+		// Get previous uploads from logged in user
+		$.ajax('/uploads/'+currentUser.id, {
+      type: 'GET',
+      complete: function(result) {
+        var resultJson = JSON.parse( result.responseText );
+        if (resultJson.result == 'ok') {
+        	if (resultJson.allUploads.length) {
+        		resultJson.allUploads.forEach(function(upload) {
+        			var tmpHtml = self.addUpload(upload);
+        			self.onUploadFinished(tmpHtml, upload.name+'.'+upload.ext, location.origin+'/'+upload.name+'.'+upload.ext);
+        		});
+        	}
+        } else {
+          console.log("Error", resultJson);
+        }
+      }.bind(this)
+	  });
 	}
 
 	MenuController.prototype.onFBLogout = function onFBLogout() {
