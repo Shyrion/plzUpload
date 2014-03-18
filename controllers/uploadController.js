@@ -5,6 +5,8 @@ var ObjectID = require('mongodb').ObjectID;
 var UPLOAD_DIR = __dirname + "/../public/upload"
 var MAX_UPLOAD = 10; // TODO: Change for 3 or 5
 var ID_LENGTH = 5;
+var UPLOAD_LIFE = 2 * 24 * 3600 * 1000; // 48h
+var CHECK_FREQUENCY = 3600 * 1000 // 1h
 
 var syllables = ['a', 'za', 'ra', 'ta', 'ya', 'pa', 'qa', 'sa', 'da', 'fa', 'ga', 'ja', 'ka', 'la',
 	'ma', 'wa', 'xa', 'ca', 'va', 'ba', 'na',
@@ -19,9 +21,9 @@ var syllables = ['a', 'za', 'ra', 'ta', 'ya', 'pa', 'qa', 'sa', 'da', 'fa', 'ga'
 	'ou', 'zou', 'rou', 'tou', 'you', 'pou', 'qou', 'sou', 'dou', 'fou', 'gou', 'jou', 'kou', 'lou',
 	'mou', 'wou', 'xou', 'cou', 'vou', 'bou', 'nou',
 	'oo', 'zoo', 'roo', 'too', 'yoo', 'poo', 'qoo', 'soo', 'doo', 'foo', 'goo', 'joo', 'koo', 'loo',
-	'moo', 'woo', 'xoo', 'coo', 'voo', 'boo', 'noo',
+	'moo', 'woo', 'xoo', 'coo', 'voo', 'boo', 'noo'/*,
 	'y', 'zy', 'ry', 'ty', 'yy', 'py', 'qy', 'sy', 'dy', 'fy', 'gy', 'jy', 'ky', 'ly',
-	'my', 'wy', 'xy', 'cy', 'vy', 'by', 'ny'
+	'my', 'wy', 'xy', 'cy', 'vy', 'by', 'ny'*/
 ];
 
 function generateName() {
@@ -56,8 +58,10 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 	  	name: generateName(),
 	  	ip: req.connection.remoteAddress,
 	  	ext: fileExtension,
-	  	userId: userId
+	  	userId: userId,
+	  	date: new Date()
 	  });
+	  console.log(up);
 
 	  var newPath = UPLOAD_DIR + '/' + up.name + "." + fileExtension;
 	  up.save(function(err, result) {
@@ -90,6 +94,20 @@ exports.getUploadedFilesForUser = function(userId, callback) {
 	})
 }
 
+exports.removeUpload = removeUpload = function(uploadId, uploadName, callback) {
+	// find file in uploaded files
+	getAllUploadedFiles(function(err, allFiles) {
+		allFiles.forEach(function(file) {
+			if (file == uploadName) {
+				console.log("Removing file : ", file);
+				Upload.find({_id: uploadId}).remove();
+				fs.unlinkSync(UPLOAD_DIR + '/' + file);	
+			}
+		});
+		if (callback) callback(true);
+	});
+}
+
 exports.purgeUploadFolder = purgeUploadFolder = function(callback) {
 	// Remove all entries from database
 	Upload.find({}).remove();
@@ -111,10 +129,6 @@ function removeAllAtMidnight() {
 	var timeUntilMidnight = midnight-now;
 	//timeUntilMidnight = 10 * 1000; // 10 sec
 
-       console.log(now, midnight);
-	
-	console.log("Call function in " + timeUntilMidnight/1000 + "sec");
-
 	setTimeout(function() {
 		purgeUploadFolder(function(success) {
 			console.log("It's midnight, all is removed !");
@@ -123,4 +137,27 @@ function removeAllAtMidnight() {
 	}, timeUntilMidnight);
 }
 
-removeAllAtMidnight();
+//removeAllAtMidnight();
+
+
+function checkFilesToRemove() {
+	var now = new Date();
+
+	console.log("Check files to remove");
+
+	Upload.find({}, function(err, allUploads) {
+		if (!err && allUploads.length) {
+			allUploads.forEach(function(upload) {
+				if (now - upload.date > UPLOAD_LIFE) {
+					removeUpload(upload._id, upload.name+'.'+upload.ext);
+				}
+			})
+		}
+	})
+
+	setTimeout(function() {
+		checkFilesToRemove(); // Check every 60sec
+	}, CHECK_FREQUENCY);
+}
+
+checkFilesToRemove();

@@ -45,12 +45,13 @@ define([], function(UploadProgress) {
 	}
 
 	MenuController.prototype.open = function open() {
+		$('#menu').show();
 		$('#mainContent').animate({
 			right: "187",
 			queue: false
 		});
 		$('#menu').animate({
-			right: "-16",
+			right: "0",
 			queue: false
 		});
 		this.opened = true;
@@ -64,7 +65,10 @@ define([], function(UploadProgress) {
 		$('#menu').animate({
 			right: "-202",
 			queue: false
-		});
+		}, 400, function() {
+				console.log("Finished"); //display: none;
+				$('#menu').hide();
+			});
 		this.opened = false;
 	}
 

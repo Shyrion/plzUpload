@@ -112,7 +112,7 @@ var MainScene = function (params) {
         spriteSheet: CPResourceManager.instance.getImage('animJump'),
         totalFrame: 4,
         offset: 0,
-        framePerSecond: 8,
+        framePerSecond: 10,
         frameSize: {w:CPResourceManager.instance.getImage('animJump').width/4, h:CPResourceManager.instance.getImage('animJump').height}
     });
 
@@ -132,7 +132,7 @@ var MainScene = function (params) {
         spriteSheet: CPResourceManager.instance.getImage('animOpenMouth'),
         totalFrame: 4,
         offset: 0,
-        framePerSecond: 8,
+        framePerSecond: 12,
         frameSize: {w:CPResourceManager.instance.getImage('animOpenMouth').width/4, h:CPResourceManager.instance.getImage('animOpenMouth').height}
     });
 
@@ -243,7 +243,7 @@ var MainScene = function (params) {
     }
 
     function cry() {
-        animatedSprite.playRepeat('crying', 6, function() {
+        animatedSprite.playRepeat('crying', 26, function() {
             animatedSprite.playOnce('blink', function() {
                 wait();
             });
