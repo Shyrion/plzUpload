@@ -67,7 +67,7 @@ a.button:visited
 
 footer
 {
-	font-size: 11pt;
+	font-size: 15pt;
 	font-family: "BeautifulEveryTime";
 	font-weight: bold;
 	font-style: oblique;
@@ -141,6 +141,8 @@ footer
 {
 	background-color: rgb(255, 250, 160);
 	border: 1px solid #333;
+
+	display: none;
 
 	position: absolute;
 	top: 0;

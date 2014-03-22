@@ -70,6 +70,14 @@ module.exports = function(app) {
 		});
 	});
 
+	app.post('/uploadFinished', function(req, res) {
+		res.send('OOOOOOOOOOOOOOOKKKKKKKKKKKKKKK !!!!!!!!!!!!!!!!');
+	}
+
+	app.get('/uploadFinished', function(req, res) {
+		res.send('OOOOOOOOOOOOOOOKKKKKKKKKKKKKKK GET !!!!!!!!!!!!!!!!');
+	}
+
 	app.post('/uploadAjax', function(req, res) {
 
 		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
