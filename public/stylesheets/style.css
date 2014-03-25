@@ -139,8 +139,8 @@ footer
 
 #menu
 {
-	background-color: rgb(255, 250, 160);
-	border: 1px solid #333;
+	background-color: rgb(200, 230, 255);
+	border-left: 2px solid #333;
 
 	display: none;
 
@@ -175,15 +175,22 @@ footer
 
 .menuItemGroup
 {
-	background-color: #333;
+	background-color: #FFDC9D;
+	border-top: 2px solid #333;
+	border-bottom: 2px solid #333;
 
 	display: block;
 
-	color: #F7F7F7;
+	color: #333;
 	text-decoration: none;
 
 	margin-bottom: 50px;
 	width: 100%;
+}
+
+.menuItemGroup:first-child
+{
+	border-top: none;
 }
 
 .menuItemGroup .title
@@ -229,7 +236,7 @@ footer
 
 .menuItemGroup li.first
 {
-	background-color: rgb(178, 178, 255);
+	background-color: rgb(252, 255, 178);
 	color: #333;
 }
 
@@ -243,7 +250,6 @@ footer
 {
 	background-color: rgb(136, 255, 212);
 	color: #333;
-	border-bottom: 1px solid #555;
 }
 
 #getFile
@@ -277,7 +283,7 @@ footer
 
 #FBLogin:hover
 {
-	background-color: #555;
+	background-color: #FAE3B9;
 }
 
 /*====== Uploads ======*/
@@ -330,7 +336,8 @@ footer
 
 .upload a
 {
-	color: #F7F7F7;
+	color: #4061CA;
+	font-weight: bold;
 }
 /*==================*/
 /*====== Main ======*/
