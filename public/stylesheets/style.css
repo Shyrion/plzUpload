@@ -50,7 +50,7 @@ input
 a.button
 {
 	background-color: #F7F7F7;
-	border: solid 1px black;
+	border-top: solid 1px black;
 
 	color: #333;
 	text-decoration: none;
@@ -223,7 +223,8 @@ footer
 .menuItemGroup li
 {
 	border-top: 1px solid #555;
-	background-color: blue;
+	background-color: white;
+	color: black;
 
 	list-style-type: none;
 	text-align: center;
@@ -236,23 +237,6 @@ footer
 	height: 40px;
 }
 
-.menuItemGroup li.first
-{
-	background-color: rgb(252, 255, 178);
-	color: #333;
-}
-
-.menuItemGroup li.second
-{
-	background-color: rgb(255, 126, 126);
-	color: #333;
-}
-
-.menuItemGroup li.third
-{
-	background-color: rgb(136, 255, 212);
-	color: #333;
-}
 
 #getFile
 {
