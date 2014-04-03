@@ -267,11 +267,6 @@ footer
 	cursor: pointer;
 }
 
-#FBLogin:hover
-{
-	background-color: #FAE3B9;
-}
-
 /*====== Uploads ======*/
 
 .upload
