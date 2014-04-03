@@ -5,7 +5,7 @@
 
 ::selection
 {
-    background: lightgreen;
+    background: #f23232;
     color: white;
     cursor: help;
 }
@@ -139,7 +139,7 @@ footer
 
 #menu
 {
-	background-color: rgb(200, 230, 255);
+	background-color: white; /*rgb(200, 230, 255);*/
 	border-left: 2px solid #333;
 
 	display: none;
@@ -148,6 +148,7 @@ footer
 	top: 0;
 	right: -202px;
 	overflow-y: scroll;
+	overflow-x: hidden;
 
 	width: 200px;
 	height: 100%;
@@ -175,13 +176,14 @@ footer
 
 .menuItemGroup
 {
-	background-color: #FFDC9D;
+	background-color: black; /*#FFDC9D;*/
+	color: white;
+
 	border-top: 2px solid #333;
 	border-bottom: 2px solid #333;
 
 	display: block;
 
-	color: #333;
 	text-decoration: none;
 
 	margin-bottom: 50px;
@@ -198,7 +200,7 @@ footer
 	display: block;
 
 	text-align: center;
-	font-size: 16pt;
+	font-size: 18pt;
 	/*text-indent: 28px;*/
 	line-height: 20px;
 
@@ -291,23 +293,65 @@ footer
 .upload
 {
 	font-size: 10pt;
-	padding: 10px 5px;
 }
 
-.upload .uploadName
+.upload > *
 {
+	width: 100%;
+	line-height: 25px;
+}
+
+.upload .uploadHeader
+{
+	background: black;
+	color: white;
+
 	font-weight: bold;
-	font-size: 11pt;
+	font-size: 12pt;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	height: 25px;
 }
 
-.upload progress
+.upload .uploadCode
 {
-	background-color: blue;
-	border: solid 1px green;
+	background: white;
+	color: black;
 
-	margin-right: 7px;
-	height: 20px;
-	width: 130px;
+	font-weight: bold;
+	font-size: 12pt;
+	padding: 0px 5px;
+}
+
+.upload .uploadCode, .upload .uploadProgress, .upload progress
+{
+	height: 40px;
+	line-height: 40px;
+}
+
+.upload .uploadProgress {
+	position: relative;
+}
+
+.uploadProgress progress
+{
+	background-color: white;
+	border: 0;
+
+	width: 100%;
+}
+
+.uploadProgress .progressValue
+{
+	color: black;
+	font-size: 16pt;
+	font-family: "BeautifulEveryTime";
+	font-weight: bold;
+
+	position: absolute;
+	left: 50%;
 }
 
 .upload progress-bar
@@ -320,23 +364,23 @@ footer
 }
 
 .upload progress::-webkit-progress-bar { 
-	background-color: #FFFA9B;
-	border: solid 1px #9BFAFF;
+	background-color: white;
+	border: 0;
 }
 
 .upload progress::-webkit-progress-value {  
-	background-color: #9BFAFF;
-	border: solid 1px #9BFF9B;
+	background-color: #f23232;
+	border: 0;
 }
 
 .upload progress::-moz-progress-bar { 
-	background-color: red;
-	border: solid 1px yellow;
+	background-color: #f23232; /*fbee48, d2e5ff*/
+	border: 0;
 }
 
 .upload a
 {
-	color: #4061CA;
+	color: black;
 	font-weight: bold;
 }
 /*==================*/
@@ -396,3 +440,8 @@ footer
 {
 	text-align: center;
 }
+
+.uploadCode.bgWhite { background: white;}
+.uploadCode.bgRed { background: #f23232;}
+.uploadCode.bgBlue { background: #d2e5ff;}
+.uploadCode.bgYellow { background: #fbee48;}

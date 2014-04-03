@@ -17,6 +17,7 @@
 		{ "imageName": "animHappy", "imagePath": "images/Glooty/animHappy.gif" },
 		{ "imageName": "animHystery", "imagePath": "images/Glooty/animHystery.gif" },
 		{ "imageName": "animOpenMouth", "imagePath": "images/Glooty/animOpenMouth.gif" },
+		{ "imageName": "animNo", "imagePath": "images/Glooty/animNo.gif" },
 
 		{ "imageName": "eye", "imagePath": "images/Glooty/eye.gif" }
 	]

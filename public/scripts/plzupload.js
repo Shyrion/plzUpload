@@ -4,10 +4,22 @@ requirejs.config({
 });
 
 
-require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/FacebookManager'],
+require(['lib/jquery-2.1.0.min', 'dragDrop', 'MenuController', 'lib/FacebookManager'],
 	function(a, DragDropController, MenuController, FacebookManager) {
   var menuController = new MenuController();
+
   var dragDrop = new DragDropController('centeredZone', menuController);
+
+
+  $('body').on('authorizeMultiupload', function() {
+  	console.log("Authorize multi");
+  	dragDrop.authorizeMultiUpload
+  }.bind(this));
+
+  $('body').on('unauthorizeMultiupload', function() {
+  	console.log("Unauthorize multi");
+  	dragDrop.unauthorizeMultiUpload = false;
+  }.bind(this));
 
 
   //===== CPScene =====//
@@ -51,27 +63,44 @@ require(['lib/jquery-2.1.0.min', 'dragDrop', 'lib/MenuController', 'lib/Facebook
   //===== Glooty animation =====//
 
   $('#centeredZone').on('dragover', function(e) {
-  	$('body').trigger('fileDragOver', e);
+  	if (fileDropOK) {
+  		$('body').trigger('fileDragOver', e);
+  	}
   });
 
   $('#centeredZone').on('dragenter', function(e) {
-  	$('body').trigger('fileDragEnter', e);
+  	if (fileDropOK) {
+  		$('body').trigger('fileDragEnter', e);
+  	} else {
+  		$('body').trigger('oneAtATime');
+  	}
   });
 
   $('#centeredZone').on('dragleave', function(e) {
-  	$('body').trigger('fileDragOut');
+  	if (fileDropOK) {
+  		$('body').trigger('fileDragOut');
+  	}
+  	
   });
 
   $('#centeredZone').on('dragend', function(e) {
   	$('body').trigger('fileDragFinished');
   });
 
-  $('#centeredZone').on('drop', function(e) {
-  	$('body').trigger('fileDropped');
-  });
-
   $('#centeredZone').on('dragout', function(e) {
   	$('body').trigger('fileDragOut');
+  });
+
+  var fileDropOK = true;
+  $('#centeredZone').on('drop', function(e) {
+  	if (fileDropOK) {
+  		$('body').trigger('fileDropped');
+  		fileDropOK = false;
+  	}
+  });
+
+  $('body').on('noUploadRunning', function(e) {
+  	fileDropOK = true;
   });
 
   //===== Facebook login =====//

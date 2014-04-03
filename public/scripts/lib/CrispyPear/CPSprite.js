@@ -222,7 +222,7 @@ CPSprite.prototype.unlock = function () {
 */
 CPSprite.prototype.pause = function (){
 	this.paused = true;
-	console.log('pause');
+	//console.log('pause');
 }
 
 /*
@@ -230,7 +230,7 @@ CPSprite.prototype.pause = function (){
 */
 CPSprite.prototype.resume = function (){
 	this.paused = false;
-	console.log('resume');
+	//console.log('resume');
 }
   
 CPSprite.prototype.gotoAndStop = function (i)

@@ -79,8 +79,10 @@ define([], function(UploadProgress) {
 		this.menuUploadsSpeech.hide();
 
 		var uploadHtml = $('<div class="upload">' +
-        '<span class="uploadName">' + fileInfo.name + '</span>' +
-        '<div class="progress">' +
+        '<div class="uploadHeader">' +
+            '<span class="uploadName">' + fileInfo.name + '</span>' +
+        '</div>' +
+        '<div class="uploadProgress">' +
             '<progress data-id="0" value="0" max="100"></progress>' +
             '<span class="progressValue">0%</span>' +
         '</div>' +
@@ -90,9 +92,13 @@ define([], function(UploadProgress) {
 	}
 
 	MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv, name, url) {
-		$('.progress', uploadDiv).remove();
+		$('.uploadProgress', uploadDiv).remove();
 
-		var finishHtml = $('<div><span><strong>Finished!</strong> (Code: <a href="' + url + '">' + name + '</a>)</span></div>');
+		var bgColorClasses = ['bgBlue', 'bgRed', 'bgYellow', 'bgWhite'];
+		var colorClass = bgColorClasses[Math.floor(Math.random()*4)];
+		var finishHtml = $('<div class="uploadCode ' + colorClass + '">Code: <a href="' + url + '">' + name + '</a></div>');
+
+		$('uploadCode', finishHtml).addClass(colorClass);
 
 		this.bindUploadOnClick($('a', finishHtml), name);
 

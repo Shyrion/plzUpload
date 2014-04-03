@@ -1,4 +1,4 @@
-define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(DropZone, MenuController, UploadProgress) {
+define(['lib/DropZone', 'MenuController', 'UploadProgress'], function(DropZone, MenuController, UploadProgress) {
 
 	var DragDropController = function(dropZoneId, menuController) {
 		this.menuController = menuController;
@@ -6,16 +6,6 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 	  this.nbRunningUploads = 0;
 	  this.allUploads = {};
     this.multiUploadAuthorized = false;
-
-    $('body').on('authorizeMultiupload', function() {
-    	console.log("Authorize multi");
-    	this.multiUploadAuthorized = true;
-    }.bind(this));
-
-    $('body').on('unauthorizeMultiupload', function() {
-    	console.log("Unauthorize multi");
-    	this.multiUploadAuthorized = false;
-    }.bind(this));
 
 		var dropZone = new DropZone(dropZoneId, function(file) {
 
@@ -111,7 +101,15 @@ define(['lib/DropZone', 'lib/MenuController', 'lib/UploadProgress'], function(Dr
 			// Increase running uploads counter
 			this.nbRunningUploads++;
 		}.bind(this));
-	}
+	};
+
+	DragDropController.prototype.authorizeMultiUpload = function() {
+    this.multiUploadAuthorized = true;
+	};
+
+	DragDropController.prototype.unauthorizeMultiUpload = function() {
+		this.multiUploadAuthorized = false;
+	};
 
 	return DragDropController;
 });

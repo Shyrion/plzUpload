@@ -194,6 +194,16 @@ var MainScene = function (params) {
         frameSize: {w:CPResourceManager.instance.getImage('animHappy').width/4, h:CPResourceManager.instance.getImage('animHappy').height}
     });
 
+    // "No no" animation
+    animatedSprite.add({
+        sequenceName: 'nono',
+        spriteSheet: CPResourceManager.instance.getImage('animNo'),
+        totalFrame: 4,
+        offset: 0,
+        framePerSecond: 10,
+        frameSize: {w:CPResourceManager.instance.getImage('animNo').width/4, h:CPResourceManager.instance.getImage('animNo').height}
+    });
+
 
     //====================//
     //======= EYES =======//
@@ -233,7 +243,7 @@ var MainScene = function (params) {
         exitHystery();
         animatedSprite.playRepeat('breathing', 7, function() {
             animatedSprite.playOnce('blink', function() {
-                if (Math.floor(Math.random()*2)) {
+                if (Math.floor(Math.random()*4)) {
                     cry();
                 } else {
                     jump();
@@ -245,7 +255,11 @@ var MainScene = function (params) {
     function cry() {
         animatedSprite.playRepeat('crying', 26, function() {
             animatedSprite.playOnce('blink', function() {
-                wait();
+                if (Math.floor(Math.random()*4)) {
+                    wait();
+                } else {
+                    cry();
+                }
             });
         });
     }
@@ -268,11 +282,23 @@ var MainScene = function (params) {
         });
     }
 
+    function eat() {
+        animatedSprite.start('eating');
+    }
+
     function glups() {
         animatedSprite.playOnce('glups', function() {
             animatedSprite.playRepeat('happy', 12, function() {
                 wait();
             });
+        });
+    }
+
+    function nono() {
+        animatedSprite.pause();
+        animatedSprite.playRepeat('nono', 2, function() {
+            console.log('eat');
+            eat();
         });
     }
     
@@ -298,6 +324,10 @@ var MainScene = function (params) {
             animatedSprite.start('hystery');
             $('body').trigger('fileDragOver', e);
         });
+    }.bind(this));
+
+    $('body').on('oneAtATime', function(eventTrigger, e) {
+        nono();
     }.bind(this));
 
     var eyesBaseY       = animatedSprite.y-25;
@@ -373,7 +403,7 @@ var MainScene = function (params) {
 
     $('body').on('fileDropped', function() {
         exitHystery();
-        animatedSprite.start('eating');
+        eat();
     }.bind(this));
 
     $('body').on('fileDragOut', function() {
