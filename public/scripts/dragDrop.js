@@ -34,8 +34,6 @@ define(['lib/DropZone', 'MenuController', 'UploadProgress'], function(DropZone, 
 			// Add new line in Menu
 			var uploadItemHtml = this.menuController.addUpload(newUpload);
 
-			console.log(uploadItemHtml);
-
 			// Create the corresponding progress bar
 			var progress = new UploadProgress($('.progress', uploadItemHtml)[0]);
 

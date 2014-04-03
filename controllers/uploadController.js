@@ -55,7 +55,8 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 
 		// Create entry in DB
 	  var up = new Upload({
-	  	name: generateName(),
+	  	name: fileName,
+	  	code: generateName(),
 	  	ip: req.connection.remoteAddress,
 	  	ext: fileExtension,
 	  	userId: userId,
@@ -63,16 +64,16 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 	  });
 	  console.log(up);
 
-	  var newPath = UPLOAD_DIR + '/' + up.name + "." + fileExtension;
+	  var newPath = UPLOAD_DIR + '/' + up.code + "." + fileExtension;
 	  up.save(function(err, result) {
 			console.log("FINISHED SAVE");
 
 			// Upload to server
 	  	fs.writeFile(newPath, data, function (err) {
 				console.log("FINISHED WRITEFILE");
-		  	var uploadUrl = '/' + up.name + "." + fileExtension;
+		  	var uploadUrl = '/' + up.code + "." + fileExtension;
 		  	var fullUrl = 'http://' + req.headers.host + uploadUrl;
-		  	var uploadCode = up.name + "." + fileExtension;
+		  	var uploadCode = up.code + "." + fileExtension;
 				callback(err, uploadUrl, fullUrl, uploadCode);
 		  });
 	  });

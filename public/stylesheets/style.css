@@ -321,7 +321,7 @@ footer
 	color: black;
 
 	font-weight: bold;
-	font-size: 12pt;
+	font-size: 11pt;
 	padding: 0px 5px;
 }
 
@@ -440,8 +440,3 @@ footer
 {
 	text-align: center;
 }
-
-.uploadCode.bgWhite { background: white;}
-.uploadCode.bgRed { background: #f23232;}
-.uploadCode.bgBlue { background: #d2e5ff;}
-.uploadCode.bgYellow { background: #fbee48;}

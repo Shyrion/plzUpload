@@ -93,12 +93,7 @@ define([], function(UploadProgress) {
 
 	MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv, name, url) {
 		$('.uploadProgress', uploadDiv).remove();
-
-		var bgColorClasses = ['bgBlue', 'bgRed', 'bgYellow', 'bgWhite'];
-		var colorClass = bgColorClasses[Math.floor(Math.random()*4)];
-		var finishHtml = $('<div class="uploadCode ' + colorClass + '">Code: <a href="' + url + '">' + name + '</a></div>');
-
-		$('uploadCode', finishHtml).addClass(colorClass);
+		var finishHtml = $('<div class="uploadCode">Code: <a href="' + url + '">' + name + '</a></div>');
 
 		this.bindUploadOnClick($('a', finishHtml), name);
 
@@ -135,7 +130,7 @@ define([], function(UploadProgress) {
         	if (resultJson.allUploads.length) {
         		resultJson.allUploads.forEach(function(upload) {
         			var tmpHtml = self.addUpload(upload);
-        			self.onUploadFinished(tmpHtml, upload.name+'.'+upload.ext, location.origin+'/'+upload.name+'.'+upload.ext);
+        			self.onUploadFinished(tmpHtml, upload.code+'.'+upload.ext, location.origin+'/'+upload.code+'.'+upload.ext);
         		});
         	}
         } else {
