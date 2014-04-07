@@ -1,11 +1,11 @@
-var uploadController = require('../controllers/uploadController');
+var uploadController = require('../app/controllers/uploadController');
 
 module.exports = function(app) {
 
-	var utils 							= require('../lib/utils');
+	var utils 							= require('../app/lib/utils');
 	var errors							= require('./errors');
 
-	var fbLoginController		= require('../controllers/fbLoginController');
+	var fbLoginController		= require('../app/controllers/fbLoginController');
 
 	//=========================//
 	//========= HOME ==========//

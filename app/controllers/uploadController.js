@@ -2,7 +2,7 @@ var fs = require('fs');
 var Upload = require('../models/Upload');
 var ObjectID = require('mongodb').ObjectID;
 
-var UPLOAD_DIR = __dirname + "/../public/upload"
+var UPLOAD_DIR = __dirname + "/../../public/upload"
 var MAX_UPLOAD = 10; // TODO: Change for 3 or 5
 var ID_LENGTH = 5;
 var UPLOAD_LIFE = 2 * 24 * 3600 * 1000; // 48h
@@ -98,6 +98,7 @@ exports.getUploadedFilesForUser = function(userId, callback) {
 exports.removeUpload = removeUpload = function(uploadId, uploadName, callback) {
 	// find file in uploaded files
 	getAllUploadedFiles(function(err, allFiles) {
+		console.log(allFiles);
 		allFiles.forEach(function(file) {
 			if (file == uploadName) {
 				console.log("Removing file : ", file);

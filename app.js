@@ -1,5 +1,5 @@
 var express 		= require('express');
-var utils		= require('./lib/utils');
+var utils		= require('./app/lib/utils');
 
 function setupMongoose(callback) {
 	var mongoose = require('mongoose');
@@ -30,7 +30,7 @@ function setupExpress(callback) {
 	//===== Configuration =====//
 
 	app.set('view engine', 'ejs');
-	app.set('views', __dirname + '/views');
+	app.set('views', __dirname + '/app/views');
 
 	app.use(express.static(__dirname + "/public"));
 	app.use(express.static(__dirname + "/public/upload"));
