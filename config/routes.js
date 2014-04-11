@@ -69,6 +69,30 @@ module.exports = function(app) {
 			}
 		});
 	});
+
+	app.post('/removeUpload', function(req, res) {
+		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
+			uploadController.getUpload({code: req.body.uploadCode}, function(err, upload) {
+				// The user will really delete one of its upload, not someone else's :).
+				if (req.session.userId == upload.userId) {
+					uploadController.removeUpload(upload, function(err, result) {
+						if (err) {
+							console.log(err);
+							response = {
+								result: 'error',
+								error: errors.REMOVE_ERROR
+							}
+						} else {
+							response = {
+								result: 'ok'
+							};
+						}
+						res.send(JSON.stringify(response));
+					});
+				}
+			});
+		});
+	});
 	
 	app.post('/uploadAjax', function(req, res) {
 
@@ -184,7 +208,6 @@ module.exports = function(app) {
 
 	app.get('/getAllUploads', function(req, res) {
 		uploadController.getAllUploadedFiles(function(err, allFiles) {
-			console.log(allFiles,allFiles.length);
 			res.render('showUploads', {allFileNames: allFiles});
 		})
 	});

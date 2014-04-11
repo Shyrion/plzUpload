@@ -62,7 +62,6 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 	  	userId: userId,
 	  	date: new Date()
 	  });
-	  console.log(up);
 
 	  var newPath = UPLOAD_DIR + '/' + up.code + "." + fileExtension;
 	  up.save(function(err, result) {
@@ -73,7 +72,7 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 				console.log("FINISHED WRITEFILE");
 		  	var uploadUrl = '/' + up.code + "." + fileExtension;
 		  	var fullUrl = 'http://' + req.headers.host + uploadUrl;
-		  	var uploadCode = up.code + "." + fileExtension;
+		  	var uploadCode = up.code;
 				callback(err, uploadUrl, fullUrl, uploadCode);
 		  });
 	  });
@@ -95,10 +94,9 @@ exports.getUploadedFilesForUser = function(userId, callback) {
 	})
 }
 
-exports.removeUpload = removeUpload = function(uploadId, uploadName, callback) {
+/*exports.removeUpload = removeUpload = function(uploadId, uploadName, callback) {
 	// find file in uploaded files
 	getAllUploadedFiles(function(err, allFiles) {
-		console.log(allFiles);
 		allFiles.forEach(function(file) {
 			if (file == uploadName) {
 				console.log("Removing file : ", file);
@@ -107,6 +105,23 @@ exports.removeUpload = removeUpload = function(uploadId, uploadName, callback) {
 			}
 		});
 		if (callback) callback(true);
+	});
+}*/
+
+exports.removeUpload = removeUpload = function(upload, callback) {
+	console.log("Going to delete ", upload.code);
+	// Remove file on disk
+	fs.unlinkSync(UPLOAD_DIR + '/' + upload.code + '.' + upload.ext);
+
+	// Remove in DB
+	upload.remove(function(err) {
+		if (callback) callback(err, true);
+	});
+}
+
+exports.getUpload = getUpload = function(uploadInfo, callback) {
+	Upload.findOne(uploadInfo, function(err, upload) {
+		if (callback) callback(err, upload);
 	});
 }
 
@@ -150,15 +165,17 @@ function checkFilesToRemove() {
 	Upload.find({}, function(err, allUploads) {
 		if (!err && allUploads.length) {
 			allUploads.forEach(function(upload) {
-				if (now - upload.date > UPLOAD_LIFE) {
-					removeUpload(upload._id, upload.name+'.'+upload.ext);
+				if (!upload.userId) { // logged in uploads last forever
+					if (now - upload.date > UPLOAD_LIFE) {
+						removeUpload(upload);
+					}
 				}
 			})
 		}
 	})
 
 	setTimeout(function() {
-		checkFilesToRemove(); // Check every 60sec
+		checkFilesToRemove();
 	}, CHECK_FREQUENCY);
 }
 

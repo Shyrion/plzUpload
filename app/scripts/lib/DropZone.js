@@ -49,6 +49,7 @@ var DropZone = function (id, onDropCallback) {
     this.dropElement.addEventListener('drop', onDrop, false);
 
     function processFile(file, callback) {
+        console.log("Process : ", file);
         if (!file) return;
 
         this.fileToUpload = file;

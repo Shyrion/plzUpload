@@ -3,8 +3,10 @@ MenuController = function (id, onDropCallback) {
 	this.menuButton = $('#menuButton');
 	this.menuDiv = $('#menu');
 	this.menuUploadsDiv = $('#menuUploads');
+	this.allUploadsDiv = $('#allUploads');
 	this.menuUploadsSpeech = $('.speech', this.menuUploadsDiv);
 	this.opened = false;
+	this.currentUserId = null;
 
 	$('#menuButton').click(function() {
 		this.opened ? this.close() : this.open();
@@ -85,15 +87,19 @@ MenuController.prototype.addUpload = function addUpload(fileInfo) {
           '<span class="progressValue">0%</span>' +
       '</div>' +
   '</div>');
-  this.menuUploadsDiv.append(uploadHtml);
+  this.allUploadsDiv.prepend(uploadHtml);
   return uploadHtml;
 }
 
-MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv, name, url) {
+MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv, code, url) {
 	$('.uploadProgress', uploadDiv).remove();
-	var finishHtml = $('<div class="uploadCode">Code: <a href="' + url + '">' + name + '</a></div>');
+	var finishHtml = $('<div class="uploadCode">' +
+											'Code: <a href="' + url + '">' + code + '</a>' +
+      								'<span data-code="'+code+'" class="uploadButton protectButton disabled"></span>' +
+      								'<span data-code="'+code+'" class="uploadButton deleteButton"></span>' +
+										'</div>');
 
-	this.bindUploadOnClick($('a', finishHtml), name);
+	this.bindUploadOnClick($('a', finishHtml), code);
 
 	uploadDiv.append(finishHtml);
 }
@@ -106,31 +112,54 @@ MenuController.prototype.onUploadFailed = function onUploadFailed(uploadDiv) {
 	}
 }
 
-//===== Facebook Login =====//
-
-MenuController.prototype.addFacebookLogin = function addFacebookLogin(isLoggedIn, callback) {
-	if (isLoggedIn) {
-
-	}
+MenuController.prototype.bindDeleteButtons = function bindDeleteButtons() {
+	var self = this;
+	$('.deleteButton').click(function(e) {
+		var data = {uploadCode: $(e.target).data('code')};
+		$.ajax('/removeUpload', {
+	    type: 'POST',
+	    data: data,
+	    complete: function(result) {
+	      var resultJson = JSON.parse( result.responseText );
+	      if (resultJson.result == 'ok') {
+	      	self.refreshUploads();
+	      } else {
+	        console.log("Error", resultJson);
+	      }
+	    }.bind(this)
+	  });
+	});
 }
 
-MenuController.prototype.onFBLogin = function onFBLogin(currentUser) {
-	this.facebookLoginDiv.hide();
-	this.facebookLogoutDiv.show();
+MenuController.prototype.bindProtectButtons = function bindProtectButtons() {
+	var self = this;
+	$('.protectButton').click(function(e) {
+		$(e.target).hasClass('disabled') ? $(e.target).removeClass('disabled') : $(e.target).addClass('disabled');
+		/*var data = {uploadCode: $(e.target).data('code')};
+		$.ajax('/removeUpload', {
+	    type: 'POST',
+	    data: data,
+	    complete: function(result) {
+	      var resultJson = JSON.parse( result.responseText );
+	      if (resultJson.result == 'ok') {
+	      	self.refreshUploads();
+	      } else {
+	        console.log("Error", resultJson);
+	      }
+	    }.bind(this)
+	  });*/
+	});
+}
 
-	var self=this;
-	// Get previous uploads from logged in user
-	$.ajax('/uploads/'+currentUser.id, {
-    type: 'GET',
+MenuController.prototype.deleteUpload = function deleteUpload(uploadCode) {
+	var data = {code: uploadCode};
+	$.ajax('/uploads/'+this.currentUserId, {
+    type: 'POST',
+    data: data,
     complete: function(result) {
       var resultJson = JSON.parse( result.responseText );
       if (resultJson.result == 'ok') {
-      	if (resultJson.allUploads.length) {
-      		resultJson.allUploads.forEach(function(upload) {
-      			var tmpHtml = self.addUpload(upload);
-      			self.onUploadFinished(tmpHtml, upload.code+'.'+upload.ext, location.origin+'/'+upload.code+'.'+upload.ext);
-      		});
-      	}
+      	self.refreshUploads();
       } else {
         console.log("Error", resultJson);
       }
@@ -138,7 +167,43 @@ MenuController.prototype.onFBLogin = function onFBLogin(currentUser) {
   });
 }
 
+MenuController.prototype.refreshUploads = function deleteUpload() {
+	var self = this;
+	// Get previous uploads from logged in user
+	$.ajax('/uploads/'+this.currentUserId, {
+    type: 'GET',
+    complete: function(result) {
+      var resultJson = JSON.parse( result.responseText );
+      if (resultJson.result == 'ok') {
+      	if (resultJson.allUploads.length) {
+      		resultJson.allUploads.forEach(function(upload) {
+      			var tmpHtml = self.addUpload(upload);
+      			self.onUploadFinished(tmpHtml, upload.code, location.origin+'/'+upload.code+'.'+upload.ext);
+      		});
+      	}
+      	self.bindDeleteButtons();
+      	self.bindProtectButtons();
+      } else {
+        console.log("Error", resultJson);
+      }
+    }.bind(this)
+  });
+}
+
+//===== Facebook Login =====//
+
+
+MenuController.prototype.onFBLogin = function onFBLogin(currentUser) {
+	this.facebookLoginDiv.hide();
+	this.facebookLogoutDiv.show();
+
+	this.currentUserId = currentUser.id;
+
+	this.refreshUploads();
+}
+
 MenuController.prototype.onFBLogout = function onFBLogout() {
 	this.facebookLoginDiv.show();
 	this.facebookLogoutDiv.hide();
+	this.currentUserId = null;
 }

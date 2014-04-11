@@ -29,6 +29,24 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
 
+    watch: {
+      css: {
+        files: cssPath+'**/*.css',
+        tasks: ['cssmin', 'clean:css'],
+        options: {
+          livereload: true,
+        },
+      },
+      js: {
+        files: [jsPath+'**/*.js', '!'+jsPath+'**/*'+minExt+'.js'],
+        tasks: ['uglify', 'concat', 'clean:js'],
+        options: {
+          livereload: true,
+        },
+      }
+    },
+
+
     uglify: {
       all: {
         files: [{
@@ -96,6 +114,7 @@ module.exports = function(grunt) {
   });
 
   // Load the plugins
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-concat');

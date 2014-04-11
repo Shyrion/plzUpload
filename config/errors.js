@@ -11,9 +11,14 @@ module.exports = {
 		},
 	QUOTA_REACHED:
 		{
-			code: 10,
+			code: 20,
 			message: "You have reached your quota for today. " +
 							"Please come back tomorrow or login with Facebook to enjoy no restrictions."
+		},
+	REMOVE_ERROR:
+		{
+			code: 100,
+			message: "An error occured when deleting your upload."
 		},
 	GENERAL_ERROR:
 		{
