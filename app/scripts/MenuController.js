@@ -112,6 +112,28 @@ MenuController.prototype.bindUploadOnClick = function bindUploadOnClick(element,
 		win.focus();
 		return false;
   });
+
+
+	function tooltipCreate() {		
+		var tooltipHtml = '<span class="title">Upload code</span>'+
+											'<p class="content">'+
+												'Give this code to your friends, and they will '+
+												'be able to access your file'
+											'</p>';
+
+		return tooltipHtml;
+	}
+
+	element.tooltip({
+		items: 'a',
+		position: {
+			my: "left top",
+			at: "right bottom"
+		},
+    content: function() {
+      return tooltipCreate();
+    }
+	});
 }
 
 MenuController.prototype.bindDeleteButtons = function bindDeleteButtons() {
@@ -155,6 +177,29 @@ MenuController.prototype.bindProtectButtons = function bindProtectButtons() {
 	      }
 	    }.bind(this)
 	  });
+	});
+
+	function tooltipCreate(isProtected) {
+		var title = isProtected ? 'Protected' : 'Shareable';
+		var contentShareable = "This file can be accessed by anyone who knows the code";
+		var contentProtected = "This file is only accessible by me";
+		var content = isProtected ? contentProtected : contentShareable;
+		
+		var tooltipHtml = '<span class="title">' + title + '</span>'+
+											'<p class="content">' + content + '</p>';
+
+		return tooltipHtml;
+	}
+
+	$('.protectButton').tooltip({
+		items: 'span',
+		position: {
+			my: "left top",
+			at: "right bottom"
+		},
+    content: function() {
+      return tooltipCreate($(this).hasClass('disabled'));
+    }
 	});
 }
 

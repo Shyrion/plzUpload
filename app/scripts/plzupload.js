@@ -53,49 +53,6 @@ $(window).resize(function(e) {
   	
 });
 
-//===== Glooty animation =====//
-
-$('#centeredZone').on('dragover', function(e) {
-	if (fileDropOK) {
-		$('body').trigger('fileDragOver', e);
-	}
-});
-
-$('#centeredZone').on('dragenter', function(e) {
-	if (fileDropOK) {
-		$('body').trigger('fileDragEnter', e);
-	} else {
-		$('body').trigger('oneAtATime');
-	}
-});
-
-$('#centeredZone').on('dragleave', function(e) {
-	if (fileDropOK) {
-		$('body').trigger('fileDragOut');
-	}
-	
-});
-
-$('#centeredZone').on('dragend', function(e) {
-	$('body').trigger('fileDragFinished');
-});
-
-$('#centeredZone').on('dragout', function(e) {
-	$('body').trigger('fileDragOut');
-});
-
-var fileDropOK = true;
-$('#centeredZone').on('drop', function(e) {
-	if (fileDropOK) {
-		$('body').trigger('fileDropped');
-		if (!dragDrop.multiUploadAuthorized) fileDropOK = false;
-	}
-});
-
-$('body').on('noUploadRunning', function(e) {
-	fileDropOK = true;
-});
-
 //===== Facebook login =====//
 
 var fbManager = new FacebookManager();

@@ -17,7 +17,7 @@ a
 
 body
 {
-	font-family: "Helvetica" Arial;
+	font-family: wf_segoe-ui_normal, Tahoma, Verdana, "Helvetica" Arial;
 	font-size: 12pt;
 
 	margin: 0;
@@ -460,4 +460,44 @@ footer
 .textCenter
 {
 	text-align: center;
+}
+
+
+
+
+
+/* UI Tooltip */
+
+.ui-tooltip
+{
+	z-index: 10000;
+	max-width: 220px;
+}
+
+.ui-tooltip-content
+{
+	background: black;
+	color: white;
+
+	font-size: 10pt;
+	font-family: 
+
+	border: solid 1px #f23232;
+	border-radius: 1px;
+
+	padding: 10px;
+}
+
+.ui-tooltip-content .title
+{
+	font-size: 11pt;
+	font-weight: bold;
+	
+	margin-bottom: 5px;
+}
+
+.ui-tooltip-content .content
+{
+	text-align: 'justify';
+	margin: 0;
 }

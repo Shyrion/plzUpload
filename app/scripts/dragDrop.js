@@ -5,7 +5,48 @@ var DragDropController = function(dropZoneId, menuController) {
   this.allUploads = {};
   this.multiUploadAuthorized = false;
 
+	var fileDropOK = true;
+
+  //===== Glooty animation =====//
+
+	$('#'+dropZoneId).on('dragover', function(e) {
+		if (fileDropOK) {
+			$('body').trigger('fileDragOver', e);
+		}
+	});
+
+	$('#'+dropZoneId).on('dragenter', function(e) {
+		if (fileDropOK) {
+			$('body').trigger('fileDragEnter', e);
+		} else {
+			$('body').trigger('oneAtATime');
+		}
+	});
+
+	$('#'+dropZoneId).on('dragleave', function(e) {
+		if (fileDropOK) {
+			$('body').trigger('fileDragOut');
+		}
+	});
+
+	$('#'+dropZoneId).on('dragend', function(e) {
+		$('body').trigger('fileDragFinished');
+	});
+
+	$('#'+dropZoneId).on('dragout', function(e) {
+		$('body').trigger('fileDragOut');
+	});
+
+	$('body').on('noUploadRunning', function(e) {
+		fileDropOK = true;
+	});
+
 	var dropZone = new DropZone(dropZoneId, function(file) {
+
+    if (!file) {
+    	$('body').trigger('fileDragOut');
+    	return;
+    }
 
 		// If multiupload not authorized and we already have one running upload, error
 		if (!this.multiUploadAuthorized && this.nbRunningUploads) {
@@ -95,6 +136,12 @@ var DragDropController = function(dropZoneId, menuController) {
 
 		// Increase running uploads counter
 		this.nbRunningUploads++;
+
+		// Trigger event
+		if (fileDropOK) {
+			$('body').trigger('fileDropped');
+			if (!this.multiUploadAuthorized) fileDropOK = false;
+		}
 	}.bind(this));
 };
 
