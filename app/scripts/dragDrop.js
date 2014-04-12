@@ -66,7 +66,6 @@ var DragDropController = function(dropZoneId, menuController) {
 					console.log(response);
 
 					if (response.result == 'ok') {
-						var uploadUrl = response.uploadUrl;
 						var fullUrl = response.fullUrl;
 						var uploadCode = response.uploadCode;
 

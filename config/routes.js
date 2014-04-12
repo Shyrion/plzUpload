@@ -19,6 +19,33 @@ module.exports = function(app) {
 	//======== UPLOAD =========//
 	//=========================//
 
+	app.get('/up/:code', function(req, res) {
+
+		function serveFile(upload) {
+			res.sendfile('uploads/' + upload.code + '.' + upload.ext);
+		}
+
+		uploadController.getUpload({code: req.params.code}, function(err, upload) {
+			if (upload) {
+				if (upload.userId && upload.protected) { // upload.isProtected
+					console.log("File", upload.code, "protected ! Requester:", req.session.userId, "owner:", upload.userId);
+					fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
+							if (user.id == upload.userId) {
+								serveFile(upload);
+							} else {
+								res.render('errorPages/403', { title: 'Forbidden!' });
+							}
+					});
+				} else {
+					console.log("File", upload.code, "not protected, we can access");
+					serveFile(upload);
+				}
+			} else {
+				res.render('errorPages/404', { title: 'Not found :(' });
+			}
+		});
+	});
+
 	/*app.post('/upload', function(req, res) {
 		console.log(req.files.uploadedFile.path);
 		uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
@@ -70,9 +97,9 @@ module.exports = function(app) {
 		});
 	});
 
-	app.post('/removeUpload', function(req, res) {
+	app.get('/upload/:code/remove', function(req, res) {
 		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
-			uploadController.getUpload({code: req.body.uploadCode}, function(err, upload) {
+			uploadController.getUpload({code: req.params.code}, function(err, upload) {
 				// The user will really delete one of its upload, not someone else's :).
 				if (req.session.userId == upload.userId) {
 					uploadController.removeUpload(upload, function(err, result) {
@@ -89,6 +116,40 @@ module.exports = function(app) {
 						}
 						res.send(JSON.stringify(response));
 					});
+				} else {
+					res.send(JSON.stringify({
+						result: 'error',
+						error: errors.REMOVE_ERROR
+					}));
+				}
+			});
+		});
+	});
+
+	app.post('/upload/:code/updateProtection', function(req, res) {
+		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
+			uploadController.getUpload({code: req.params.code}, function(err, upload) {
+				// The user will really update one of its upload, not someone else's :).
+				if (req.session.userId == upload.userId) {
+					uploadController.updateUploadProtection(upload, req.body.isProtected, function(err, result) {
+						if (err) {
+							console.log(err);
+							response = {
+								result: 'error',
+								error: errors.REMOVE_ERROR
+							}
+						} else {
+							response = {
+								result: 'ok'
+							};
+						}
+						res.send(JSON.stringify(response));
+					});
+				} else {
+					res.send(JSON.stringify({
+						result: 'error',
+						error: errors.REMOVE_ERROR
+					}));
 				}
 			});
 		});
@@ -100,7 +161,7 @@ module.exports = function(app) {
 
 			function uploadFunction(callback) {
 				uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
-					req.session.userId, req, res, function(err, uploadUrl, fullUrl, uploadCode) {
+					req.session.userId, req, res, function(err, fullUrl, uploadCode) {
 						if (err) {
 							console.log(err);
 							response = {
@@ -110,7 +171,6 @@ module.exports = function(app) {
 						} else {
 							response = {
 								result: 'ok',
-								uploadUrl: uploadUrl,
 								fullUrl: fullUrl,
 								uploadCode: uploadCode
 							};

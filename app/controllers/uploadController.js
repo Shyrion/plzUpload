@@ -2,7 +2,7 @@ var fs = require('fs');
 var Upload = require('../models/Upload');
 var ObjectID = require('mongodb').ObjectID;
 
-var UPLOAD_DIR = __dirname + "/../../public/upload"
+var UPLOAD_DIR = __dirname + "/../../uploads"
 var MAX_UPLOAD = 10; // TODO: Change for 3 or 5
 var ID_LENGTH = 5;
 var UPLOAD_LIFE = 2 * 24 * 3600 * 1000; // 48h
@@ -60,7 +60,8 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 	  	ip: req.connection.remoteAddress,
 	  	ext: fileExtension,
 	  	userId: userId,
-	  	date: new Date()
+	  	date: new Date(),
+	  	protected: false,
 	  });
 
 	  var newPath = UPLOAD_DIR + '/' + up.code + "." + fileExtension;
@@ -70,10 +71,9 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 			// Upload to server
 	  	fs.writeFile(newPath, data, function (err) {
 				console.log("FINISHED WRITEFILE");
-		  	var uploadUrl = '/' + up.code + "." + fileExtension;
-		  	var fullUrl = 'http://' + req.headers.host + uploadUrl;
+		  	var fullUrl = 'http://' + req.headers.host + '/' + up.getFullName();
 		  	var uploadCode = up.code;
-				callback(err, uploadUrl, fullUrl, uploadCode);
+				callback(err, fullUrl, uploadCode);
 		  });
 	  });
 	});
@@ -117,6 +117,16 @@ exports.removeUpload = removeUpload = function(upload, callback) {
 	upload.remove(function(err) {
 		if (callback) callback(err, true);
 	});
+}
+
+exports.updateUploadProtection = function(upload, isProtected, callback) {
+	console.log("Going to change protection for ", upload.code, ':', isProtected);
+	
+	upload.protected = isProtected;
+	upload.save(function(err, result) {
+		console.log(err, result);
+		if (callback) callback(err, result);
+	})
 }
 
 exports.getUpload = getUpload = function(uploadInfo, callback) {

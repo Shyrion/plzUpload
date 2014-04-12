@@ -13,7 +13,7 @@ MenuController = function (id, onDropCallback) {
 	}.bind(this));
 
 	$('#getUploadButton').click(function() {
-  	var fileUrl = location.protocol + "//" + location.hostname + ":" + location.port + "/" + $('#getUploadField').val();
+  	var fileUrl = location.protocol + "//" + location.hostname + ":" + location.port + "/up/" + $('#getUploadField').val();
   	var win = window.open(fileUrl, '_blank');
 		win.focus();
   });
@@ -29,15 +29,6 @@ MenuController = function (id, onDropCallback) {
 	this.facebookLogoutDiv.hide();
 
   this.allUploads = {};
-}
-
-MenuController.prototype.bindUploadOnClick = function bindUploadOnClick(element, uploadCode) {
-	element.click(function() {
-  	var fileUrl = location.protocol + "//" + location.hostname + ":" + location.port + "/" + uploadCode;
-  	var win = window.open(fileUrl, '_blank');
-		win.focus();
-		return false;
-  });
 }
 
 MenuController.prototype.isOpened = function isOpened() {
@@ -91,17 +82,19 @@ MenuController.prototype.addUpload = function addUpload(fileInfo) {
   return uploadHtml;
 }
 
-MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv, code, url) {
+MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv, code, url, isProtected) {
 	$('.uploadProgress', uploadDiv).remove();
 	var finishHtml = $('<div class="uploadCode">' +
 											'Code: <a href="' + url + '">' + code + '</a>' +
-      								'<span data-code="'+code+'" class="uploadButton protectButton disabled"></span>' +
+      								'<span data-code="'+code+'" class="uploadButton protectButton' + (isProtected ? '' : ' disabled') + '"></span>' +
       								'<span data-code="'+code+'" class="uploadButton deleteButton"></span>' +
 										'</div>');
 
-	this.bindUploadOnClick($('a', finishHtml), code);
-
 	uploadDiv.append(finishHtml);
+
+	this.bindUploadOnClick($('a', finishHtml), code);
+	this.bindDeleteButtons();
+	this.bindProtectButtons();
 }
 
 MenuController.prototype.onUploadFailed = function onUploadFailed(uploadDiv) {
@@ -112,11 +105,45 @@ MenuController.prototype.onUploadFailed = function onUploadFailed(uploadDiv) {
 	}
 }
 
+MenuController.prototype.bindUploadOnClick = function bindUploadOnClick(element, uploadCode) {
+	element.click(function() {
+  	var fileUrl = location.protocol + "//" + location.hostname + ":" + location.port + "/up/" + uploadCode;
+  	var win = window.open(fileUrl, '_blank');
+		win.focus();
+		return false;
+  });
+}
+
 MenuController.prototype.bindDeleteButtons = function bindDeleteButtons() {
 	var self = this;
+	$('.deleteButton').off('click'); // remove previous events
 	$('.deleteButton').click(function(e) {
-		var data = {uploadCode: $(e.target).data('code')};
-		$.ajax('/removeUpload', {
+		if (confirm("Êtes vous sûr de vouloir supprimer ce fichier ?")) {
+			var uploadCode = $(e.target).data('code');
+			$.ajax('/upload/' + uploadCode + '/remove', {
+		    type: 'GET',
+		    complete: function(result) {
+		      var resultJson = JSON.parse( result.responseText );
+		      if (resultJson.result == 'ok') {
+		      	self.refreshUploads();
+		      } else {
+		        console.log("Error", resultJson);
+		      }
+		    }.bind(this)
+		  });
+		}
+	});
+}
+
+MenuController.prototype.bindProtectButtons = function bindProtectButtons() {
+	var self = this;
+	$('.protectButton').off('click'); // remove previous events
+	$('.protectButton').click(function(e) {
+		$(e.target).hasClass('disabled') ? $(e.target).removeClass('disabled') : $(e.target).addClass('disabled');
+		var uploadCode = $(e.target).data('code');
+		var willBeProtected = $(e.target).hasClass('disabled') ? false : true;
+		var data = { isProtected: willBeProtected };
+		$.ajax('/upload/' + uploadCode + '/updateProtection', {
 	    type: 'POST',
 	    data: data,
 	    complete: function(result) {
@@ -131,26 +158,6 @@ MenuController.prototype.bindDeleteButtons = function bindDeleteButtons() {
 	});
 }
 
-MenuController.prototype.bindProtectButtons = function bindProtectButtons() {
-	var self = this;
-	$('.protectButton').click(function(e) {
-		$(e.target).hasClass('disabled') ? $(e.target).removeClass('disabled') : $(e.target).addClass('disabled');
-		/*var data = {uploadCode: $(e.target).data('code')};
-		$.ajax('/removeUpload', {
-	    type: 'POST',
-	    data: data,
-	    complete: function(result) {
-	      var resultJson = JSON.parse( result.responseText );
-	      if (resultJson.result == 'ok') {
-	      	self.refreshUploads();
-	      } else {
-	        console.log("Error", resultJson);
-	      }
-	    }.bind(this)
-	  });*/
-	});
-}
-
 MenuController.prototype.deleteUpload = function deleteUpload(uploadCode) {
 	var data = {code: uploadCode};
 	$.ajax('/uploads/'+this.currentUserId, {
@@ -159,7 +166,7 @@ MenuController.prototype.deleteUpload = function deleteUpload(uploadCode) {
     complete: function(result) {
       var resultJson = JSON.parse( result.responseText );
       if (resultJson.result == 'ok') {
-      	self.refreshUploads();
+      	self.refreshUploads(); // TODO: remove only the deleted upload without server call
       } else {
         console.log("Error", resultJson);
       }
@@ -176,9 +183,13 @@ MenuController.prototype.refreshUploads = function deleteUpload() {
       var resultJson = JSON.parse( result.responseText );
       if (resultJson.result == 'ok') {
       	if (resultJson.allUploads.length) {
+      		// remove all
+      		this.allUploadsDiv.html('');
+
+      		// add new list
       		resultJson.allUploads.forEach(function(upload) {
       			var tmpHtml = self.addUpload(upload);
-      			self.onUploadFinished(tmpHtml, upload.code, location.origin+'/'+upload.code+'.'+upload.ext);
+      			self.onUploadFinished(tmpHtml, upload.code, location.origin+'/'+upload.code+'.'+upload.ext, upload.protected);
       		});
       	}
       	self.bindDeleteButtons();

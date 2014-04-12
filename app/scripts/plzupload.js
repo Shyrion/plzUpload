@@ -6,12 +6,12 @@ var dragDrop = new DragDropController('centeredZone', menuController);
 
 $('body').on('authorizeMultiupload', function() {
 	console.log("Authorize multi");
-	dragDrop.authorizeMultiUpload
+	dragDrop.authorizeMultiUpload();
 }.bind(this));
 
 $('body').on('unauthorizeMultiupload', function() {
 	console.log("Unauthorize multi");
-	dragDrop.unauthorizeMultiUpload = false;
+	dragDrop.unauthorizeMultiUpload();
 }.bind(this));
 
 
@@ -88,7 +88,7 @@ var fileDropOK = true;
 $('#centeredZone').on('drop', function(e) {
 	if (fileDropOK) {
 		$('body').trigger('fileDropped');
-		fileDropOK = false;
+		if (!dragDrop.multiUploadAuthorized) fileDropOK = false;
 	}
 });
 
