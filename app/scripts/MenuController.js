@@ -227,9 +227,9 @@ MenuController.prototype.refreshUploads = function deleteUpload() {
     complete: function(result) {
       var resultJson = JSON.parse( result.responseText );
       if (resultJson.result == 'ok') {
+    		// remove all
+    		this.allUploadsDiv.html('');
       	if (resultJson.allUploads.length) {
-      		// remove all
-      		this.allUploadsDiv.html('');
 
       		// add new list
       		resultJson.allUploads.forEach(function(upload) {
