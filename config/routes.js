@@ -1,11 +1,13 @@
-var uploadController = require('../app/controllers/uploadController');
+
 
 module.exports = function(app) {
 
+	var path								= require('path');
 	var utils 							= require('../app/lib/utils');
 	var errors							= require('./errors');
 
 	var fbLoginController		= require('../app/controllers/fbLoginController');
+	var uploadController		= require('../app/controllers/uploadController');
 
 	//=========================//
 	//========= HOME ==========//
@@ -22,7 +24,7 @@ module.exports = function(app) {
 	app.get('/up/:code', function(req, res) {
 
 		function serveFile(upload) {
-			res.sendfile('uploads/' + upload.code + '.' + upload.ext);
+			res.sendfile(path.resolve(__dirname, '..', 'uploads', upload.code + '.' + upload.ext));
 		}
 
 		uploadController.getUpload({code: req.params.code}, function(err, upload) {
