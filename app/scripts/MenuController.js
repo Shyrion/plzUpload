@@ -130,6 +130,8 @@ MenuController.prototype.bindUploadOnClick = function bindUploadOnClick(element,
 			my: "left top",
 			at: "right bottom"
 		},
+		show: { duration: 100 },
+		hide: { duration: 100 },
     content: function() {
       return tooltipCreate();
     }
@@ -197,8 +199,10 @@ MenuController.prototype.bindProtectButtons = function bindProtectButtons() {
 			my: "left top",
 			at: "right bottom"
 		},
+		show: { duration: 100 },
+		hide: { duration: 100 },
     content: function() {
-      return tooltipCreate($(this).hasClass('disabled'));
+      return tooltipCreate(!$(this).hasClass('disabled'));
     }
 	});
 }

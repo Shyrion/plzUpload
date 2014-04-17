@@ -500,3 +500,32 @@ footer
 	text-align: 'justify';
 	margin: 0;
 }
+
+/* Error pages */
+
+.container-center
+{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	margin: auto;
+	width: 600px;
+	height: 600px;
+}
+
+.container-center h1, .container-center h2
+{
+	font-family: "BeautifulEveryTime";
+	text-align: center;
+	font-size: 36pt;
+
+	margin: 0;
+}
+
+.container-center h2
+{
+	font-size: 20pt;
+}

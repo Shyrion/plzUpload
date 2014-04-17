@@ -43,10 +43,12 @@ var DragDropController = function(dropZoneId, menuController) {
 
 	var dropZone = new DropZone(dropZoneId, function(file) {
 
-    if (!file) {
+    if (!file || file.type == '') { // No file (text) or no type (folder, without extensions)
     	$('body').trigger('fileDragOut');
     	return;
     }
+
+    console.log(file);
 
 		// If multiupload not authorized and we already have one running upload, error
 		if (!this.multiUploadAuthorized && this.nbRunningUploads) {
