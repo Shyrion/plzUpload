@@ -1,42 +1,13 @@
 var fs = require('fs');
 var Upload = require('../models/Upload');
-var ObjectID = require('mongodb').ObjectID;
+var UploadCode = require('../models/UploadCode');
 
 var UPLOAD_DIR = __dirname + "/../../uploads"
 var MAX_UPLOAD = 10; // TODO: Change for 3 or 5
 var ID_LENGTH = 5;
 var UPLOAD_LIFE = 2 * 24 * 3600 * 1000; // 48h
 var CHECK_FREQUENCY = 3600 * 1000 // 1h
-
-var syllables = ['a', 'za', 'ra', 'ta', 'ya', 'pa', 'qa', 'sa', 'da', 'fa', 'ga', 'ja', 'ka', 'la',
-	'ma', 'wa', 'xa', 'ca', 'va', 'ba', 'na',
-	'e', 'ze', 're', 'te', 'ye', 'pe', 'qe', 'se', 'de', 'fe', 'ge', 'je', 'ke', 'le',
-	'me', 'we', 'xe', 'ce', 've', 'be', 'ne',
-	'i', 'zi', 'ri', 'ti', 'yi', 'pi', 'qi', 'si', 'di', 'fi', 'gi', 'ji', 'ki', 'li',
-	'mi', 'wi', 'xi', 'ci', 'vi', 'bi', 'ni',
-	'o', 'zo', 'ro', 'to', 'yo', 'po', 'qo', 'so', 'do', 'fo', 'go', 'jo', 'ko', 'lo',
-	'mo', 'wo', 'xo', 'co', 'vo', 'bo', 'no',
-	'u', 'zu', 'ru', 'tu', 'yu', 'pu', 'qu', 'su', 'du', 'fu', 'gu', 'ju', 'ku', 'lu',
-	'mu', 'wu', 'xu', 'cu', 'vu', 'bu', 'nu',
-	'ou', 'zou', 'rou', 'tou', 'you', 'pou', 'qou', 'sou', 'dou', 'fou', 'gou', 'jou', 'kou', 'lou',
-	'mou', 'wou', 'xou', 'cou', 'vou', 'bou', 'nou',
-	'oo', 'zoo', 'roo', 'too', 'yoo', 'poo', 'qoo', 'soo', 'doo', 'foo', 'goo', 'joo', 'koo', 'loo',
-	'moo', 'woo', 'xoo', 'coo', 'voo', 'boo', 'noo'/*,
-	'y', 'zy', 'ry', 'ty', 'yy', 'py', 'qy', 'sy', 'dy', 'fy', 'gy', 'jy', 'ky', 'ly',
-	'my', 'wy', 'xy', 'cy', 'vy', 'by', 'ny'*/
-];
-
-function generateName() {
-	var name = '';
-
-	allSyllableLength = syllables.length;
-
-	while(name.length < ID_LENGTH) {
-		name += syllables[Math.floor(Math.random()*allSyllableLength)];
-	}
-
-	return name;
-}
+var CODE_MIN_LENGTH = 2; // codes will be length 5 or 6 (2-4 syllables)
 
 exports.checkIP = function checkIP(ip, callback) {
 	Upload.count({ip: ip}, function(err, number) {
@@ -51,30 +22,45 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 	fileExtension = (fileName.indexOf('.') != -1) && fileName.split('.')[fileName.split('.').length-1];
 	
 	fs.readFile(path, function (err, data) {
-		console.log("FINISHED READFILE");
+		UploadCode.getRandomCode(function(err, uploadCode) {
 
-		// Create entry in DB
-	  var up = new Upload({
-	  	name: fileName,
-	  	code: generateName(),
-	  	ip: req.connection.remoteAddress,
-	  	ext: fileExtension,
-	  	userId: userId,
-	  	date: new Date(),
-	  	protected: false,
-	  });
+			if (err) {
+				if (callback) callback(err, null);
+				return;
+			}
 
-	  var newPath = UPLOAD_DIR + '/' + up.code + "." + fileExtension;
-	  up.save(function(err, result) {
-			console.log("FINISHED SAVE");
-
-			// Upload to server
-	  	fs.writeFile(newPath, data, function (err) {
-				console.log("FINISHED WRITEFILE");
-		  	var fullUrl = 'http://' + req.headers.host + '/' + up.getFullName();
-		  	var uploadCode = up.code;
-				callback(err, fullUrl, uploadCode);
+			// Create entry in DB
+		  var up = new Upload({
+		  	name: fileName,
+		  	code: uploadCode.name,
+		  	ip: req.connection.remoteAddress,
+		  	ext: fileExtension,
+		  	userId: userId,
+		  	date: new Date(),
+		  	protected: false,
 		  });
+
+		  var newPath = UPLOAD_DIR + '/' + up.code + "." + fileExtension;
+		  up.save(function(err, result) {
+				if (err) {
+					UploadCode.reinsert(up.code);
+					return;
+				}
+
+				// Upload to server
+		  	fs.writeFile(newPath, data, function (err) {
+		  		if (err) {
+						UploadCode.reinsert(up.code);
+						return;
+					}
+
+			  	var fullUrl = 'http://' + req.headers.host + '/' + up.getFullName();
+			  	var uploadCode = up.code;
+					callback(err, fullUrl, uploadCode);
+			  });
+		});
+
+			
 	  });
 	});
 
@@ -116,6 +102,9 @@ exports.removeUpload = removeUpload = function(upload, callback) {
 	// Remove in DB
 	upload.remove(function(err) {
 		if (callback) callback(err, true);
+
+		// make the code available again
+		UploadCode.reinsert(upload.code);
 	});
 }
 
@@ -138,6 +127,9 @@ exports.getUpload = getUpload = function(uploadInfo, callback) {
 exports.purgeUploadFolder = purgeUploadFolder = function(callback) {
 	// Remove all entries from database
 	Upload.find({}).remove();
+
+	UploadCode.purgeDB();
+	UploadCode.fillDB(CODE_MIN_LENGTH);
 
 	// Remove all local uploaded files
 	getAllUploadedFiles(function(err, allFiles) {

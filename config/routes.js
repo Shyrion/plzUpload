@@ -165,7 +165,6 @@ module.exports = function(app) {
 				uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
 					req.session.userId, req, res, function(err, fullUrl, uploadCode) {
 						if (err) {
-							console.log(err);
 							response = {
 								result: 'error',
 								error: errors.GENERAL_ERROR

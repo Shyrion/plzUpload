@@ -77,7 +77,10 @@ $('#FBLogin').click(function() {
 $('#FBLogout').click(function() {
 	fbManager.logout(function(success) {
 			if (success) {
-				if (menuController) menuController.onFBLogout();
+				if (menuController) {
+					menuController.clearUploads(true);
+					menuController.onFBLogout();
+				}
 					$('body').trigger('unauthorizeMultiupload');
 			} else {
 				console.log('Failed to logout ? :(');

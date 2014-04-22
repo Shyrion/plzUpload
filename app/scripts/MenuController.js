@@ -223,6 +223,13 @@ MenuController.prototype.deleteUpload = function deleteUpload(uploadCode) {
   });
 }
 
+MenuController.prototype.clearUploads = function clearUploads(showSpeech) {
+	this.allUploadsDiv.html('');
+	
+	if (showSpeech)
+		this.menuUploadsSpeech.show();
+}
+
 MenuController.prototype.refreshUploads = function deleteUpload() {
 	var self = this;
 	// Get previous uploads from logged in user
@@ -231,8 +238,8 @@ MenuController.prototype.refreshUploads = function deleteUpload() {
     complete: function(result) {
       var resultJson = JSON.parse( result.responseText );
       if (resultJson.result == 'ok') {
-    		// remove all
-    		this.allUploadsDiv.html('');
+    		// clear all
+    		this.clearUploads();
       	if (resultJson.allUploads.length) {
 
       		// add new list
