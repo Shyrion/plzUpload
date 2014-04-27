@@ -472,6 +472,35 @@ footer
 
 
 
+/* Tutorial */
+
+#tutorial
+{
+	position: absolute;
+	z-index: 100;
+
+	display: none;
+
+	font-family: "BeautifulEveryTime";
+	font-size: 1.5em;
+}
+
+#tutorial > *
+{
+	position: absolute;
+}
+
+#tutorial > img
+{
+	opacity: 0;
+}
+
+#tutorial > p
+{
+	top: 60px;
+	left: 100px;
+	width: 600px;
+}
 
 
 /* UI Tooltip */

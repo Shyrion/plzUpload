@@ -53,6 +53,42 @@ $(window).resize(function(e) {
   	
 });
 
+//===== Tutorial =====//
+
+var tutorial = $('#tutorial');
+function showTutorial() {
+	console.log("Hehehe", tutorial);
+	tutorial.css('left', $(window).width() * 10/100);
+	tutorial.css('top', $(window).height() * 70/100);
+	tutorial.fadeIn(1000, function() {
+		console.log('completed !');
+	});
+	$('img', tutorial).animate({
+		width: '80',
+		height: '100',
+		opacity: '1'
+	}, 1500, 'easeOutQuint', function() {
+		$('img', tutorial).animate({
+			left: '300px',
+			top: '-100px'
+		}, 2000, 'linear', function() {
+			setTimeout(function() {
+				$('img', tutorial).animate({
+					width: '160',
+					height: '200',
+					opacity: '0'
+				}, 1500, 'easeOutQuint', function() {
+					tutorial.fadeOut(2000, function() {
+						setTimeout(showTutorial, 5*60*1000)
+					});
+				});
+			},1000);
+		});
+	});
+}
+
+setTimeout(showTutorial, 10*1000);
+
 //===== Facebook login =====//
 
 var fbManager = new FacebookManager();
