@@ -64,7 +64,7 @@ module.exports = function(app) {
 		});
 	});*/
 
-	app.get('/uploads/:fbUserId', function(req, res) {
+	app.get('/users/:fbUserId/uploads', function(req, res) {
 		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
 			var response;
 			if (err) {
