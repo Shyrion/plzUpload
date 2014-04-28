@@ -45,11 +45,11 @@ MenuController.prototype.open = function open() {
 	$('#mainContent').animate({
 		right: "240",
 		queue: false
-	});
+	}, 500, 'easeOutQuint');
 	$('#menu').animate({
 		right: "0",
 		queue: false
-	});
+	}, 500, 'easeOutQuint');
 	this.opened = true;
 }
 
@@ -57,11 +57,11 @@ MenuController.prototype.close = function close() {
 	$('#mainContent').animate({
 		right: "0",
 		queue: false
-	});
+	}, 500, 'easeOutQuint');
 	$('#menu').animate({
 		right: "-250",
 		queue: false
-	}, 400, function() {
+	}, 500, 'easeOutQuint', function() {
 			console.log("Finished"); //display: none;
 			$('#menu').hide();
 		});
