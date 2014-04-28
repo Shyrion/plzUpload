@@ -170,7 +170,7 @@ footer
 #menu a.button
 {
 	border-left: none;
-	width: 180px;
+	width: 100%;
 }
 
 .menuItemGroup

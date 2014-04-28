@@ -21,6 +21,19 @@ module.exports = function(app) {
 	//======== UPLOAD =========//
 	//=========================//
 
+
+	app.get('/uploads', function(req, res) {
+		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
+			if (!err && user) {
+				uploadController.getAllUploadedFiles(function(err, allUploads) {
+					res.render('showUploads', {allUploads: allUploads});
+				});
+			} else {
+				res.render('errorPages/403', { title: 'Forbidden!' });
+			}
+		});
+	});
+
 	app.get('/up/:code', function(req, res) {
 
 		function serveFile(upload) {
@@ -100,13 +113,43 @@ module.exports = function(app) {
 	});
 
 	app.get('/upload/:code/remove', function(req, res) {
-		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
-			uploadController.getUpload({code: req.params.code}, function(err, upload) {
-				// The user will really delete one of its upload, not someone else's :).
-				if (req.session.userId == upload.userId) {
+		
+		uploadController.getUpload({code: req.params.code}, function(err, upload) {
+
+			if (upload.userId) {
+				// Upload done for a logged in user. We must ensure that the user
+				// will really delete one of its upload, not someone else's :).
+				fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
+					console.log('USER : ', user);
+					if (req.session.userId == upload.userId) {
+						uploadController.removeUpload(upload, function(err, result) {
+							if (err) {
+								console.error(err);
+								response = {
+									result: 'error',
+									error: errors.REMOVE_ERROR
+								}
+							} else {
+								response = {
+									result: 'ok'
+								};
+							}
+							res.send(JSON.stringify(response));
+						});
+					} else {
+						res.send(JSON.stringify({
+							result: 'error',
+							error: errors.REMOVE_ERROR
+						}));
+					}
+				});
+			} else {
+				// Check on IP... Better than nothing.
+				// Anyway, the upload will expire in a few days :).
+				if (req.connection.remoteAddress == upload.ip) {
 					uploadController.removeUpload(upload, function(err, result) {
 						if (err) {
-							console.log(err);
+							console.error(err);
 							response = {
 								result: 'error',
 								error: errors.REMOVE_ERROR
@@ -124,7 +167,7 @@ module.exports = function(app) {
 						error: errors.REMOVE_ERROR
 					}));
 				}
-			});
+			}
 		});
 	});
 
@@ -184,7 +227,6 @@ module.exports = function(app) {
 			
 			if (err) {
 				// User is not logged in : Authorize only 3 uploads per IP address !
-				console.log('user not connected. Restrictions ! :).');
 				uploadController.checkIP(req.connection.remoteAddress, function(err, ipAuthorized) {
 					if (ipAuthorized) {
 						uploadFunction(function(response) {
@@ -265,14 +307,6 @@ module.exports = function(app) {
 	//========= MISC ==========//
 	//=========================//
 
-
-
-	app.get('/getAllUploads', function(req, res) {
-		uploadController.getAllUploadedFiles(function(err, allFiles) {
-			res.render('showUploads', {allFileNames: allFiles});
-		})
-	});
-
 	app.get('/clear', function(req, res) {
 		fbLoginController.isAdminLoggedIn(req.session.userId, req.session.fbToken, function(err, authorized) {
 			if (authorized) {
@@ -284,6 +318,12 @@ module.exports = function(app) {
 				res.send("You are not admin.");
 			}
 		});
+	});
+
+
+
+	app.get('/uploads/generate/:number', function(req, res) {
+		require('../app/models/UploadCode').fillDB(req.params.number);
 	});
 
 

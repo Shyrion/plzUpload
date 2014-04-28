@@ -9,11 +9,17 @@
 </head>
 <body>
 
-    <ul>
-        <% allFileNames.forEach(function(fileName) { %>
-            <li><a href="/up/<%= fileName %>"><%= fileName %></a></li>
+    <table>
+        <% allUploads.forEach(function(upload) { %>
+            <tr>
+                <td><%= upload.name %></a></td>
+                <td><a href="/up/<%= upload.code %>"><%= upload.code %></a></td>
+                <td><%= upload.userId %></a></td>
+                <td><%= upload.protected %></a></td>
+                <td><a href="/upload/<%= upload.code %>/remove">Delete</a></td>
+            </tr>
         <% }) %>
-    </ul>
+    </table>
 
     <script src="scripts/jquery-1.10.2.js"></script>
     <script src="scripts/bootstrap.js"></script>

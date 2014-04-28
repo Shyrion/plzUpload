@@ -67,10 +67,8 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 }
 
 exports.getAllUploadedFiles = getAllUploadedFiles = function(callback) {
-	fs.readdir(UPLOAD_DIR, function(err, files) {
-		if (err) console.log(err);
-
-		callback(err, files);
+	Upload.find({}, function(err, allUploads) {
+		if (callback) callback(err, allUploads);
 	});
 }
 

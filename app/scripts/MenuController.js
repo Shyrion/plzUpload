@@ -20,6 +20,7 @@ MenuController = function (id, onDropCallback) {
   	var fileUrl = location.protocol + '//' + location.hostname + ':' + location.port + '/up/' + $('#getUploadField').val();
   	var win = window.open(fileUrl, '_blank');
 		win.focus();
+		$('#getUploadField').val('');
   });
 
   $('#getUploadField').keydown(function(e) {
@@ -96,7 +97,6 @@ MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv,
 	if (this.currentUserId) {
 		// User is logged, we add protect button
 		finishHtml += '<span data-code="'+code+'" class="uploadButton protectButton' + (isProtected ? '' : ' disabled') + '"></span>';
-		this.bindProtectButtons();
 	}
 
   finishHtml += '<span data-code="'+code+'" class="uploadButton deleteButton"></span>' +
@@ -107,6 +107,11 @@ MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv,
 	uploadDiv.append(finishHtml);
 
 	this.bindUploadOnClick($('a', finishHtml), code);
+
+	if (this.currentUserId) {
+		this.bindProtectButtons();
+	}
+	
 	this.bindDeleteButtons();
 	this.bindCopyButtons();
 }

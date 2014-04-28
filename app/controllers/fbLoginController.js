@@ -59,9 +59,15 @@ exports.validateTokenValidity = validateTokenValidity = function(userId, token, 
 
 	  	if (resultJSON.error) {
 	  		if (resultJSON.error.code == 190) {
-	  			console.log("AUTH FAIL");
+	  			console.log("User Not logged");
 	  		}
 	  	}
+
+			admins.forEach(function(admin) {
+				if ( (admin.id == resultJSON.id) ) {
+					resultJSON.admin = true;
+				}
+			});
 
 	  	if (callback) callback(resultJSON.error, resultJSON);
 	  })
