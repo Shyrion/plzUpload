@@ -23,8 +23,8 @@ module.exports = function(app) {
 
 
 	app.get('/uploads', function(req, res) {
-		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
-			if (!err && user) {
+		fbLoginController.isAdminLoggedIn(req.session.userId, req.session.fbToken, function(err, authorized) {
+			if (authorized) {
 				uploadController.getAllUploadedFiles(function(err, allUploads) {
 					res.render('showUploads', {allUploads: allUploads});
 				});
