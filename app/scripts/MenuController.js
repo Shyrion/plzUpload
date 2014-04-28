@@ -154,16 +154,14 @@ MenuController.prototype.bindCopyButtons = function bindCopyButtons() {
 		});
 
     client.on("load", function(client) {
-			// Movie is loaded
-
 		  client.on("complete", function(client, args) {
 		  	console.log(client, args, this);
 		  });
 		});
 	});
 
-	$('.copyButton').tooltip({
-		items: 'span',
+  $('#global-zeroclipboard-html-bridge').tooltip({
+		items: 'div',
 		position: {
 			my: "left top",
 			at: "right bottom"
@@ -173,7 +171,7 @@ MenuController.prototype.bindCopyButtons = function bindCopyButtons() {
     content: function() {			
 			return	'<span class="title">Copy to Clipboard</span>'+
 							'<p class="content">' +
-								'Copy the share link to your clipboard' +
+								'Click to copy the share link to your clipboard' +
 							'</p>';
     }
 	});
@@ -216,7 +214,7 @@ MenuController.prototype.bindProtectButtons = function bindProtectButtons() {
     	var isProtected = !$(this).hasClass('disabled');
 			var title = isProtected ? 'Protected' : 'Shareable';
 			var contentShareable = "This file can be accessed by anyone who knows the code";
-			var contentProtected = "This file is only accessible by me and people who have the url";
+			var contentProtected = "This file is only accessible by you and people who have the url";
 			var content = isProtected ? contentProtected : contentShareable;
 			
 			var tooltipHtml = '<span class="title">' + title + '</span>'+

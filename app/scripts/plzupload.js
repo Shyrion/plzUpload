@@ -1,7 +1,9 @@
+var TUTORIAL_INACTIVITY_TIME = 5*60*1000; // 5 minutes
 
 var menuController = new MenuController();
 
-var dragDrop = new DragDropController('centeredZone', menuController);
+var dropZoneId = 'centeredZone';
+var dragDrop = new DragDropController(dropZoneId, menuController);
 
 
 $('body').on('authorizeMultiupload', function() {
@@ -56,13 +58,14 @@ $(window).resize(function(e) {
 //===== Tutorial =====//
 
 var tutorial = $('#tutorial');
+var tutorialTimer = null;
 function showTutorial() {
-	console.log("Hehehe", tutorial);
 	tutorial.css('left', $(window).width() * 10/100);
 	tutorial.css('top', $(window).height() * 70/100);
-	tutorial.fadeIn(1000, function() {
-		console.log('completed !');
-	});
+	$('img', tutorial).css('left', 0);
+	$('img', tutorial).css('top', 0);
+
+	tutorial.fadeIn(1000);
 	$('img', tutorial).animate({
 		width: '80',
 		height: '100',
@@ -78,16 +81,41 @@ function showTutorial() {
 					height: '200',
 					opacity: '0'
 				}, 1500, 'easeOutQuint', function() {
-					tutorial.fadeOut(2000, function() {
-						setTimeout(showTutorial, 5*60*1000)
-					});
+					setTimeout(function() {
+						tutorial.fadeOut(1000, function() {
+							if (!tutorialTimer) {
+								tutorialTimer = setTimeout(showTutorial, TUTORIAL_INACTIVITY_TIME);
+							}
+						});
+					}, 2000);
 				});
 			},1000);
 		});
 	});
 }
 
-setTimeout(showTutorial, 10*1000);
+function launchTutorialTimer() {
+	clearTimeout(tutorialTimer);
+	setTimeout(showTutorial, TUTORIAL_INACTIVITY_TIME);
+}
+
+function stopTutorialTimer() {
+	clearTimeout(tutorialTimer);
+}
+
+$('body').on('noUploadRunning', function(e) {
+	launchTutorialTimer();
+});
+
+$('body').on('fileDragEnter', function(e) {
+	stopTutorialTimer();
+});
+
+$('body').on('fileDropped', function(e) {
+	stopTutorialTimer();
+});
+
+tutorialTimer = setTimeout(showTutorial, 5*1000);
 
 //===== Facebook login =====//
 
