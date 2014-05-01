@@ -1,4 +1,4 @@
-var DURATION_DISPLAY_NOTICE = 300000;
+var DURATION_DISPLAY_NOTICE = 3000;
 
 var NoticeManager = function NoticeManager(noticeDiv) {
 	this.htmlElement = noticeDiv;
