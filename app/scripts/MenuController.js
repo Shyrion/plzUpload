@@ -1,5 +1,6 @@
 function getUploadUrl(code) {
-	return location.protocol + '//' + location.hostname + ':' + location.port + '/up/' + code;
+	return location.protocol + '//' + location.hostname +
+  		(location.port=="" ? "" : ':' + location.port)  + '/up/' + $('#getUploadField').val();
 }
 
 
@@ -17,7 +18,7 @@ MenuController = function (id, onDropCallback) {
 	}.bind(this));
 
 	$('#getUploadButton').click(function() {
-  	var fileUrl = location.protocol + '//' + location.hostname + ':' + location.port + '/up/' + $('#getUploadField').val();
+  	var fileUrl = getUploadUrl($('#getUploadField').val());
   	var win = window.open(fileUrl, '_blank');
 		win.focus();
 		$('#getUploadField').val('');
@@ -84,6 +85,7 @@ MenuController.prototype.addUpload = function addUpload(fileInfo) {
       '</div>' +
   '</div>');
   this.allUploadsDiv.prepend(uploadHtml);
+  console.log('addUpload', uploadHtml);
   return uploadHtml;
 }
 

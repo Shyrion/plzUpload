@@ -49,7 +49,7 @@ var MainScene = function (params) {
         y: 0,
         content: 'PlzUpload',
         anchor: Anchors.TOPCENTER,
-        font: '70pt BeautifulEveryTime',
+        font: '100pt ChinaCat',
         color: 'rgb(0, 0, 0)'
     },this);
     titleGroup.insert("titleText", titleText);
@@ -57,10 +57,10 @@ var MainScene = function (params) {
 
     var subtitleText = new CPText({
         x: titleText.width/2,
-        y: titleText.height,
+        y: titleText.height-40,
         content: "I'm hungry",
         anchor: Anchors.CENTERRIGHT,
-        font: '24pt BeautifulEveryTime',
+        font: '34pt ChinaCat',
         color: 'rgb(0, 0, 0)'
     },this);
     titleGroup.insert("subtitleText", subtitleText);
@@ -81,7 +81,7 @@ var MainScene = function (params) {
         y: 0,
         width: 40,
         height: 100,
-        anchor: Anchors.CENTER
+        anchor: Anchors.TOPCENTER
     });
     cloud.insert("animatedSprite", animatedSprite);
     this.characterLayer.insert("animatedSprite", animatedSprite);
@@ -330,8 +330,8 @@ var MainScene = function (params) {
         nono();
     }.bind(this));
 
-    var eyesBaseY       = animatedSprite.y-25;
-    var leftEyeBaseX    = animatedSprite.x-64;
+    var eyesBaseY       = animatedSprite.y-15;
+    var leftEyeBaseX    = animatedSprite.x-67;
     var rightEyeBaseX   = animatedSprite.x+73;
     var eyeRay          = 12;
 
@@ -417,15 +417,18 @@ var MainScene = function (params) {
     }.bind(this));
 
 
-    $('body').on('resizeEnd', function(e) {
+    function placeObjects() {
         titleGroup.x = CPGame.instance.canvasWidth/2;
         titleText.draw();
         subtitleText.draw();
 
         animatedSprite.x = CPGame.instance.canvasWidth/2;
-        animatedSprite.y = Math.max(titleGroup.y+subtitleText.y+subtitleText.height+animatedSprite.height/2*animatedSprite.scale, CPGame.instance.canvasHeight/2);
+        animatedSprite.y = Math.min(subtitleText.y+subtitleText.height, CPGame.instance.canvasHeight/2);
         console.log(titleGroup.y,subtitleText.y,subtitleText.height, CPGame.instance.canvasHeight/2, animatedSprite.y);
-    });
+    }
+    $('body').on('resizeEnd', placeObjects);
+
+    placeObjects();
 
     // Starts everything
     wait();

@@ -62,7 +62,7 @@ var DragDropController = function(dropZoneId, menuController) {
 		var uploadItemHtml = this.menuController.addUpload(newUpload);
 
 		// Create the corresponding progress bar
-		var progress = new UploadProgress($('.progress', uploadItemHtml)[0]);
+		var progress = new UploadProgress(uploadItemHtml);
 
 		var self = this;
 		UploadManager.getInstance().addUpload(file, {

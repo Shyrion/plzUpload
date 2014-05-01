@@ -1,7 +1,24 @@
 @font-face { 
   font-family: 'BeautifulEveryTime'; 
-  src: url('../fonts/BeautifulEveryTime.ttf'); 
+  src: url('../fonts/BeautifulEveryTime.ttf');
 }
+
+@font-face { 
+  font-family: 'ChinaCat'; 
+  src: url('../fonts/chinacat.ttf');
+}
+
+
+@font-face { 
+  font-family: 'RobotoRegular'; 
+  src: url('../fonts/RobotoRegular.ttf');
+}
+
+@font-face { 
+  font-family: 'RobotoLight'; 
+  src: url('../fonts/RobotoLight.ttf');
+}
+
 
 ::selection
 {
@@ -17,7 +34,7 @@ a
 
 body
 {
-	font-family: wf_segoe-ui_normal, Tahoma, Verdana, "Helvetica" Arial;
+	font-family: RobotoRegular, wf_segoe-ui_normal, Tahoma, Verdana, "Helvetica" Arial;
 	font-size: 12pt;
 
 	margin: 0;
@@ -68,7 +85,7 @@ a.button:visited
 footer
 {
 	font-size: 15pt;
-	font-family: "BeautifulEveryTime";
+	font-family: "ChinaCat";
 	font-weight: bold;
 	font-style: oblique;
 
@@ -76,7 +93,8 @@ footer
 	bottom: 5pt;
 	left: 10pt;
 
-	z-index: 10000;
+	width: 100%;
+	z-index: 1000;
 }
 
 #aboutLink
@@ -130,6 +148,10 @@ footer
 	right: 1%;
 	top: 1%;
 	z-index: 2000;
+	width: 100px;
+	height: 100px;
+	text-align: center;
+	line-height: 120px;
 }
 
 #menuButton:hover
@@ -199,6 +221,7 @@ footer
 	display: block;
 
 	text-align: center;
+	font-family: RobotoLight;
 	font-size: 18pt;
 	/*text-indent: 28px;*/
 	line-height: 20px;
@@ -373,7 +396,7 @@ footer
 {
 	color: black;
 	font-size: 16pt;
-	font-family: "BeautifulEveryTime";
+	font-family: "ChinaCat";
 	font-weight: bold;
 
 	position: absolute;
@@ -481,7 +504,7 @@ footer
 
 	display: none;
 
-	font-family: "BeautifulEveryTime";
+	font-family: "ChinaCat";
 	font-size: 1.5em;
 }
 
@@ -499,7 +522,12 @@ footer
 {
 	top: 60px;
 	left: 100px;
-	width: 600px;
+	
+	text-align: justify;
+
+	width: 300px;
+}
+
 }
 
 
@@ -556,7 +584,7 @@ footer
 
 .container-center h1, .container-center h2
 {
-	font-family: "BeautifulEveryTime";
+	font-family: "ChinaCat";
 	text-align: center;
 	font-size: 36pt;
 

@@ -54,6 +54,7 @@ $(window).resize(function(e) {
 	}
   	
 });
+$('body').trigger('resizeEnd');
 
 //===== Tutorial =====//
 
@@ -160,11 +161,13 @@ function checkUserStatus() {
 			fbManager.login(function(success) {
 				console.log("Autologin success ? ", success);
 
-				if (menuController) menuController.onFBLogin(fbManager.currentUser);
-
-				fbManager.getUserInfo(function(response) {
-					fbManager.currentUser.name = response.name;
-				});
+				if (success) {
+					$('body').trigger('authorizeMultiupload');
+					if (menuController) menuController.onFBLogin(fbManager.currentUser);
+					fbManager.getUserInfo(function(response) {
+						fbManager.currentUser.name = response.name;
+					});
+				}					
 			}, 'email');
 		} else {
 			//console.log('NOT connected');
