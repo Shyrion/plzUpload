@@ -240,6 +240,7 @@ var MainScene = function (params) {
     _w = _h = null;
 
     function wait() {
+        isEating = false;
         exitHystery();
         animatedSprite.playRepeat('breathing', 7, function() {
             animatedSprite.playOnce('blink', function() {
@@ -253,6 +254,7 @@ var MainScene = function (params) {
     }
 
     function cry() {
+        isEating = false;
         animatedSprite.playRepeat('crying', 26, function() {
             animatedSprite.playOnce('blink', function() {
                 if (Math.floor(Math.random()*4)) {
@@ -265,6 +267,7 @@ var MainScene = function (params) {
     }
 
     function jump() {
+        isEating = false;
         animatedSprite.playRepeat('jump', 2, function() {
             wait();
         });
@@ -273,10 +276,14 @@ var MainScene = function (params) {
     function disapointed() {
         animatedSprite.playRepeat('disapointed', 4, function() {
             animatedSprite.playOnce('disapointedBlink', function() {
-                if (Math.floor(Math.random()*2)) {
-                    disapointed();
+                if (isEating) {
+                    eat();
                 } else {
-                    wait();
+                    if (Math.floor(Math.random()*2)) {
+                        disapointed();
+                    } else {
+                        wait();
+                    }
                 }
             });
         });
@@ -296,14 +303,13 @@ var MainScene = function (params) {
         });
     }
 
-    function nono() {
+    function nono(callback) {
         exitHystery();
         animatedSprite.pause();
         animatedSprite.playRepeat('nono', 2, function() {
-            if (isEating) {
-                eat();
-            } else {
-                wait();
+            if (callback) {
+                callback();
+                return;
             }
         });
     }
@@ -323,24 +329,6 @@ var MainScene = function (params) {
         hysteryMode = false;
         leftEye.y = rightEye.y = -2500;
     }
-
-    $('body').on('fileDragEnter', function(eventTrigger, e) {
-        exitHystery();
-        animatedSprite.playOnce('openMouth', function() {
-            hysteryMode = true;
-            animatedSprite.start('hystery');
-            $('body').trigger('fileDragOver', e);
-        });
-    }.bind(this));
-
-    $('body').on('oneAtATime', function(eventTrigger, e) {
-        nono();
-    }.bind(this));
-
-
-    $('body').on('fileTooBig', function(eventTrigger, e) {
-        nono();
-    }.bind(this));
 
     var eyesBaseY       = animatedSprite.y-15;
     var leftEyeBaseX    = animatedSprite.x-67;
@@ -408,6 +396,15 @@ var MainScene = function (params) {
 
     }.bind(this));
 
+    $('body').on('fileDragEnter', function(eventTrigger, e) {
+        exitHystery();
+        animatedSprite.playOnce('openMouth', function() {
+            hysteryMode = true;
+            animatedSprite.start('hystery');
+            $('body').trigger('fileDragOver', e);
+        });
+    }.bind(this));
+
     $('body').on('fileDragFinished', function() {
         exitHystery();
         wait();
@@ -425,8 +422,26 @@ var MainScene = function (params) {
 
     $('body').on('noUploadRunning', function() {
         exitHystery();
+        isEating = false;
         glups();
     }.bind(this));
+
+    $('body').on('noUploadRunningButFail', function() {
+        exitHystery();
+        isEating = false;
+        nono(cry);
+    }.bind(this));
+
+    $('body').on('oneAtATime', function(eventTrigger, e) {
+        nono(isEating ? eat : cry);
+    }.bind(this));
+
+
+    $('body').on('fileTooBig', function(eventTrigger, e) {
+        nono(isEating ? eat : cry);
+    }.bind(this));
+
+
 
 
     function placeObjects() {

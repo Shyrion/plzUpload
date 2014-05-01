@@ -120,7 +120,7 @@ tutorialTimer = setTimeout(showTutorial, 5*1000);
 
 $('body').on('oneAtATime', function(eventTrigger, e) {
 	var content = 'Your cannot upload more than one file at a time<br />' +
-               'Please <span class="button colored underlined">login with Facebook</span> to enjoy fully plzUpload experience!'
+               'Please <span class="button colored underlined">login with Facebook</span> to enjoy fully plzUpload experience!';
 
 	NoticeManager.getInstance().showNotice({
 		content: content

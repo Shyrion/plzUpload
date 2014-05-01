@@ -1,4 +1,4 @@
-
+var MAX_FILE_SIZE = 20*1024*1024;
 
 module.exports = function(app) {
 
@@ -201,6 +201,14 @@ module.exports = function(app) {
 	});
 	
 	app.post('/uploadAjax', function(req, res) {
+
+		if (req.files.uploadedFile.size > MAX_FILE_SIZE) {
+			res.send(JSON.stringify({
+				result: 'error',
+				error: errors.FILE_TOO_BIG
+			}));
+			return;
+		}
 
 		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
 

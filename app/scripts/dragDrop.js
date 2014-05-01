@@ -42,6 +42,10 @@ var DragDropController = function(dropZoneId, menuController) {
 		fileDropOK = true;
 	});
 
+	$('body').on('noUploadRunningButFail', function(e) {
+		fileDropOK = true;
+	});
+
 	var dropZone = new DropZone(dropZoneId, function(file) {
 
     if (!file || file.type == '') { // No file (text) or no type (folder, without extensions)
@@ -77,14 +81,31 @@ var DragDropController = function(dropZoneId, menuController) {
 				console.log("load", newUpload);
 			},
 			error: function(err) {
-				NoticeManager.getInstance().showNotice(err);
+				var content = "";
+				switch (err.code) {
+					case 20: content = 'You have reached your quota for today<br />' +
+				               'Please <span class="button colored underlined">login with Facebook</span> to enjoy fully plzUpload experience!';
+				    break;
+					case 21: content = 'I told you...<br />' +
+				               'I will NOT be able to digest such a big file';
+				    break;
+				}
+					
+				NoticeManager.getInstance().showNotice({
+					content: content
+				}, function() {
+					$('#notice .content .button').click(function() {
+						$('#FBLogin').click();
+					})
+				});
+
 				this.menuController.onUploadFailed(uploadItemHtml);
 
 				// Decrease running uploads counter + send even if no upload running
 				self.nbRunningUploads--;
 
 				if (self.nbRunningUploads <= 0) {
-					$('body').trigger('noUploadRunning');
+					$('body').trigger('noUploadRunningButFail');
 				}
 			}.bind(this),
 			loadstart: function(event) {

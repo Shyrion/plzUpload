@@ -15,6 +15,11 @@ module.exports = {
 			message: "You have reached your quota for today. " +
 							"Please come back tomorrow or login with Facebook to enjoy no restrictions."
 		},
+	FILE_TOO_BIG:
+		{
+			code: 21,
+			message: "The file you are trying to upload is too big"
+		},
 	REMOVE_ERROR:
 		{
 			code: 100,

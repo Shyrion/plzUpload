@@ -1,10 +1,12 @@
-var DURATION_DISPLAY_NOTICE = 3000;
+var DURATION_DISPLAY_NOTICE = 5000;
 
 var NoticeManager = function NoticeManager(noticeDiv) {
 	this.htmlElement = noticeDiv;
 	this.htmlElement.hide();
 	this.title = $('.title', this.htmlElement);
 	this.content = $('.content', this.htmlElement);
+
+	this.hideTimer = null;
 
 	this._instance = null;
 }
@@ -21,9 +23,11 @@ NoticeManager.prototype.showNotice = function showNotice(error, callback) {
 
 	this.title.html(error.title);
 	this.content.html(error.content || error.message);
+
+	this.hideTimer && clearTimeout(this.hideTimer);
 	
 	this.htmlElement.fadeIn(700, function() {
-		setTimeout(this.hideNotice.bind(this), DURATION_DISPLAY_NOTICE);
+		this.hideTimer = setTimeout(this.hideNotice.bind(this), DURATION_DISPLAY_NOTICE);
 		if (callback) callback();
 	}.bind(this));
 }
