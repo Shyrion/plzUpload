@@ -1,3 +1,5 @@
+var MAX_FILE_SIZE = 20*1024*1024;
+
 var DragDropController = function(dropZoneId, menuController) {
 	this.menuController = menuController;
 
@@ -49,7 +51,12 @@ var DragDropController = function(dropZoneId, menuController) {
 
 		// If multiupload not authorized and we already have one running upload, return
 		if (!this.multiUploadAuthorized && this.nbRunningUploads) {
-			console.log('One at a time !');
+			return;
+		}
+
+		// If file too big, return
+		if (file.size > MAX_FILE_SIZE) {
+			$('body').trigger('fileTooBig');
 			return;
 		}
 

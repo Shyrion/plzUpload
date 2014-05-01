@@ -283,10 +283,12 @@ var MainScene = function (params) {
     }
 
     function eat() {
+        isEating = true;
         animatedSprite.start('eating');
     }
 
     function glups() {
+        isEating = false;
         animatedSprite.playOnce('glups', function() {
             animatedSprite.playRepeat('happy', 12, function() {
                 wait();
@@ -295,14 +297,19 @@ var MainScene = function (params) {
     }
 
     function nono() {
+        exitHystery();
         animatedSprite.pause();
         animatedSprite.playRepeat('nono', 2, function() {
-            console.log('eat');
-            eat();
+            if (isEating) {
+                eat();
+            } else {
+                wait();
+            }
         });
     }
     
     var hysteryMode = false;
+    var isEating = false;
 
     function isHystery() {
         return hysteryMode;
@@ -327,6 +334,11 @@ var MainScene = function (params) {
     }.bind(this));
 
     $('body').on('oneAtATime', function(eventTrigger, e) {
+        nono();
+    }.bind(this));
+
+
+    $('body').on('fileTooBig', function(eventTrigger, e) {
         nono();
     }.bind(this));
 

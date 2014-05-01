@@ -131,6 +131,19 @@ $('body').on('oneAtATime', function(eventTrigger, e) {
 	});
 });
 
+$('body').on('fileTooBig', function(eventTrigger, e) {
+	var content = 'I am sorry<br />' +
+               'This file is too big, I will never be able to digest it'
+
+	NoticeManager.getInstance().showNotice({
+		content: content
+	}, function() {
+		$('#notice .content .button').click(function() {
+			$('#FBLogin').click();
+		})
+	});
+});
+
 //===== Facebook login =====//
 
 var fbManager = new FacebookManager();
