@@ -114,6 +114,15 @@ $('body').on('fileDropped', function(e) {
 	stopTutorialTimer();
 });
 
+$('body').on('wrongFileTypeDropped', function(e) {
+	NoticeManager.getInstance().showNotice({
+		content: 'Seriously... ?<br />' + 
+							'Do I look like a downmarket cloud ? Feed me with REAL files, please.'
+	});
+});
+
+
+
 tutorialTimer = setTimeout(showTutorial, 5*1000);
 
 //===== Error management =====//
@@ -133,7 +142,7 @@ $('body').on('oneAtATime', function(eventTrigger, e) {
 
 $('body').on('fileTooBig', function(eventTrigger, e) {
 	var content = 'I am sorry<br />' +
-               'This file is too big, I will never be able to digest it'
+               'This file is too big, I will never be able to digest it (>20MB)'
 
 	NoticeManager.getInstance().showNotice({
 		content: content

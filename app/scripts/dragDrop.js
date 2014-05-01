@@ -49,7 +49,7 @@ var DragDropController = function(dropZoneId, menuController) {
 	var dropZone = new DropZone(dropZoneId, function(file) {
 
     if (!file || file.type == '') { // No file (text) or no type (folder, without extensions)
-    	$('body').trigger('fileDragOut');
+    	$('body').trigger('wrongFileTypeDropped');
     	return;
     }
 
@@ -87,7 +87,7 @@ var DragDropController = function(dropZoneId, menuController) {
 				               'Please <span class="button colored underlined">login with Facebook</span> to enjoy fully plzUpload experience!';
 				    break;
 					case 21: content = 'I told you...<br />' +
-				               'I will NOT be able to digest such a big file';
+				               'I will NOT be able to digest such a big file (>20MB)';
 				    break;
 				}
 					

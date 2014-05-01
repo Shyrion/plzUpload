@@ -420,6 +420,13 @@ var MainScene = function (params) {
         disapointed();
     }.bind(this));
 
+    $('body').on('wrongFileTypeDropped', function() {
+        exitHystery();
+        disapointed();
+    }.bind(this));
+
+    
+
     $('body').on('noUploadRunning', function() {
         exitHystery();
         isEating = false;
