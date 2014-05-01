@@ -45,7 +45,7 @@ var CPActionCanvas = function (width, height) {
     this.canvas.id = 'cpactioncanvas';
 
     this.canvas.style.position = 'absolute';
-    this.canvas.style.zIndex = 1000;
+    this.canvas.style.zIndex = 500;
 
     // Mouse move
     this.canvas.addEventListener('mousemove', this.mouseMove.bind(this));

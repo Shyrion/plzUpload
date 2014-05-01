@@ -424,7 +424,6 @@ var MainScene = function (params) {
 
         animatedSprite.x = CPGame.instance.canvasWidth/2;
         animatedSprite.y = Math.min(subtitleText.y+subtitleText.height, CPGame.instance.canvasHeight/2);
-        console.log(titleGroup.y,subtitleText.y,subtitleText.height, CPGame.instance.canvasHeight/2, animatedSprite.y);
     }
     $('body').on('resizeEnd', placeObjects);
 

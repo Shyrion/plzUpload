@@ -70,7 +70,7 @@ var DragDropController = function(dropZoneId, menuController) {
 				console.log("load", newUpload);
 			},
 			error: function(err) {
-				console.log(err);
+				NoticeManager.getInstance().showNotice(err);
 				this.menuController.onUploadFailed(uploadItemHtml);
 
 				// Decrease running uploads counter + send even if no upload running
@@ -90,6 +90,10 @@ var DragDropController = function(dropZoneId, menuController) {
 			},
 			success: function(fullUrl, uploadCode) {
 				menuController.onUploadFinished(uploadItemHtml, uploadCode, fullUrl);
+
+				NoticeManager.getInstance().showNotice({
+					content: 'Your upload <span class="oblique colored">' + uploadCode + '</span> has been successfuly uploaded'
+				});
 
 				// Decrease running uploads counter + send even if no upload running
 				self.nbRunningUploads--;

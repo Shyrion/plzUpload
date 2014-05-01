@@ -191,7 +191,15 @@ MenuController.prototype.bindDeleteButtons = function bindDeleteButtons() {
 		if (confirm("Êtes vous sûr de vouloir supprimer ce fichier ?")) {
 			var uploadCode = $(e.target).data('code');
 			UploadManager.getInstance().removeUpload(uploadCode, function(err, code) {
-				if (!err) self.refreshUploads();
+
+				if (err) {
+					NoticeManager.getInstance().showNotice(err);
+				} else {
+					NoticeManager.getInstance().showNotice({
+						content: 'Your upload <span class="oblique colored">' + uploadCode + '</span> has been successfuly deleted'
+					});
+					self.refreshUploads();
+				}
 			});
 		}
 	});
@@ -205,7 +213,20 @@ MenuController.prototype.bindProtectButtons = function bindProtectButtons() {
 		var uploadCode = $(e.target).data('code');
 		var willBeProtected = $(e.target).hasClass('disabled') ? false : true;
 		UploadManager.getInstance().protectUpload(uploadCode, willBeProtected, function(err, code) {
-			if (!err) self.refreshUploads();
+			if (err) {
+				NoticeManager.getInstance().showNotice(err);
+			} else {
+				var messageSuffix = "";
+				if (willBeProtected) {
+					messageSuffix = "will be only accessible by you from now on";
+				} else {
+					messageSuffix = "will be accessible by everyone who have the code";
+				}
+				NoticeManager.getInstance().showNotice({
+					content: 'Your upload <span class="oblique colored">' + uploadCode + '</span> ' + messageSuffix
+				});
+				self.refreshUploads();
+			}
 		});
 	});
 

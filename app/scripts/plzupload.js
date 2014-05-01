@@ -7,12 +7,10 @@ var dragDrop = new DragDropController(dropZoneId, menuController);
 
 
 $('body').on('authorizeMultiupload', function() {
-	console.log("Authorize multi");
 	dragDrop.authorizeMultiUpload();
 }.bind(this));
 
 $('body').on('unauthorizeMultiupload', function() {
-	console.log("Unauthorize multi");
 	dragDrop.unauthorizeMultiUpload();
 }.bind(this));
 
@@ -61,8 +59,8 @@ $('body').trigger('resizeEnd');
 var tutorial = $('#tutorial');
 var tutorialTimer = null;
 function showTutorial() {
-	tutorial.css('left', $(window).width() * 10/100);
-	tutorial.css('top', $(window).height() * 70/100);
+	tutorial.css('left', $(window).width() * 5/100);
+	tutorial.css('top', $(window).height() * 55/100);
 	$('img', tutorial).css('left', 0);
 	$('img', tutorial).css('top', 0);
 
@@ -118,6 +116,21 @@ $('body').on('fileDropped', function(e) {
 
 tutorialTimer = setTimeout(showTutorial, 5*1000);
 
+//===== Error management =====//
+
+$('body').on('oneAtATime', function(eventTrigger, e) {
+	var content = 'Your cannot upload more than one file at a time<br />' +
+               'Please <span class="button colored underlined">login with Facebook</span> to enjoy fully plzUpload experience!'
+
+	NoticeManager.getInstance().showNotice({
+		content: content
+	}, function() {
+		$('#notice .content .button').click(function() {
+			$('#FBLogin').click();
+		})
+	});
+});
+
 //===== Facebook login =====//
 
 var fbManager = new FacebookManager();
@@ -159,8 +172,6 @@ function checkUserStatus() {
 
 		if (userStatus == 'connected') {
 			fbManager.login(function(success) {
-				console.log("Autologin success ? ", success);
-
 				if (success) {
 					$('body').trigger('authorizeMultiupload');
 					if (menuController) menuController.onFBLogin(fbManager.currentUser);
