@@ -93,7 +93,7 @@ MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv,
 	$('.uploadProgress', uploadDiv).remove();
 	
 	var finishHtml = '<div class="uploadCode">' +
-											'Code: <a href="' + url + '">' + code + '</a>' +
+											'<span class="localizable" data-key="CODE"></span>: <a href="' + url + '">' + code + '</a>' +
 											'<span data-code="'+code+'" class="uploadButton copyButton" data-clipboard-text="'+getUploadUrl(code)+'"></span>';
 	
 	if (this.currentUserId) {
@@ -105,6 +105,7 @@ MenuController.prototype.onUploadFinished = function onUploadFinished(uploadDiv,
 							'</div>';
 
 	finishHtml = $(finishHtml);
+	LocaleManager.getInstance().localize(finishHtml);
 
 	uploadDiv.append(finishHtml);
 
@@ -143,11 +144,10 @@ MenuController.prototype.bindUploadOnClick = function bindUploadOnClick(element,
 		show: { duration: 100 },
 		hide: { duration: 100 },
     content: function() {
-			return '<span class="title">Upload code</span>'+
-							'<p class="content">'+
-								'Give this code to your friends, and they will '+
-								'be able to access your file'
-							'</p>';
+    	var tooltipTitle = LocaleManager.getInstance().getValue('UPLOAD_CODE_TOOLTIP_TITLE');
+    	var tooltipContent = LocaleManager.getInstance().getValue('UPLOAD_CODE_TOOLTIP_CONTENT');
+			return '<span class="title">'+ tooltipTitle +'</span>'+
+							'<p class="content">' + tooltipContent + '</p>';
     }
 	});
 }
@@ -175,11 +175,11 @@ MenuController.prototype.bindCopyButtons = function bindCopyButtons() {
 		},
 		show: { duration: 100 },
 		hide: { duration: 100 },
-    content: function() {			
-			return	'<span class="title">Copy to Clipboard</span>'+
-							'<p class="content">' +
-								'Click to copy the share link to your clipboard' +
-							'</p>';
+    content: function() {
+    	var tooltipTitle = LocaleManager.getInstance().getValue('COPY_TOOLTIP_TITLE');
+    	var tooltipContent = LocaleManager.getInstance().getValue('COPY_TOOLTIP_CONTENT');
+			return '<span class="title">'+ tooltipTitle +'</span>'+
+							'<p class="content">' + tooltipContent + '</p>';
     }
 	});
 }
@@ -193,10 +193,13 @@ MenuController.prototype.bindDeleteButtons = function bindDeleteButtons() {
 			UploadManager.getInstance().removeUpload(uploadCode, function(err, code) {
 
 				if (err) {
-					NoticeManager.getInstance().showNotice(err);
+					NoticeManager.getInstance().showNotice({
+						code: err.code,
+						content: LocaleManager.getInstance().getValue('ERROR_'+err.code)
+					});
 				} else {
 					NoticeManager.getInstance().showNotice({
-						content: 'Your upload <span class="oblique colored">' + uploadCode + '</span> has been successfuly deleted'
+						content: LocaleManager.getInstance().getValue('UPLOAD_DELETED', uploadCode)
 					});
 					self.refreshUploads();
 				}
@@ -214,16 +217,19 @@ MenuController.prototype.bindProtectButtons = function bindProtectButtons() {
 		var willBeProtected = $(e.target).hasClass('disabled') ? false : true;
 		UploadManager.getInstance().protectUpload(uploadCode, willBeProtected, function(err, code) {
 			if (err) {
-				NoticeManager.getInstance().showNotice(err);
+				NoticeManager.getInstance().showNotice({
+					code: err.code,
+					content: LocaleManager.getInstance().getValue('ERROR_'+err.code)
+				});
 			} else {
-				var messageSuffix = "";
+				var message = "";
 				if (willBeProtected) {
-					messageSuffix = "will be only accessible by you from now on";
+					message = LocaleManager.getInstance().getValue('UPLOAD_PROTECTED', uploadCode);
 				} else {
-					messageSuffix = "will be accessible by everyone who have the code";
+					message = LocaleManager.getInstance().getValue('UPLOAD_UNPROTECTED', uploadCode);
 				}
 				NoticeManager.getInstance().showNotice({
-					content: 'Your upload <span class="oblique colored">' + uploadCode + '</span> ' + messageSuffix
+					content: message
 				});
 				self.refreshUploads();
 			}
@@ -240,10 +246,15 @@ MenuController.prototype.bindProtectButtons = function bindProtectButtons() {
 		hide: { duration: 100 },
     content: function() {
     	var isProtected = !$(this).hasClass('disabled');
-			var title = isProtected ? 'Protected' : 'Shareable';
-			var contentShareable = "This file can be accessed by anyone who knows the code";
-			var contentProtected = "This file is only accessible by you and people who have the url";
-			var content = isProtected ? contentProtected : contentShareable;
+
+    	var tooltipTitle1 = LocaleManager.getInstance().getValue('PROTECT_TOOLTIP_TITLE_1');
+    	var tooltipContent1 = LocaleManager.getInstance().getValue('PROTECT_TOOLTIP_CONTENT_1');
+
+    	var tooltipTitle2 = LocaleManager.getInstance().getValue('PROTECT_TOOLTIP_TITLE_2');
+    	var tooltipContent2 = LocaleManager.getInstance().getValue('PROTECT_TOOLTIP_CONTENT_2');
+
+			var title = isProtected ? tooltipTitle1 : tooltipTitle2;
+			var content = isProtected ? tooltipContent1 : tooltipContent2;
 			
 			var tooltipHtml = '<span class="title">' + title + '</span>'+
 												'<p class="content">' + content + '</p>';

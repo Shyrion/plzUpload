@@ -7,10 +7,9 @@ var NoticeManager = function NoticeManager(noticeDiv) {
 	this.content = $('.content', this.htmlElement);
 
 	this.hideTimer = null;
-
-	this._instance = null;
 }
 
+NoticeManager._instance = null;
 NoticeManager.getInstance = function getInstance() {
 	if (!this._instance) {
 		this._instance = new NoticeManager($('#notice'));

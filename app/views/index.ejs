@@ -45,45 +45,41 @@
 
     <nav id="menu">
         <div class="menuItemGroup">
-            <span class="title">Get a file</span>
+            <span class="title localizable" data-key="GET_FILE"></span>
             <div id="getFile" class="textCenter">
-                <input id="getUploadField" class="textCenter" type="text" placeholder="Enter file code" />
-                <a id="getUploadButton" class="button" href="javascript:void(0)">Get it!</a>
+                <input id="getUploadField" class="textCenter localizable" data-key="ENTER_FILE_CODE" type="text" placeholder="Enter file code" />
+                <a id="getUploadButton" class="button localizable" data-key="GET_IT" href="javascript:void(0)"></a>
             </div>
         </div>
 
         <div id="facebookLogin" class="menuItemGroup">
-            <span id="FBLogin" class="title">Login</span>
-            <p class="speech textCenter">
-                Login with Facebook and instantly get benefits of :
-            </p>
+            <span id="FBLogin" class="title localizable" data-key="LOGIN"></span>
+            <p class="speech textCenter localizable" data-key="LOGIN_AND_BENEFITS"></p>
             <ul>
-                <li>Unlimited downloads in parallel</li>
-                <li>Unlimited lifetime of uploads</li>
-                <li>Access to uploads history</li>
+                <li class="localizable" data-key="BENEFIT_1"></li>
+                <li class="localizable" data-key="BENEFIT_2"></li>
+                <li class="localizable" data-key="BENEFIT_3"></li>
             </ul>
         </div>
 
         <div id="facebookLogout" class="menuItemGroup">
-            <span id="FBLogout" class="title">Logout</span>
+            <span id="FBLogout" class="title localizable" data-key="LOGOUT"></span>
         </div>
 
         <div id="menuUploads" class="menuItemGroup">
-            <span class="title">Uploads</span>
-            <p class="speech textCenter">
-                Feed Glooty with a file from your computer, and start uploading it!
-            </p>
+            <span class="title localizable" data-key="UPLOADS"></span>
+            <p class="speech textCenter localizable" data-key="UPLOAD_SPEECH"></p>
             <div id="allUploads"></div>
         </div>
     </nav>
 
     <div id="tutorial">
         <img src="/images/iconDrag.png">
-        <p>Drag&Drop a file from your desktop to this page</p>
+        <p class="localizable" data-key="DRAG_DROP_TUTORIAL"></p>
     </div>
 
     <footer>
-        Graphics by <a href="http://eyoha.deviantart.com/" target="_blank">Eyoha</a>
+        <span class="localizable" data-key="GRAPHICS_BY"></span> <a href="http://eyoha.deviantart.com/" target="_blank">Eyoha</a>
     </footer>
 
     <script src="build/libs.js"></script>

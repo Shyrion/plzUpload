@@ -247,6 +247,8 @@ footer
 	border-top: 1px solid #555;
 	background-color: white;
 	color: black;
+	
+	overflow: hidden;
 
 	list-style-type: none;
 	text-align: center;
@@ -611,6 +613,8 @@ footer
 
 .ui-tooltip-content .title
 {
+	display: inline-block;
+
 	font-size: 11pt;
 	font-weight: bold;
 
