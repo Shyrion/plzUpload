@@ -8,6 +8,7 @@ module.exports = function(app) {
 
 	var fbLoginController		= require('../app/controllers/fbLoginController');
 	var uploadController		= require('../app/controllers/uploadController');
+	var UserController			= require('../app/controllers/UserController');
 
 	//=========================//
 	//========= HOME ==========//
@@ -233,7 +234,7 @@ module.exports = function(app) {
 
 			var response = {};
 			
-			if (err) {
+			if (err || !user) {
 				// User is not logged in : Authorize only 3 uploads per IP address !
 				uploadController.checkIP(req.connection.remoteAddress, function(err, ipAuthorized) {
 					if (ipAuthorized) {
@@ -250,7 +251,6 @@ module.exports = function(app) {
 				return;
 			} else {
 				// User is logged in, we let him do what he wants :)
-				console.log('user connected. Have fun :).');
 				uploadFunction(function(response) {
 					res.send(JSON.stringify(response));
 				});
@@ -288,7 +288,7 @@ module.exports = function(app) {
         userId: req.body.userID
     }
 
-    fbLoginController.validateFacebookLogin(fbData, function(err, result) {
+    fbLoginController.validateFacebookLogin(fbData, function(err, fbUser) {
     	var response;
     	if (err) {
     		response = {
@@ -296,7 +296,7 @@ module.exports = function(app) {
     			error: err
     		}
     	} else {
-
+    		UserController.createUser(fbUser);
     		req.session.userId = fbData.userId;
     		req.session.fbToken = fbData.accessToken;
 
@@ -308,6 +308,19 @@ module.exports = function(app) {
     	res.send(JSON.stringify(response));
     });
 	
+	});
+
+	app.get('/users', function(req, res) {
+		fbLoginController.isAdminLoggedIn(req.session.userId, req.session.fbToken, function(err, authorized) {
+			if (authorized) {
+				UserController.getAllUsers(function(err, allUsers) {
+					console.log(err, allUsers.map(function(user) { return user.firstname; }));
+					res.redirect('/');
+				});
+			} else {
+				res.render('errorPages/403', { title: 'Forbidden!' });
+			}
+		});
 	});
 
 
@@ -323,7 +336,7 @@ module.exports = function(app) {
 					res.redirect('/');
 				});
 			} else {
-				res.send("You are not admin.");
+				res.render('errorPages/403', { title: 'Forbidden!' });
 			}
 		});
 	});
@@ -331,7 +344,13 @@ module.exports = function(app) {
 
 
 	app.get('/uploads/generate/:number', function(req, res) {
-		require('../app/models/UploadCode').fillDB(req.params.number);
+		fbLoginController.isAdminLoggedIn(req.session.userId, req.session.fbToken, function(err, authorized) {
+			if (authorized) {
+				require('../app/models/UploadCode').fillDB(req.params.number);
+			} else {
+				res.render('errorPages/403', { title: 'Forbidden!' });
+			}
+		});
 	});
 
 

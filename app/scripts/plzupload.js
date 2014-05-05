@@ -78,7 +78,7 @@ var dico = {
 		'UPLOAD_DELETED': 'Votre upload <span class="oblique colored">%0</span> a été supprimé',
 		'UPLOAD_PROTECTED': 'Votre upload <span class="oblique colored">%0</span> n\'est maintenant accessible que par vous',
 		'UPLOAD_UNPROTECTED': 'Votre upload <span class="oblique colored">%0</span> est maintenant accessible à ceux qui possèdent le code',
-		'SERIOUSLY_SPEECH': 'Sérieux... ?<br />J\ai vraiment l\air d\'être un nuage bas de gamme ? Donne-moi des VRAIS fichiers à manger. Merci.',
+		'SERIOUSLY_SPEECH': 'Sérieux... ?<br />J\'ai vraiment l\'air d\'être un nuage bas de gamme ? Donne-moi des VRAIS fichiers à manger. Merci.',
 		'ONE_AT_A_TIME_SPEECH': 'Je ne peux manger 2 fichiers à la fois que si tu es connecté<br />' +
 			'Merci de te <span class="button colored underlined">connecter via Facebook</span> pour profiter à fond de PlzUpload !',
 		'FILE_TOO_BIG_SPEECH' : 'Uuuuuuuh !<br />Ce fichier est beaucoup trop gros, je pourrais jamais le digérer ! (>20MB)',
