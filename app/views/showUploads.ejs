@@ -9,10 +9,10 @@
     <table>
         <% allUploads.forEach(function(upload) { %>
             <tr>
-                <td><%= upload.name %></a></td>
+                <td><%= upload.name %></td>
                 <td><a href="/up/<%= upload.code %>"><%= upload.code %></a></td>
                 <td><%= upload.userId %></a></td>
-                <td><%= upload.protected %></a></td>
+                <td><%= upload.protected %></td>
                 <td><a href="/upload/<%= upload.code %>/remove">Delete</a></td>
             </tr>
         <% }) %>

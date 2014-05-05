@@ -314,15 +314,13 @@ module.exports = function(app) {
 		fbLoginController.isAdminLoggedIn(req.session.userId, req.session.fbToken, function(err, authorized) {
 			if (authorized) {
 				UserController.getAllUsers(function(err, allUsers) {
-					console.log(err, allUsers.map(function(user) { return user.firstname; }));
-					res.redirect('/');
+					res.render('showUsers', {allUsers: allUsers});
 				});
 			} else {
 				res.render('errorPages/403', { title: 'Forbidden!' });
 			}
 		});
 	});
-
 
 	//=========================//
 	//========= MISC ==========//

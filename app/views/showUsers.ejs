@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title ? title : "Plz Upload" %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <table>
+        <% allUsers.forEach(function(user) { %>
+            <tr>
+                <td><img src="http://graph.facebook.com/<%= user.fbId %>/picture"></td>
+                <td><%= user.firstname %> <%= user.lastname %></td>
+                <td>(<%= user.email %>)</td>
+            </tr>
+        <% }) %>
+    </table>
+</body>
+</html>
