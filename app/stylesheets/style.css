@@ -655,3 +655,20 @@ footer
 {
 	font-size: 20pt;
 }
+
+
+/* Browsers */
+
+#browsers
+{
+	margin-top: 5%;
+	width: 100%;
+}
+
+
+#browsers > *
+{
+	display: inline-block;
+	width: 49%;
+	text-align: center;
+}

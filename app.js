@@ -1,5 +1,6 @@
 var express 		= require('express');
-var utils		= require('./app/lib/utils');
+var utils				= require('./app/lib/utils');
+var useragent 	= require('useragent');
 
 function setupMongoose(callback) {
 	var mongoose = require('mongoose');
@@ -51,6 +52,20 @@ function setupExpress(callback) {
 	} else if ('production' == app.get('env')) {
 		app.set('port', 80);
 	}
+
+
+	function isClientSupported(req, res, next) {
+
+		useragent(true);
+		var ua = useragent.is(req.headers['user-agent']);
+		
+		if (ua.ie || ua.safari || ua.android ||  ua.mobile_safari) {
+			res.render('wrongBrowser');	
+		} else {
+			next();	
+		}
+	}
+	app.use(isClientSupported);
 
 	if (callback) callback(app);
 }
