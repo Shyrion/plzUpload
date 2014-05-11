@@ -42,4 +42,19 @@ User.createUser = function createUser(userData, callback) {
 	});
 }
 
+User.prototype.addUpload = function addUpload(upload, callback) {
+	this.uploads.push(upload);
+	this.save(callback);
+}
+
+User.prototype.removeUpload = function addUpload(upload, callback) {
+	this.uploads.splice(this.uploads.indexOf(upload), 1);
+	this.save(callback);
+}
+
+User.prototype.purgeUploads = function purgeUploads(callback) {
+	this.uploads = [];
+	this.save(callback);
+}
+
 module.exports = User;

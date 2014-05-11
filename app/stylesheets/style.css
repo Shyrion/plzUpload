@@ -270,6 +270,7 @@ footer
 #getUploadButton
 {
 	display: none;
+	font-size: 13pt;
 }
 
 #FBLogin::before, #FBLogout::before
@@ -522,6 +523,7 @@ footer
 
 #tutorial > p
 {
+	background: white;
 	top: 60px;
 	left: 100px;
 	
@@ -549,6 +551,7 @@ footer
 
 #notice .content
 {
+	background: white;
 
 	position: relative;
 	display: inline-block;

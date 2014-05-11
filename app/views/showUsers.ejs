@@ -12,6 +12,12 @@
                 <td><img src="http://graph.facebook.com/<%= user.fbId %>/picture"></td>
                 <td><%= user.firstname %> <%= user.lastname %></td>
                 <td>(<%= user.email %>)</td>
+                <td>
+                    <% for (var i=0; i<user.uploads.length; i++) { %>
+                        <a href="/up/<%= user.uploads[i].code %>" target="_blank"><%= user.uploads[i].code %></a>
+                    <% } %>
+
+                </td>
             </tr>
         <% }) %>
     </table>

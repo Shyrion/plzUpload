@@ -43,7 +43,8 @@ var dico = {
 
 		// Errors
 		'ERROR_LOGIN' : 'Looks like a login issue<br />Thanks to try again later',
-		'ERROR_USER_RESIGNED': '...Why ? Don\'t worry, I don\'t care about your personal data, I just want to eat'
+		'ERROR_USER_RESIGNED': '...Why ? Don\'t worry, I don\'t care about your personal data, I just want to eat',
+		'ERROR_100': 'An error occured while<br/>I was trying to remove your file (Error 100)'
 
 	},
 	fr: {
@@ -85,7 +86,8 @@ var dico = {
 
 		// Errors
 		'ERROR_LOGIN' : 'Y\'a eu comme qui dirait un problème de login<br />Merci de ré-essayer plus tard',
-		'ERROR_USER_RESIGNED': 'Bah pourquoi ?<br />T\'en fais pas, je ne suis pas intéressé par tes données personnelles, je veux juste manger'
+		'ERROR_USER_RESIGNED': 'Bah pourquoi ?<br />T\'en fais pas, je ne suis pas intéressé par tes données personnelles, je veux juste manger',
+		'ERROR_100': 'Quelque chose s\'est mal passé<br/>lors de la suppression du fichier (Error 100)'
 	},
 }
 
@@ -216,8 +218,14 @@ $('body').on('wrongFileTypeDropped', function(e) {
 	});
 });
 
-
-tutorialTimer = setTimeout(showTutorial, 5*1000);
+if (localStorage.nbVisits == undefined) {
+	localStorage.nbVisits = 0;
+}
+localStorage.nbVisits = parseInt(localStorage.nbVisits) + 1;
+// We show the tutorial on start only on 3 first visits
+if (localStorage.nbVisits <= 3) {
+	tutorialTimer = setTimeout(showTutorial, 5*1000);
+}
 
 //===== Error management =====//
 

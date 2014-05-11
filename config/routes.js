@@ -95,7 +95,7 @@ module.exports = function(app) {
 				};
 				res.send(JSON.stringify(response));
 			} else {
-				uploadController.getUploadedFilesForUser(user.id, function(err, allUploads) {
+				UserController.getUploads(user.id, function(err, allUploads) {
 					if (err) {
 						response = {
 							result: 'error',
@@ -117,11 +117,18 @@ module.exports = function(app) {
 		
 		uploadController.getUpload({code: req.params.code}, function(err, upload) {
 
+			if (!upload) {
+				res.send(JSON.stringify({
+					result: 'error',
+					error: errors.REMOVE_ERROR
+				}));
+				return;
+			}
+
 			if (upload.userId) {
 				// Upload done for a logged in user. We must ensure that the user
 				// will really delete one of its upload, not someone else's :).
 				fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
-					console.log('USER : ', user);
 					if (req.session.userId == upload.userId) {
 						uploadController.removeUpload(upload, function(err, result) {
 							if (err) {

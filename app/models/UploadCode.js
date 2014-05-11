@@ -77,7 +77,7 @@ UploadCode.fillDB = function fillDB(nbDigits) {
 							if (err) {
 								console.error("Error while saving", err);
 							} else {
-								console.log('[Generated code: ' + upCode.name + ']');
+								//console.log('[Generated code: ' + upCode.name + ']');
 							}
 						});
 					}

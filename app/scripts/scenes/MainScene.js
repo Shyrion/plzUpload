@@ -449,8 +449,6 @@ var MainScene = function (params) {
     }.bind(this));
 
 
-
-
     function placeObjects() {
         titleGroup.x = CPGame.instance.canvasWidth/2;
         titleText.draw();
@@ -458,6 +456,10 @@ var MainScene = function (params) {
 
         animatedSprite.x = CPGame.instance.canvasWidth/2;
         animatedSprite.y = Math.min(subtitleText.y+subtitleText.height, CPGame.instance.canvasHeight/2);
+
+        eyesBaseY       = animatedSprite.y-25 + animatedSprite.height/2;
+        leftEyeBaseX    = animatedSprite.x-67;
+        rightEyeBaseX   = animatedSprite.x+73;
     }
     $('body').on('resizeEnd', placeObjects);
 
