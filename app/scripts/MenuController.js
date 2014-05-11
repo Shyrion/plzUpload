@@ -1,6 +1,6 @@
 function getUploadUrl(code) {
 	return location.protocol + '//' + location.hostname +
-  		(location.port=="" ? "" : ':' + location.port)  + '/up/' + $('#getUploadField').val();
+  		(location.port=="" ? "" : ':' + location.port)  + '/up/' + code;
 }
 
 

@@ -324,7 +324,7 @@ module.exports = function(app) {
 					res.render('showUsers', {allUsers: allUsers});
 				});
 			} else {
-				res.render('errorPages/403', { title: 'Forbidden!' });
+				res.render('errorPages/404', { title: 'Not found' });
 			}
 		});
 	});
