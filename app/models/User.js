@@ -48,7 +48,15 @@ User.prototype.addUpload = function addUpload(upload, callback) {
 }
 
 User.prototype.removeUpload = function addUpload(upload, callback) {
-	this.uploads.splice(this.uploads.indexOf(upload), 1);
+	var i = 0;
+	this.uploads.forEach(function(up) {
+		if (up.code == upload.code) {
+			this.uploads.splice(i, 1);
+			return;
+		}
+		i++;
+	}.bind(this));
+	
 	this.save(callback);
 }
 
