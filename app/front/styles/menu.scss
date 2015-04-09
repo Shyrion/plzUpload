@@ -1,0 +1,295 @@
+/*====== Headers ======*/
+
+#menuButton
+{
+	position: absolute;
+	right: 1%;
+	top: 1%;
+	z-index: 2000;
+	width: 100px;
+	height: 100px;
+	text-align: center;
+	line-height: 120px;
+}
+
+#menuButton:hover
+{
+  cursor: pointer;
+}
+
+#menu
+{
+	background-color: white; /*rgb(200, 230, 255);*/
+	border-left: 2px solid #333;
+
+	display: none;
+
+	position: absolute;
+	top: 0;
+	right: -250px;
+	overflow: auto;
+
+	width: 250px;
+	height: 100%;
+	z-index: 200;
+}
+
+#menu input
+{
+	text-align: center;
+	border-right: solid 1px black;
+	outline: black;
+
+	font-size: inherit;
+
+	margin: 0;
+	width: 100%;
+	height: 30px;
+}
+
+#menu a.button
+{
+	border-left: none;
+	width: 100%;
+}
+
+.menuItemGroup
+{
+	background-color: black; /*#FFDC9D;*/
+	color: white;
+
+	border-top: 2px solid #333;
+	border-bottom: 2px solid #333;
+
+	display: block;
+
+	text-decoration: none;
+
+	margin-bottom: 50px;
+	width: 100%;
+}
+
+.menuItemGroup:first-child
+{
+	border-top: none;
+}
+
+.menuItemGroup .title
+{
+	display: block;
+
+	text-align: center;
+	font-family: RobotoLight;
+	font-size: 18pt;
+	/*text-indent: 28px;*/
+	line-height: 20px;
+
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.menuItemGroup .speech, .menuItemGroup ul
+{
+	font-size: 10pt;
+	padding: 0px;
+	margin: 0px;
+}
+
+.menuItemGroup .speech
+{
+	padding-bottom: 10px;
+}
+
+.menuItemGroup li
+{
+	border-top: 1px solid #555;
+	background-color: white;
+	color: black;
+	
+	overflow: hidden;
+
+	list-style-type: none;
+	text-align: center;
+	font-size: 9pt;
+	font-family: RobotoBold;
+	line-height: 40px;
+
+	padding: 0px;
+	width: 100%;
+	height: 40px;
+}
+
+
+#getFile
+{
+	overflow: hidden;
+}
+
+#getUploadButton
+{
+	display: none;
+	font-size: 13pt;
+}
+
+#FBLogin::before, #FBLogout::before
+{
+	content: url('/images/logoFBLogin25.png');
+
+	vertical-align: -20%;
+
+	margin-right: 5px;
+}
+
+#FBLogout::before
+{
+	content: url('/images/logoFBLogout25.png');
+}
+
+#FBLogin, #FBLogout
+{
+	cursor: pointer;
+}
+
+/*====== Uploads ======*/
+
+.upload
+{
+	font-size: 10pt;
+}
+
+.upload > *
+{
+	width: 100%;
+	line-height: 25px;
+	width: 100%;
+}
+
+.upload .uploadHeader
+{
+	background: black;
+	color: white;
+
+	font-family: RobotoBold;
+	font-size: 12pt;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	height: 25px;
+}
+
+.upload .uploadCode
+{
+	background: white;
+	color: black;
+
+	position: relative;
+
+	font-family: RobotoBold;
+	font-size: 11pt;
+	padding-left: 3%;
+
+	width: 97%;
+}
+
+.uploadCode .uploadButton
+{
+	position: absolute;
+	top: 10px;
+}
+
+.uploadCode .uploadButton.copyButton
+{
+	background: url('/images/iconCopy.png') no-repeat;
+	right: 75px;
+
+	width: 20px;
+	height: 20px;
+}
+
+.uploadCode .uploadButton.deleteButton
+{
+	background: url('/images/iconDelete.png') no-repeat;
+	right: 10px;
+
+	width: 25px;
+	height: 19px;
+}
+
+.uploadCode .uploadButton.protectButton, .uploadCode .uploadButton.protectButton.disabled
+{
+	background: url('/images/iconProtect.png') no-repeat;
+	right: 45px;
+
+	width: 20px;
+	height: 20px;
+}
+
+.uploadCode .uploadButton.protectButton.disabled
+{
+	opacity: 0.4;
+}
+
+.uploadCode .uploadButton:hover
+{
+	cursor: pointer;
+}
+
+.upload .uploadCode, .upload .uploadProgress, .upload progress
+{
+	height: 40px;
+	line-height: 40px;
+}
+
+.upload .uploadProgress {
+	position: relative;
+}
+
+.uploadProgress progress
+{
+	background-color: white;
+	border: 0;
+
+	width: 100%;
+}
+
+.uploadProgress .progressValue
+{
+	color: black;
+	font-size: 16pt;
+	font-family: "ChinaCat";
+	font-family: RobotoBold;
+
+	position: absolute;
+	left: 50%;
+}
+
+.upload progress-bar
+{
+	background-color: red;
+	border: solid 1px yellow;
+
+	height: 20px;
+	width: 150px;
+}
+
+.upload progress::-webkit-progress-bar { 
+	background-color: white;
+	border: 0;
+}
+
+.upload progress::-webkit-progress-value {  
+	background-color: #f23232;
+	border: 0;
+}
+
+.upload progress::-moz-progress-bar { 
+	background-color: #f23232; /*fbee48, d2e5ff*/
+	border: 0;
+}
+
+.upload a
+{
+	color: black;
+	font-family: RobotoBold;
+}

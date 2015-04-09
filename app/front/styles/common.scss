@@ -1,0 +1,201 @@
+::selection
+{
+    background: #f23232;
+    color: white;
+    cursor: help;
+}
+
+a
+{
+	text-decoration: none;
+}
+
+body
+{
+	font-family: RobotoRegular, wf_segoe-ui_normal, Tahoma, Verdana, "Helvetica" Arial;
+	font-size: 12pt;
+
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	min-width: 250px;
+
+	overflow: hidden;
+}
+
+html
+{
+	width: 100%;
+	height: 100%;
+}
+
+input:focus
+{
+	border: none;
+	box-shadow: none;
+	outline: none;
+}
+
+input
+{
+	border: none;
+	box-shadow: none;
+}
+
+a.button
+{
+	background-color: #F7F7F7;
+	border-top: solid 1px black;
+
+	color: #333;
+	text-decoration: none;
+
+	display: block;
+
+	padding: 10px;
+}
+
+a.button:visited
+{
+	color: #333;
+}
+
+footer
+{
+	font-size: 15pt;
+	font-family: "ChinaCat";
+	font-weight: bold;
+	font-style: oblique;
+
+	position: absolute;
+	bottom: 5pt;
+	left: 10pt;
+
+	width: 100%;
+	z-index: 1000;
+}
+
+#aboutLink
+{
+	position: fixed;
+	top: 1%;
+	left: 1%;
+	z-index: 100;
+}
+
+#overlay
+{
+	background: url("/images/overlay50.png");
+
+	display: none;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+
+	width: 100%;
+	height: 100%;
+}
+
+#getImageInput
+{
+	display: table;
+	position: absolute;
+	top: 1%;
+	left: 1%;
+	z-index: 100;
+}
+
+#getImageInput > *
+{
+	display: table-cell;
+	vertical-align: top;
+	margin-right: 5px;
+}
+
+/*==================*/
+/*====== Main ======*/
+/*==================*/
+
+#mainContent
+{
+	background: white;
+	
+	position: relative;
+	right: 0%;
+
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+}
+
+#centeredZone
+{
+	text-align: center;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+#centeredZone > *
+{
+	display: block;
+	margin: auto;
+}
+
+.fb-like
+{
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+
+	z-index: 1000;
+}
+
+.textCenter
+{
+	text-align: center;
+}
+
+
+
+/* Tutorial */
+
+#tutorial
+{
+	position: absolute;
+	z-index: 100;
+
+	display: none;
+
+	font-family: "ChinaCat";
+	font-size: 1.5em;
+}
+
+#tutorial > *
+{
+	position: absolute;
+}
+
+#tutorial > img
+{
+	opacity: 0;
+}
+
+#tutorial > p
+{
+	background: white;
+	top: 60px;
+	left: 100px;
+	
+	text-align: justify;
+
+	width: 300px;
+	border: 3px black solid;
+  padding: 10px;
+}

@@ -1,0 +1,45 @@
+/* Error pages */
+
+.container-center
+{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	margin: auto;
+	width: 600px;
+	height: 600px;
+}
+
+.container-center h1, .container-center h2
+{
+	font-family: "ChinaCat";
+	text-align: center;
+	font-size: 36pt;
+
+	margin: 0;
+}
+
+.container-center h2
+{
+	font-size: 20pt;
+}
+
+
+/* Browsers */
+
+#browsers
+{
+	margin-top: 5%;
+	width: 100%;
+}
+
+
+#browsers > *
+{
+	display: inline-block;
+	width: 49%;
+	text-align: center;
+}

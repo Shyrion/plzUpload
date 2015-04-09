@@ -1,0 +1,60 @@
+/* Notice */
+
+#notice
+{
+	display: none;
+
+	text-align: center;
+
+	position: relative;
+	top: 70%;
+
+	width: 100%;
+	min-width: 500px;
+	height: 30%;
+	z-index: 1000;
+
+	border: 3px black solid;
+  padding: 10px;
+}
+
+#notice .content
+{
+	background: white;
+
+	position: relative;
+	display: inline-block;
+
+	font-size: 18pt;
+	font-family: ChinaCat;
+
+	vertical-align: middle;
+
+	margin: auto;
+
+	padding: 20px;
+	min-width: 400px;
+	width: 50%;
+	min-height: 15%;
+	z-index: 1000;
+}
+
+.button:hover
+{
+	cursor: pointer;
+}
+
+.underlined
+{
+	text-decoration: underline;
+}
+
+.oblique
+{
+	font-style: oblique;
+}
+
+.colored
+{
+	color: #f23232;
+}
