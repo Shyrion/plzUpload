@@ -2,7 +2,6 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var cssmin = require('gulp-cssmin');
 var concat = require('gulp-concat');
-var debug = require('gulp-debug');
 
 var SCRIPTS_FOLDER = './app/front/scripts/';
 var SCRIPTS_LIB_FOLDER = SCRIPTS_FOLDER + 'lib/';
