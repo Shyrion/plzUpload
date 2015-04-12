@@ -53,7 +53,6 @@ module.exports = function(app) {
 							}
 					});
 				} else {
-					console.log("File", upload.code, "not protected, we can access");
 					serveFile(upload);
 				}
 			} else {

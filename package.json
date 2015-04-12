@@ -15,7 +15,8 @@
     "mongoose": "~3.6.17",
     "useragent": "^2.0.8",
     "yamlparser": "0.0.2",
-    "request": "^2.34.0"
+    "request": "^2.34.0",
+    "moment": "^2.10.2"
   },
   "devDependencies": {
     "gulp": "^3.8.11",

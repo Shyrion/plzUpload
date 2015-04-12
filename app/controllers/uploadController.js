@@ -1,17 +1,18 @@
-var fs = require('fs');
-var Upload = require('../models/Upload');
-var UploadCode = require('../models/UploadCode');
-var User = require('../models/User');
+var fs 					= require('fs');
+var Upload 			= require('../models/Upload');
+var UploadCode 	= require('../models/UploadCode');
+var User 				= require('../models/User');
+var moment 			= require('moment');
 
-var UPLOAD_DIR = __dirname + "/../../uploads"
-var MAX_UPLOAD = 10; // TODO: Change for 3 or 5
-var ID_LENGTH = 5;
-var UPLOAD_LIFE = 2 * 24 * 3600 * 1000; // 48h
-var CHECK_FREQUENCY = 3600 * 1000 // 1h
+var UPLOAD_DIR 			= __dirname + "/../../uploads";
+var MAX_UPLOAD 			= 5;
+var UPLOAD_LIFE 		= 2 * 24 * 3600 * 1000; // 48h
+var CHECK_FREQUENCY = 3600 * 1000; // 1h
 var CODE_MIN_LENGTH = 2; // codes will be length 5 or 6 (2-4 syllables)
 
 exports.checkIP = function checkIP(ip, callback) {
-	Upload.count({ip: ip}, function(err, number) {
+	Upload.count({ip: ip, userId: null}, function(err, number) {
+		console.log(number);
 		callback(err, number<MAX_UPLOAD);
 	});
 }
@@ -41,7 +42,8 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 		  	protected: false,
 		  });
 
-		  var newPath = UPLOAD_DIR + '/' + up.code + "." + fileExtension;
+		  // We save the file with the code as name to avoid collisions
+		  var newPath = UPLOAD_DIR + '/' + up.code + '.' + up.ext;
 		  up.save(function(err, result) {
 				if (err) {
 					UploadCode.reinsert(up.code);
@@ -75,15 +77,26 @@ exports.uploadFile = function(path, fileName, userId, req, res, callback) {
 }
 
 exports.getAllUploadedFiles = getAllUploadedFiles = function(callback) {
-	Upload.find({}, function(err, allUploads) {
+	// http://stackoverflow.com/questions/14504385/why-cant-you-modify-the-data-returned-by-a-mongoose-query-ex-findbyid
+	// Cannot modify results from Mongoose. Need to call lean() to get
+	// a plain json object.
+	Upload.find({}).lean().exec(function(err, allUploads) {
+		allUploads.forEach(function(upload) {
+			upload.date = moment(upload.date).format('DD-MM-YY, hh:mm');
+		});
 		if (callback) callback(err, allUploads);
 	});
 }
 
 exports.removeUpload = removeUpload = function(upload, callback) {
 	console.log("Going to delete ", upload.code);
-	// Remove file on disk
-	fs.unlinkSync(UPLOAD_DIR + '/' + upload.code + '.' + upload.ext);
+
+	try {
+		// Remove file on disk
+		fs.unlinkSync(UPLOAD_DIR + '/' + upload.code + '.' + upload.ext);
+	} catch (err) {
+		console.log(err);
+	}
 
 	// Remove in DB
 	upload.remove(function(err) {
@@ -157,7 +170,7 @@ function removeAllAtMidnight() {
 //removeAllAtMidnight();
 
 
-function checkFilesToRemove() {
+function checkFilesToRemove(forceRemove) {
 	var now = new Date();
 
 	console.log("Check files to remove");
@@ -166,7 +179,7 @@ function checkFilesToRemove() {
 		if (!err && allUploads.length) {
 			allUploads.forEach(function(upload) {
 				if (!upload.userId) { // logged in uploads last forever
-					if (now - upload.date > UPLOAD_LIFE) {
+					if (forceRemove || (now - upload.date > UPLOAD_LIFE)) {
 						removeUpload(upload);
 					}
 				}

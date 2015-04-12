@@ -1,0 +1,30 @@
+.uploadButton {
+
+  display: inline-block;
+
+  &.copyButton {
+    background: url('/images/iconCopy.png') no-repeat;
+
+    width: 20px;
+    height: 20px;
+  }
+
+  &.deleteButton {
+    background: url('/images/iconDelete.png') no-repeat;
+
+    width: 25px;
+    height: 19px;
+  }
+
+  &.protectButton {
+    background: url('/images/iconProtect.png') no-repeat;
+    right: 45px;
+
+    width: 20px;
+    height: 20px;
+
+    &.disabled {
+      opacity: 0.4;
+    }
+  }
+}

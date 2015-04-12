@@ -1,13 +1,11 @@
 /* UI Tooltip */
 
-.ui-tooltip
-{
+.ui-tooltip {
 	z-index: 10000;
 	max-width: 220px;
 }
 
-.ui-tooltip-content
-{
+.ui-tooltip-content {
 	background: black;
 	color: white;
 
@@ -18,20 +16,19 @@
 	border-radius: 1px;
 
 	padding: 10px;
-}
 
-.ui-tooltip-content .title
-{
-	display: inline-block;
+	.title {
+		display: inline-block;
 
-	font-size: 11pt;
-	font-weight: bold;
+		font-size: 11pt;
+		font-family: RobotoBold;
+		font-weight: bold;
 
-	margin-bottom: 5px;
-}
+		margin-bottom: 5px;
+	}
 
-.ui-tooltip-content .content
-{
-	text-align: 'justify';
-	margin: 0;
+	.content {
+		text-align: 'justify';
+		margin: 0;
+	}
 }

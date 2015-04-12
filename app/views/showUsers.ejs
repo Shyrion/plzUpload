@@ -3,15 +3,25 @@
 <head>
     <title><%= title ? title : "Plz Upload" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="build/style.css" />
 </head>
-<body>
+<body class="admin">
 
     <table>
+
+        <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Uploads</th>
+        </tr>
+
         <% allUsers.forEach(function(user) { %>
             <tr>
-                <td><img src="http://graph.facebook.com/<%= user.fbId %>/picture"></td>
-                <td><%= user.firstname %> <%= user.lastname %></td>
-                <td>(<%= user.email %>)</td>
+                <td>
+                    <img src="http://graph.facebook.com/<%= user.fbId %>/picture" width="15" height="15" >
+                    <%= user.firstname %> <%= user.lastname %>
+                </td>
+                <td><%= user.email %></td>
                 <td>
                     <% for (var i=0; i<user.uploads.length; i++) { %>
                         <a href="/up/<%= user.uploads[i].code %>" target="_blank"><%= user.uploads[i].code %></a>

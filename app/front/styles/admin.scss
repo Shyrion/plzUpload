@@ -1,0 +1,37 @@
+.admin {
+
+  table {
+
+    margin: 10px;
+    text-align: center;
+    border-spacing: 0px;
+
+    tr {
+
+      &.odd {
+        background-color: #F7F7F7;
+      }
+
+      th {
+        font-family: RobotoBold;
+      }
+
+      td {
+        padding: 0px 10px;
+        width: auto;
+        line-height: initial;
+
+        * { vertical-align: middle }
+
+      }
+
+      a {
+        font-family: RobotoBold;
+        font-weight: bold;
+        color: $red;
+      }
+    }
+      
+  }
+  
+}

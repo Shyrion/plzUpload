@@ -3,18 +3,44 @@
 <head>
     <title><%= title ? title : "Plz Upload" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="build/style.css" />
 </head>
-<body>
+<body class="admin">
 
     <table>
+        <tr>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Date</th>
+            <th>IP</th>
+            <th>UserId</th>
+        </tr>
+
+        <% var i=0; %>
+
         <% allUploads.forEach(function(upload) { %>
-            <tr>
+
+            <tr class="upload <%= (i%2) && 'odd' || '' %>">
                 <td><%= upload.name %></td>
                 <td><a href="/up/<%= upload.code %>"><%= upload.code %></a></td>
-                <td><%= upload.userId %></a></td>
-                <td><%= upload.protected %></td>
-                <td><a href="/upload/<%= upload.code %>/remove">Delete</a></td>
+                <td><%= upload.date %></td>
+                <td><%= upload.ip %></td>
+                <td>
+                    <% if (upload.userId) { %>
+                        <img src="http://graph.facebook.com/<%= upload.userId %>/picture" width="15" height="15" />
+                        (<%= upload.userId %>)
+                    <% } %>
+                </td>
+                <td>
+                    <% if (upload.protected) { %>
+                        <span class="uploadButton protectButton"></span>
+                    <% } %>
+                    <a href="/upload/<%= upload.code %>/remove">Delete</a>
+                </td>
             </tr>
+
+        <% i++; %>
+
         <% }) %>
     </table>
 </body>
