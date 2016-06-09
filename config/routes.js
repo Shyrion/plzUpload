@@ -225,7 +225,7 @@ module.exports = function(app) {
 						if (err) {
 							response = {
 								result: 'error',
-								error: errors.GENERAL_ERROR
+								error: err
 							}
 						} else {
 							response = {

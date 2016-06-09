@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Upload = require('./Upload');
+var ERRORS = require('../../config/errors');
 
 var UploadCodeSchema = new Schema({
 	name: String
@@ -96,13 +97,13 @@ UploadCode.getRandomCode = function getRandomCode(callback) {
 
 	UploadCode.count(function(err, count) {
 		if (count <= 0) {
-			var err = new Error('No more codes !');
-			console.error(err);
+			var err = ERRORS.NO_MORE_CODES;
   		if (callback) callback(err, null);
 			return;
 		}
 
   	if (err) {
+      var err = ERRORS.CANNOT_GENERATE_CODE;
   		if (callback) callback(err, null);
     } else {
     	var rand = Math.floor(Math.random() * count);

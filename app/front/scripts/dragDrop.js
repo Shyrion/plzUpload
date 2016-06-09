@@ -81,16 +81,8 @@ var DragDropController = function(dropZoneId, menuController) {
 				console.log("load", newUpload);
 			},
 			error: function(err) {
-				var content = "";
-				switch (err.code) {
-					case 20: content = 'You have reached your quota for today<br />' +
-				               'Please <span class="button colored underlined">login with Facebook</span> to enjoy fully plzUpload experience!';
-				    break;
-					case 21: content = 'I told you...<br />' +
-				               'I will NOT be able to digest such a big file (>20MB)';
-				    break;
-				}
-					
+				var content = err.message;
+
 				NoticeManager.getInstance().showNotice({
 					content: content
 				}, function() {
