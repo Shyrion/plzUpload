@@ -120,9 +120,14 @@ UploadCode.getRandomCode = function getRandomCode(callback) {
     			UploadCode.codesToProcess.push(uploadCode.name);
 
 	    		if (uploadCode) uploadCode.take(callback);
-    		}	    		
+    		}
     	});*/
-	  	this.findOneAndRemove().skip(rand).exec(callback);
+      var randomCodePromise = this.findOne({}, { skip: rand }).exec();
+
+      randomCodePromise.then(function (code) {
+        console.log(code);
+        //.remove(callback.bind(null, randomCode));
+      });
     }
   }.bind(this));
 }

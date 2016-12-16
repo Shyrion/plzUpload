@@ -2,15 +2,13 @@ var https = require('https');
 
 var admins = [
 	{
-		id: '100003874428105',
-		username: 'jewemy.baboulinet'
+		id: '100003874428105'
 	},
 
 	{
-		id: '521939382',
-		username: 'j.gabriele'
+		id: '521939382'
 	}
-	
+
 ]
 exports.validateFacebookLogin = function(fbData, callback) {
 	var token = fbData.accessToken; // ex CAAHsZANtx9dMBALllC31UtVWTxn6ZBVWKq4uh4T83P...
@@ -27,7 +25,7 @@ exports.isAdminLoggedIn = function(userId, token, callback) {
 		var found = false;
 		if (!err) {
 			admins.forEach(function(admin) {
-				if ( (admin.id == userInfo.id) && (admin.username == userInfo.username) ) {
+				if ( admin.id == userInfo.id) {
 					if (callback) callback(err, true);
 					found = true
 					return;

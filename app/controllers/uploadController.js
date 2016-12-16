@@ -17,63 +17,64 @@ exports.checkIP = function checkIP(ip, callback) {
 	});
 }
 
-exports.uploadFile = function(path, fileName, userId, req, res, callback) {
+exports.uploadFile = function(bufferData, fileName, userId, req, res, callback) {
 
 	// Get the file extension from the filename
 	var fileExtension = '';
 	fileExtension = (fileName.indexOf('.') != -1) && fileName.split('.')[fileName.split('.').length-1];
-	
-	fs.readFile(path, function (err, data) {
-		UploadCode.getRandomCode(function(err, uploadCode) {
 
+	UploadCode.getRandomCode(function(uploadCode, err, result) {
+
+		if (err) {
+			if (callback) callback(err, null);
+			return;
+		}
+
+		console.log('Got code:', uploadCode);
+
+		// Create entry in DB
+	  var up = new Upload({
+	  	name: fileName,
+	  	code: uploadCode.name,
+	  	ip: req.connection.remoteAddress,
+	  	ext: fileExtension,
+	  	userId: userId,
+	  	date: new Date(),
+	  	protected: false,
+	  });
+
+	  // We save the file with the code as name to avoid collisions
+	  var newPath = UPLOAD_DIR + '/' + up.code + '.' + up.ext;
+
+	  up.save(function(err, result) {
 			if (err) {
-				if (callback) callback(err, null);
+				UploadCode.reinsert(up.code);
 				return;
 			}
 
-			// Create entry in DB
-		  var up = new Upload({
-		  	name: fileName,
-		  	code: uploadCode.name,
-		  	ip: req.connection.remoteAddress,
-		  	ext: fileExtension,
-		  	userId: userId,
-		  	date: new Date(),
-		  	protected: false,
-		  });
-
-		  // We save the file with the code as name to avoid collisions
-		  var newPath = UPLOAD_DIR + '/' + up.code + '.' + up.ext;
-		  up.save(function(err, result) {
-				if (err) {
+			// Upload to server
+	  	fs.writeFile(newPath, bufferData, function (err) {
+	  		if (err) {
 					UploadCode.reinsert(up.code);
 					return;
 				}
 
-				// Upload to server
-		  	fs.writeFile(newPath, data, function (err) {
-		  		if (err) {
-						UploadCode.reinsert(up.code);
-						return;
-					}
+				// add Upload to user
+				if (userId) {
+					User.findOne({fbId: userId}, function(err, user) {
+						user.addUpload(up);
+					})
+				}
 
-					// add Upload to user
-					if (userId) {
-						User.findOne({fbId: userId}, function(err, user) {
-							user.addUpload(up);
-						})
-					}
+		  	var fullUrl = 'http://' + req.headers.host + '/' + up.getFullName();
+		  	var uploadCode = up.code;
 
-			  	var fullUrl = 'http://' + req.headers.host + '/' + up.getFullName();
-			  	var uploadCode = up.code;
-					callback(err, fullUrl, uploadCode);
-			  });
+				console.log('upload to file ok', fullUrl, uploadCode, userId);
+
+				callback(err, fullUrl, uploadCode);
+		  });
 		});
-
-			
-	  });
-	});
-
+  });
 }
 
 exports.getAllUploadedFiles = getAllUploadedFiles = function(callback) {
@@ -116,7 +117,7 @@ exports.removeUpload = removeUpload = function(upload, callback) {
 
 exports.updateUploadProtection = function(upload, isProtected, callback) {
 	console.log("Going to change protection for ", upload.code, ':', isProtected);
-	
+
 	upload.protected = isProtected;
 	upload.save(function(err, result) {
 		console.log(err, result);

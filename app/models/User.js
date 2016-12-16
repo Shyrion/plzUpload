@@ -1,7 +1,7 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Upload = require('./Upload').Schema;
+var Upload = require('./Upload').schema;
 
 var UserSchema = new Schema({
 	fbId: String,
@@ -56,7 +56,7 @@ User.prototype.removeUpload = function addUpload(upload, callback) {
 		}
 		i++;
 	}.bind(this));
-	
+
 	this.save(callback);
 }
 

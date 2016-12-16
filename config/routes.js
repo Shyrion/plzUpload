@@ -10,6 +10,8 @@ module.exports = function(app) {
 	var uploadController		= require('../app/controllers/uploadController');
 	var UserController			= require('../app/controllers/UserController');
 
+	var multer      				= require('multer');
+
 	//=========================//
 	//========= HOME ==========//
 	//=========================//
@@ -113,7 +115,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/upload/:code/remove', function(req, res) {
-		
+
 		uploadController.getUpload({code: req.params.code}, function(err, upload) {
 
 			if (!upload) {
@@ -206,10 +208,12 @@ module.exports = function(app) {
 			});
 		});
 	});
-	
-	app.post('/uploadAjax', function(req, res) {
 
-		if (req.files.uploadedFile.size > MAX_FILE_SIZE) {
+	app.post('/uploadAjax', multer().single('uploadedFile'), function(req, res) {
+
+		var file = req.file;
+
+		if (file.size > MAX_FILE_SIZE) {
 			res.send(JSON.stringify({
 				result: 'error',
 				error: errors.FILE_TOO_BIG
@@ -220,7 +224,7 @@ module.exports = function(app) {
 		fbLoginController.validateTokenValidity(req.session.userId, req.session.fbToken, function(err, user) {
 
 			function uploadFunction(callback) {
-				uploadController.uploadFile(req.files.uploadedFile.path, req.files.uploadedFile.name,
+				uploadController.uploadFile(file.buffer, file.originalname,
 					req.session.userId, req, res, function(err, fullUrl, uploadCode) {
 						if (err) {
 							response = {
@@ -234,12 +238,12 @@ module.exports = function(app) {
 								uploadCode: uploadCode
 							};
 						}
-						if (callback) callback(response);		
+						if (callback) callback(response);
 				});
 			}
 
 			var response = {};
-			
+
 			if (err || !user) {
 				// User is not logged in : Authorize only 3 uploads per IP address !
 				uploadController.checkIP(req.connection.remoteAddress, function(err, ipAuthorized) {
@@ -282,7 +286,7 @@ module.exports = function(app) {
 			response = {
 				result: 'ok'
 			}
-	    	
+
 	   	res.send(JSON.stringify(response));
 	   	return;
 		}
@@ -310,10 +314,10 @@ module.exports = function(app) {
     			result: 'ok'
     		}
     	}
-    	
+
     	res.send(JSON.stringify(response));
     });
-	
+
 	});
 
 	app.get('/users', function(req, res) {

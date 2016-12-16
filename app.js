@@ -1,4 +1,5 @@
 var express 		= require('express');
+var bodyParser  = require('body-parser');
 var utils				= require('./app/lib/utils');
 var useragent 	= require('useragent');
 
@@ -20,7 +21,7 @@ function setupMongoose(callback) {
 function setupRoutes(app, callback) {
 	// Routes setup
 	require('./config/routes')(app);
-	
+
 	if (callback) callback(app);
 }
 
@@ -36,7 +37,10 @@ function setupExpress(callback) {
 	app.use(express.static(__dirname + "/public"));
 	app.use(express.static(__dirname + "/public/upload"));
 
-	app.use(express.bodyParser());
+	app.use(bodyParser.urlencoded({ extended: false }));
+	app.use(bodyParser.json());
+
+
 	app.use(express.methodOverride());
 	app.use(express.cookieParser('Node JS is quite cool'));
 	app.use(express.session({ cookie: { maxAge: 3*60*60*1000 }}));
@@ -58,11 +62,11 @@ function setupExpress(callback) {
 
 		useragent(true);
 		var ua = useragent.is(req.headers['user-agent']);
-		
+
 		if (ua.ie || ua.safari || ua.android ||  ua.mobile_safari) {
-			res.render('wrongBrowser');	
+			res.render('wrongBrowser');
 		} else {
-			next();	
+			next();
 		}
 	}
 	app.use(isClientSupported);
